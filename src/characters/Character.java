@@ -2,6 +2,8 @@ package characters;
 
 import items.Items;
 
+import java.util.ArrayList;
+
 public abstract class Character {
     protected String name;  //classe
     protected int hpMax;
@@ -14,7 +16,8 @@ public abstract class Character {
     protected int damage = 2;
     protected int defence = 0;
     protected int money = 0;
-    protected Items[] inventario;
+    protected ArrayList<Items> inventory = new ArrayList<Items>();
+
     public Character(){
     }
 
@@ -37,5 +40,21 @@ public abstract class Character {
     }
     public void presentation(){
         System.out.println("\n-----STATS-----\n" + "Classe: " + name + "\nPunti vita: " + hpMax + "\nForza: " + strength + "\nAgilità: " + agility + "\nIntelligenza: " + intelligence + "\nPrecisione: " + precision);
+    }
+
+    public void getInventory () { //SISTEMARLO CON LE EXEPTION
+        System.out.println("\n----- Inventario -----");
+        if(inventory.size() <= 0) {
+            System.out.println("Inventario vuoto");
+        } else {
+            for (Items item : inventory) {
+                System.out.println(item.getName() + item.getRarity() + item.getDamage());
+            }
+        }
+
+    }
+
+    public void addToInventory (Items item) {
+        inventory.add(item);
     }
 }
