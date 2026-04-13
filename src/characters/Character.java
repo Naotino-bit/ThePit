@@ -3,6 +3,8 @@ package characters;
 import items.Items;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public abstract class Character {
     protected String name;  //classe
@@ -17,8 +19,15 @@ public abstract class Character {
     protected int defence = 0;
     protected int money = 0;
     protected ArrayList<Items> inventory = new ArrayList<Items>();
+    protected HashMap<String, Items> equippedItems = new LinkedHashMap<String, Items>();
 
     public Character(){
+        equippedItems.put("Testa", null);
+        equippedItems.put("Torso", null);
+        equippedItems.put("Gambe", null);
+        equippedItems.put("Piedi", null);
+        equippedItems.put("Primaria", null);
+        equippedItems.put("Secondaria", null);
     }
 
     public void takeDamage(int receivedDamage) {
@@ -48,13 +57,47 @@ public abstract class Character {
             System.out.println("Inventario vuoto");
         } else {
             for (Items item : inventory) {
-                System.out.println(item.getName() + item.getRarity() + item.getDamage());
+                System.out.println(item.getDetails());
             }
         }
-
     }
 
     public void addToInventory (Items item) {
         inventory.add(item);
+    }
+
+    public ArrayList<String> getItemSlot(Items item) {
+        return item.getEquippedSlot();
+    }
+
+    public void equip(Items item) {
+//        if(getItemSlot(item).size()==1){
+//            deEquip(getItemSlot(item).get(0));
+//            deEquip(getItemSlot(item).get(1));
+//            equippedItems.replace(getItemSlot(item).get(0), item);
+//        } else if(getItemSlot(item).size()==2) {
+//            deEquip(getItemSlot(item).get(0));
+//            deEquip(getItemSlot(item).get(1));
+//            equippedItems.replace(getItemSlot(item).get(0), item);
+//            equippedItems.replace(getItemSlot(item).get(1), item);
+//        }
+
+
+    }
+
+    public void deEquip(String target) {
+        equippedItems.replace(target, null);
+    }
+
+    public void getEquippedItems() {
+        System.out.println("----- Equipaggiamento -----");
+        for( String i : equippedItems.keySet()) {
+            try {
+                System.out.println(i + ": " + equippedItems.get(i).getName());
+            } catch (NullPointerException e) {
+                System.out.println(i + ": " + "Non equipaggiato");
+            }
+
+        }
     }
 }

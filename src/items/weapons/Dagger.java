@@ -1,12 +1,11 @@
 package items.weapons;
 
-
 import java.util.ArrayList;
 
-public class Sword extends Weapons {
+public class Dagger extends Weapons {
     protected String specialAbility;
     protected ArrayList<String> equippedSlot = new ArrayList<String>();
-    public Sword(String name, String rarity, int damage, String specialAbility) {
+    public Dagger(String name, String rarity, int damage, String specialAbility) {
         this.name = name;
         this.rarity = rarity;
         this.damage = damage;

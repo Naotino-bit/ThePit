@@ -10,4 +10,6 @@ public class Assassin extends Character{
         intelligence = 62;
         precision = 62; //secondaria
     }
+
+    // da aggiugnere
 }
