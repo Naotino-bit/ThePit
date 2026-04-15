@@ -3,7 +3,6 @@ package items.weapons;
 import java.util.ArrayList;
 
 public class Claymore extends Weapons {
-    protected String specialAbility;
     protected ArrayList<String> equippedSlot = new ArrayList<String>();
 
     public Claymore(String name, String rarity, int damage, String specialAbility) {

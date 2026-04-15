@@ -3,8 +3,8 @@ package items.weapons;
 import java.util.ArrayList;
 
 public class Dagger extends Weapons {
-    protected String specialAbility;
     protected ArrayList<String> equippedSlot = new ArrayList<String>();
+
     public Dagger(String name, String rarity, int damage, String specialAbility) {
         this.name = name;
         this.rarity = rarity;
@@ -18,8 +18,5 @@ public class Dagger extends Weapons {
         return equippedSlot;
     }
 
-    @Override
-    public String getDetails() {
-        return super.getDetails() + " | Abilità Speciale: " + specialAbility;
-    }
+
 }

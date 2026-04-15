@@ -12,6 +12,7 @@ public class Bow extends Weapons {
         equippedSlot.add("Primaria");
     }
 
+    @Override
     public ArrayList<String> getEquippedSlot() {
         return equippedSlot;
     }

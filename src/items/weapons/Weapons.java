@@ -4,8 +4,11 @@ import items.Items;
 
 public class Weapons extends Items {
 
+    protected int damage;
+    protected String specialAbility;
 
-    public void getInfo() {
-        System.out.println("----- Info " + this.name + " -----\nRarità: " + this.rarity + "\nDanno: " + this.damage);
+    @Override
+    public String getDetails() {
+        return super.getDetails() + " | Danno: " + damage + " | Abilità Speciale: " + specialAbility;
     }
 }

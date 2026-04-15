@@ -1,6 +1,8 @@
 package characters;
 
 import items.Items;
+import items.weapons.Bow;
+import items.weapons.Claymore;
 
 public class Tank extends Character{
     public Tank() {
@@ -15,12 +17,16 @@ public class Tank extends Character{
 
     @Override
     public void equip(Items item) {
-        String classe = item.getClass().toString();
-        if(classe.contains("Claymore")){
+        if(!inInventory(item)) {
+            System.out.println("Non hai questo oggetto nell'inventario");
+            return;
+        }
+        inventory.remove(item);
+        if(item instanceof Claymore){
             equippedItems.replace("Primaria", item);
             equippedItems.replace("Secondaria", item);
         } else {
-            System.out.println("Non puoi equipaggiare " + item.getName());
+            super.equip(item);
         }
     }
 }

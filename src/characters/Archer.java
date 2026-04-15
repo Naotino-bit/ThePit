@@ -1,6 +1,7 @@
 package characters;
 
 import items.Items;
+import items.weapons.Bow;
 
 public class Archer extends Character{
     public Archer() {
@@ -15,12 +16,16 @@ public class Archer extends Character{
 
     @Override
     public void equip(Items item) {
-        String classe = item.getClass().toString();
-        if(classe.contains("Bow")){
+        if(!inInventory(item)) {
+            System.out.println("Non hai questo oggetto nell'inventario");
+            return;
+        }
+        inventory.remove(item);
+        if(item instanceof Bow){
             equippedItems.replace("Primaria", item);
             equippedItems.replace("Secondaria", item);
         } else {
-            System.out.println("Non puoi equipaggiare " + item.getName());
+            super.equip(item);
         }
     }
 }

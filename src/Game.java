@@ -1,5 +1,6 @@
 import characters.Archer;
 import characters.Warrior;
+import items.armors.Boots;
 import items.weapons.Bow;
 import items.weapons.Claymore;
 import items.weapons.Sword;
@@ -22,15 +23,12 @@ public class Game {
 
     public void startMatch() {
         System.out.println("Inizio partita!");
-        player1.addToInventory(spada1);
+
         player1.getInventory();
-        player1.equip(claymore1);
+
+        player1.addToInventory(spada1);
         player1.equip(spada1);
-        player2.equip(spada1);
-        player1.getEquippedItems();
-        player2.getHp();
-        player1.attack(player2);
-        player2.getHp();
+        player1.getInventory();
     }
 
 }

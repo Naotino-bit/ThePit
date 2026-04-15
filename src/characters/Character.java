@@ -1,10 +1,13 @@
 package characters;
 
 import items.Items;
+import items.armors.Armors;
+import items.artefacts.Artefacts;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.TreeMap;
 
 public abstract class Character {
     protected String name;  //classe
@@ -70,27 +73,29 @@ public abstract class Character {
         return item.getEquippedSlot();
     }
 
+    public boolean inInventory(Items item){
+        if(inventory.contains(item)){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void equip(Items item) {
-//        if(getItemSlot(item).size()==1){
-//            deEquip(getItemSlot(item).get(0));
-//            deEquip(getItemSlot(item).get(1));
-//            equippedItems.replace(getItemSlot(item).get(0), item);
-//        } else if(getItemSlot(item).size()==2) {
-//            deEquip(getItemSlot(item).get(0));
-//            deEquip(getItemSlot(item).get(1));
-//            equippedItems.replace(getItemSlot(item).get(0), item);
-//            equippedItems.replace(getItemSlot(item).get(1), item);
-//        }
-
-
+        if(item instanceof Armors || item instanceof Artefacts){
+            equippedItems.replace(item.getEquippedSlot().getFirst(), item);
+        } else {
+            System.out.println("Non puoi equipaggiare " + item.getName());
+        }
     }
 
     public void deEquip(String target) {
+        inventory.add(equippedItems.get(target));
         equippedItems.replace(target, null);
     }
 
     public void getEquippedItems() {
-        System.out.println("----- Equipaggiamento -----");
+        System.out.println("\n----- Equipaggiamento -----");
         for( String i : equippedItems.keySet()) {
             try {
                 System.out.println(i + ": " + equippedItems.get(i).getName());

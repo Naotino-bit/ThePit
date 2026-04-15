@@ -4,7 +4,7 @@ package items.weapons;
 import java.util.ArrayList;
 
 public class Sword extends Weapons {
-    protected String specialAbility;
+
     protected ArrayList<String> equippedSlot = new ArrayList<String>();
     public Sword(String name, String rarity, int damage, String specialAbility) {
         this.name = name;
@@ -19,8 +19,4 @@ public class Sword extends Weapons {
         return equippedSlot;
     }
 
-    @Override
-    public String getDetails() {
-        return super.getDetails() + " | Abilità Speciale: " + specialAbility;
-    }
 }
