@@ -43,21 +43,22 @@ public abstract class Character {
         hp -= receivedDamage;
     }
 
-    public void attack(Character target) {
+    public String attack(Character target) {
         //aggiungere metodo per calcolare il danno in base a armi e oggetti
         target.takeDamage(damage);
 
         if(isDead(target)) {
-            System.out.println("Hai sconfitto: " + target.name);
+            return "Hai sconfitto: " + target.name;
         }
+        return "Hai inflitto " + damage + " danni a " + target.name;
     }
 
     public void setHp(int hp) {
         this.hp = hp;
     }
 
-    public void getHp() {
-        System.out.println(hp);
+    public int getHp() {
+        return  hp;
     }
     public void presentation(){
         System.out.println("\n-----STATS-----\n" + "Classe: " + name + "\nPunti vita: " + hpMax + "\nForza: " + strength + "\nAgilità: " + agility + "\nIntelligenza: " + intelligence + "\nPrecisione: " + precision);
@@ -71,14 +72,11 @@ public abstract class Character {
         }
     }
 
-    public void getInventory () { //SISTEMARLO CON LE EXEPTION
-        System.out.println("\n----- Inventario -----");
+    public Object getInventory () { //SISTEMARLO CON LE EXEPTION
         if(inventory.size() <= 0) {
-            System.out.println("Inventario vuoto");
+            return "Inventario vuoto";
         } else {
-            for (Items item : inventory) {
-                System.out.println(item.getDetails());
-            }
+            return inventory;
         }
     }
 
