@@ -1,10 +1,11 @@
-package characters;
+package characters.player;
 
+import characters.Character;
 import items.Items;
 import items.weapons.Shield;
 import items.weapons.Sword;
 
-public class Warrior extends Character{
+public class Warrior extends Character {
     public Warrior(){
         name = "Guerriero";
         hpMax = 120;

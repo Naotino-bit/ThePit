@@ -1,18 +1,18 @@
-package characters;
+package characters.player;
 
+import characters.Character;
 import items.Items;
-import items.weapons.Bow;
-import items.weapons.Staff;
+import items.weapons.Claymore;
 
-public class Mage extends Character{
-    public Mage() {
-        name = "Mago";
-        hpMax = 75;
+public class Tank extends Character {
+    public Tank() {
+        name = "Tank";
+        hpMax = 150;
         hp = hpMax;
-        strength = 30;
-        agility = 30;
-        intelligence = 115; //primaria
-        precision = 80; //secondaria
+        strength = 105; //primaria
+        agility = 40;
+        intelligence = 70; //secondaria
+        precision = 40;
     }
 
     @Override
@@ -22,7 +22,7 @@ public class Mage extends Character{
             return;
         }
         inventory.remove(item);
-        if(item instanceof Staff){
+        if(item instanceof Claymore){
             equippedItems.replace("Primaria", item);
             equippedItems.replace("Secondaria", item);
         } else {

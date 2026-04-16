@@ -1,19 +1,18 @@
-package characters;
+package characters.player;
 
+import characters.Character;
 import items.Items;
-import items.weapons.Bow;
-import items.weapons.Claymore;
-import items.weapons.Dagger;
+import items.weapons.Staff;
 
-public class Assassin extends Character{
-    public Assassin() {
-        name = "Assassino";
-        hpMax = 100;
+public class Mage extends Character {
+    public Mage() {
+        name = "Mago";
+        hpMax = 75;
         hp = hpMax;
-        strength = 50;
-        agility = 81; //primaria
-        intelligence = 62;
-        precision = 62; //secondaria
+        strength = 30;
+        agility = 30;
+        intelligence = 115; //primaria
+        precision = 80; //secondaria
     }
 
     @Override
@@ -23,7 +22,7 @@ public class Assassin extends Character{
             return;
         }
         inventory.remove(item);
-        if(item instanceof Dagger){
+        if(item instanceof Staff){
             equippedItems.replace("Primaria", item);
             equippedItems.replace("Secondaria", item);
         } else {

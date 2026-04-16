@@ -1,18 +1,18 @@
-package characters;
+package characters.player;
 
+import characters.Character;
 import items.Items;
-import items.weapons.Bow;
-import items.weapons.Claymore;
+import items.weapons.Dagger;
 
-public class Tank extends Character{
-    public Tank() {
-        name = "Tank";
-        hpMax = 150;
+public class Assassin extends Character {
+    public Assassin() {
+        name = "Assassino";
+        hpMax = 100;
         hp = hpMax;
-        strength = 105; //primaria
-        agility = 40;
-        intelligence = 70; //secondaria
-        precision = 40;
+        strength = 50;
+        agility = 81; //primaria
+        intelligence = 62;
+        precision = 62; //secondaria
     }
 
     @Override
@@ -22,7 +22,7 @@ public class Tank extends Character{
             return;
         }
         inventory.remove(item);
-        if(item instanceof Claymore){
+        if(item instanceof Dagger){
             equippedItems.replace("Primaria", item);
             equippedItems.replace("Secondaria", item);
         } else {

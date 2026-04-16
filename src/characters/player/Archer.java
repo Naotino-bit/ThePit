@@ -1,9 +1,10 @@
-package characters;
+package characters.player;
 
+import characters.Character;
 import items.Items;
 import items.weapons.Bow;
 
-public class Archer extends Character{
+public class Archer extends Character {
     public Archer() {
         name = "Arciere";
         hpMax = 75;

@@ -4,6 +4,7 @@ import items.Items;
 import items.armors.Armors;
 import items.artefacts.Artefacts;
 
+import java.lang.foreign.StructLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -31,6 +32,10 @@ public abstract class Character {
         equippedItems.put("Piedi", null);
         equippedItems.put("Primaria", null);
         equippedItems.put("Secondaria", null);
+        equippedItems.put("Mantello", null);
+        equippedItems.put("Orecchini", null);
+        equippedItems.put("Collana", null);
+        equippedItems.put("Anello", null);
     }
 
     public void takeDamage(int receivedDamage) {
@@ -41,6 +46,10 @@ public abstract class Character {
     public void attack(Character target) {
         //aggiungere metodo per calcolare il danno in base a armi e oggetti
         target.takeDamage(damage);
+
+        if(isDead(target)) {
+            System.out.println("Hai sconfitto: " + target.name);
+        }
     }
 
     public void setHp(int hp) {
@@ -52,6 +61,14 @@ public abstract class Character {
     }
     public void presentation(){
         System.out.println("\n-----STATS-----\n" + "Classe: " + name + "\nPunti vita: " + hpMax + "\nForza: " + strength + "\nAgilità: " + agility + "\nIntelligenza: " + intelligence + "\nPrecisione: " + precision);
+    }
+
+    public boolean isDead(Character target) {
+        if(target.hp <= 0){
+          return true;
+        } else {
+            return false;
+        }
     }
 
     public void getInventory () { //SISTEMARLO CON LE EXEPTION
@@ -66,7 +83,19 @@ public abstract class Character {
     }
 
     public void addToInventory (Items item) {
+        if (inventoryFull()) {
+            System.out.println("Inventario pieno");
+            return;
+        }
         inventory.add(item);
+    }
+
+    public boolean inventoryFull() {
+        if(inventory.size() == 20) { //slot totali di inventario
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public ArrayList<String> getItemSlot(Items item) {
@@ -84,6 +113,7 @@ public abstract class Character {
     public void equip(Items item) {
         if(item instanceof Armors || item instanceof Artefacts){
             equippedItems.replace(item.getEquippedSlot().getFirst(), item);
+            System.out.println("Hai equipaggiato: " + item);
         } else {
             System.out.println("Non puoi equipaggiare " + item.getName());
         }
@@ -99,10 +129,13 @@ public abstract class Character {
         for( String i : equippedItems.keySet()) {
             try {
                 System.out.println(i + ": " + equippedItems.get(i).getName());
+
             } catch (NullPointerException e) {
                 System.out.println(i + ": " + "Non equipaggiato");
             }
-
+            if(i.equals("Piedi") || i.equals("Secondaria")) {
+                System.out.println("/");
+            }
         }
     }
 }
