@@ -1,7 +1,10 @@
 package game;
 
+import characters.enemies.Enemies;
 import characters.enemies.Zombie;
 import characters.player.Warrior;
+
+import java.util.ArrayList;
 
 public class Game {
     private Warrior player1;
@@ -14,8 +17,10 @@ public class Game {
 
     public Object processCommand(String comando){
         if(comando.equalsIgnoreCase("spawn zombie")){
-            Zombie zombie = new Zombie();
-            this.scontroAttuale = new BattleManager(player1, zombie);
+            ArrayList<Enemies> enemies = new ArrayList<Enemies>();
+            enemies.add(new Zombie());
+            enemies.add(new Enemies());
+            this.scontroAttuale = new BattleManager(player1, enemies);
             return "E' apparso uno zombie!";
 
         }

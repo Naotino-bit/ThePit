@@ -57,6 +57,14 @@ public abstract class Character {
         this.hp = hp;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getHpMax(){
+        return hpMax;
+    }
+
     public int getHp() {
         return  hp;
     }
