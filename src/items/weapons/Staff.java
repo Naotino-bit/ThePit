@@ -1,11 +1,12 @@
 package items.weapons;
 
 public class Staff extends Weapons{
-    public Staff(String name, String rarity, int damage, String specialAbility) {
+    public Staff(String name, String rarity, int damage, String boostedStat, int boostedStatVal) {
         this.name = name;
         this.rarity = rarity;
-        this.damage = damage;
-        this.specialAbility = specialAbility;
+        this.stat = damage;
+        this.boostedStat = boostedStat;
+        this.boostedStatVal = boostedStatVal;
         equippedSlot.add("Primaria");
         equippedSlot.add("Secondaria");
     }

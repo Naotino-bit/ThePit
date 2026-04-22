@@ -14,7 +14,6 @@ public class Game {
         this.player1 = new Warrior();
         this.scontroAttuale = null; // All'inizio non stai combattendo
     }
-
     public Object processCommand(String comando){
         if(comando.equalsIgnoreCase("spawn zombie")){
             ArrayList<Enemies> enemies = new ArrayList<Enemies>();

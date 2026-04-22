@@ -7,12 +7,14 @@ import items.weapons.Bow;
 public class Archer extends Character {
     public Archer() {
         name = "Arciere";
-        hpMax = 75;
-        hp = hpMax;
-        strength = 30;
-        agility = 90; //secondaria
-        intelligence = 30;
-        precision = 105; //primaria
+        baseHpMax = 75;
+        baseStrength = 30;
+        baseAgility = 90; //secondaria
+        baseIntelligence = 30;
+        basePrecision = 105; //primaria
+
+        updateStats();
+        this.totalHp = this.totalHpMax;
     }
 
     @Override
@@ -28,5 +30,6 @@ public class Archer extends Character {
         } else {
             super.equip(item);
         }
+        updateStats();
     }
 }
