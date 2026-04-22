@@ -8,12 +8,14 @@ import items.weapons.Sword;
 public class Warrior extends Character {
     public Warrior(){
         name = "Guerriero";
-        hpMax = 120;
-        hp = hpMax;
-        strength = 90; //primaria
-        agility = 85; //secondaria
-        intelligence = 30;
-        precision = 50;
+        baseHpMax = 120;
+        baseStrength = 90; //primaria
+        baseAgility = 85; //secondaria
+        baseIntelligence = 30;
+        basePrecision = 50;
+
+        updateStats();
+        this.totalHp = this.totalHpMax;
     }
 
     @Override
@@ -30,5 +32,6 @@ public class Warrior extends Character {
         } else {
             super.equip(item);
         }
+        updateStats();
     }
 }

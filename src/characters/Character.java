@@ -12,16 +12,25 @@ import java.util.TreeMap;
 
 public abstract class Character {
     protected String name;  //classe
-    protected int hpMax;
-    protected int hp;
-    protected int strength; //CRIT DMG Multiplier
-    protected int agility; //Precedenza turno, probabilità schivata
-    protected int intelligence; //Quantità, velocità recupero mana
-    protected int precision; //CRIT RATE Multiplier
-    // ↓↓↓↓ stats che variano in base all'equipaggiamento ↓↓↓↓
-    protected int damage = 2;
-    protected int defence = 0;
+
+    //statistiche BASE
+    protected int baseHpMax;
+    protected int baseStrength; //CRIT DMG Multiplier
+    protected int baseAgility; //Precedenza turno, probabilità schivata
+    protected int baseIntelligence; //Quantità, velocità recupero mana
+    protected int basePrecision; //CRIT RATE Multiplier
+
+    //statistiche + stat oggetti
+    protected int totalHpMax;
+    protected int totalHp;
+    protected int totalStrength; //CRIT DMG Multiplier
+    protected int totalAgility; //Precedenza turno, probabilità schivata
+    protected int totalIntelligence; //Quantità, velocità recupero mana
+    protected int totalPrecision; //CRIT RATE Multiplier
+
+    //SOLDI
     protected int money = 0;
+
     protected ArrayList<Items> inventory = new ArrayList<Items>();
     protected HashMap<String, Items> equippedItems = new LinkedHashMap<String, Items>();
 
@@ -38,104 +47,65 @@ public abstract class Character {
         equippedItems.put("Anello", null);
     }
 
+    protected void updateStats(){
+        //resetto il personaggio alle stats base
+        this.totalHpMax = this.baseHpMax;
+        this.totalStrength = this.baseStrength;
+        this.totalAgility = this.baseAgility;
+        this.totalIntelligence = this.baseIntelligence;
+        this.totalPrecision = this.basePrecision;
+
+        for(Items item : equippedItems.values()){
+            if(item != null){
+                switch(item.getBoostedStat()){
+                    case "Forza":
+                        this.totalStrength += item.getBoostedStaVal();
+                        break;
+                    case "Intelligenza":
+                        this.totalIntelligence += item.getBoostedStaVal();
+                        break;
+                    case "Agilità":
+                        this.totalAgility += item.getBoostedStaVal();
+                        break;
+                    case "Precisione":
+                        this.totalPrecision += item.getBoostedStaVal();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        if(this.totalHp > this.totalHpMax) {this.totalHp = this.totalHpMax;}
+    }
+
     public void takeDamage(int receivedDamage) {
         //aggiungere calcolo difese
-        hp -= receivedDamage;
+        totalHp -= receivedDamage;
     }
 
-    public String attack(Character target) {
-        //aggiungere metodo per calcolare il danno in base a armi e oggetti
+    public void attack(Character target) {
+        int damage = this.totalStrength;
         target.takeDamage(damage);
-
-        if(isDead(target)) {
-            return "Hai sconfitto: " + target.name;
-        }
-        return "Hai inflitto " + damage + " danni a " + target.name;
     }
 
+    public boolean isDead() {
+        return this.totalHp <= 0;
+    }
+
+    //SETTERS
     public void setHp(int hp) {
-        this.hp = hp;
+        this.totalHp = hp;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public int getHpMax(){
-        return hpMax;
-    }
-
-    public int getHp() {
-        return  hp;
-    }
-    public void presentation(){
-        System.out.println("\n-----STATS-----\n" + "Classe: " + name + "\nPunti vita: " + hpMax + "\nForza: " + strength + "\nAgilità: " + agility + "\nIntelligenza: " + intelligence + "\nPrecisione: " + precision);
-    }
-
-    public boolean isDead(Character target) {
-        if(target.hp <= 0){
-          return true;
-        } else {
-            return false;
-        }
-    }
-
-    public Object getInventory () { //SISTEMARLO CON LE EXEPTION
-        if(inventory.size() <= 0) {
-            return "Inventario vuoto";
-        } else {
-            return inventory;
-        }
-    }
-
-    public void addToInventory (Items item) {
-        if (inventoryFull()) {
-            System.out.println("Inventario pieno");
-            return;
-        }
-        inventory.add(item);
-    }
-
-    public boolean inventoryFull() {
-        if(inventory.size() == 20) { //slot totali di inventario
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public ArrayList<String> getItemSlot(Items item) {
-        return item.getEquippedSlot();
-    }
-
-    public boolean inInventory(Items item){
-        if(inventory.contains(item)){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public void equip(Items item) {
-        if(item instanceof Armors || item instanceof Artefacts){
-            equippedItems.replace(item.getEquippedSlot().getFirst(), item);
-            System.out.println("Hai equipaggiato: " + item);
-        } else {
-            System.out.println("Non puoi equipaggiare " + item.getName());
-        }
-    }
-
-    public void deEquip(String target) {
-        inventory.add(equippedItems.get(target));
-        equippedItems.replace(target, null);
-    }
-
+    //GETTERS
+    public String getName() {return name;}
+    public int getHpMax(){return totalHpMax;}
+    public int getHp(){return  totalHp;}
     public void getEquippedItems() {
         System.out.println("\n----- Equipaggiamento -----");
         for( String i : equippedItems.keySet()) {
             try {
                 System.out.println(i + ": " + equippedItems.get(i).getName());
-
             } catch (NullPointerException e) {
                 System.out.println(i + ": " + "Non equipaggiato");
             }
@@ -144,4 +114,70 @@ public abstract class Character {
             }
         }
     }
+    public Object getInventory(){
+        if(inventory.isEmpty()){
+            return "Inventario vuoto";
+        } else{
+            return inventory;
+        }
+    }
+
+    //STAMPA DEL PERSONAGGIO
+    public void presentation(){
+        System.out.println("\n-----STATS-----\n" +
+                "Classe: " + name + "" +
+                "\nPunti vita: " + totalHpMax + "/" + totalHpMax +
+                "\nForza: " + totalStrength +
+                "\nAgilità: " + totalAgility +
+                "\nIntelligenza: " + totalIntelligence +
+                "\nPrecisione: " + totalPrecision);
+    }
+
+
+    public void addToInventory (Items item) {
+        if(inventoryFull()) {
+            System.out.println("Inventario pieno");
+            return;
+        }
+        inventory.add(item);
+    }
+
+    public boolean inventoryFull() {return inventory.size() >= 20;}
+
+    public ArrayList<String> getItemSlot(Items item) {
+        return item.getEquippedSlot();
+    } // non è tipo inutile questa broder?
+
+    public boolean inInventory(Items item){return inventory.contains(item);}
+
+    public void equip(Items item){
+        if(inInventory(item)){
+            inventory.remove(item);
+        }
+
+        if(item instanceof Armors || item instanceof Artefacts){
+            equippedItems.replace(item.getEquippedSlot().getFirst(), item);
+            System.out.println("Hai equippaggiato: " + item.getName());
+
+            updateStats(); //ocho al mocho
+        } else{
+            System.out.println("Non puoi equipaggiare: " + item.getName());
+            inventory.add(item);
+        }
+    }
+
+    public void deEquip(String target){
+        Items itemToDeEquip = equippedItems.get(target);
+        if (itemToDeEquip != null){
+            inventory.add(itemToDeEquip);
+            equippedItems.replace(target, null);
+            System.out.println("Hai rimosso: " + itemToDeEquip.getName());
+
+            updateStats();
+        } else{
+            System.out.println("Lo slot " + target + " è già vuoto");
+        }
+    }
+
+
 }

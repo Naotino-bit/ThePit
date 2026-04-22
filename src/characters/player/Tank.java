@@ -7,12 +7,14 @@ import items.weapons.Claymore;
 public class Tank extends Character {
     public Tank() {
         name = "Tank";
-        hpMax = 150;
-        hp = hpMax;
-        strength = 105; //primaria
-        agility = 40;
-        intelligence = 70; //secondaria
-        precision = 40;
+        baseHpMax = 150;
+        baseStrength = 105; //primaria
+        baseAgility = 40;
+        baseIntelligence = 70; //secondaria
+        basePrecision = 40;
+
+        updateStats();
+        this.totalHp = this.totalHpMax;
     }
 
     @Override
@@ -28,5 +30,6 @@ public class Tank extends Character {
         } else {
             super.equip(item);
         }
+        updateStats();
     }
 }

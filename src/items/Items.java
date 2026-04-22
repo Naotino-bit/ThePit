@@ -5,6 +5,8 @@ import java.util.ArrayList;
 public abstract class Items {
     protected String name;
     protected String rarity;
+    protected String boostedStat;
+    protected int boostedStatVal;
 
     public String getName() {
         return this.name;
@@ -23,4 +25,6 @@ public abstract class Items {
         return "Nome: " + name + " | Rarità: " + rarity;
     }
 
+    public int getBoostedStaVal(){ return this.boostedStatVal;}
+    public String getBoostedStat(){ return this.boostedStat;}
 }

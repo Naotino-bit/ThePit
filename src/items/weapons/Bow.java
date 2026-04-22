@@ -1,13 +1,13 @@
 package items.weapons;
 
 
-import java.util.ArrayList;
-
 public class Bow extends Weapons {
-    public Bow(String name, String rarity, int damage) {
+    public Bow(String name, String rarity, int damage, String boostedStat, int boostedStatVal) {
         this.name = name;
         this.rarity = rarity;
-        this.damage = damage;
+        this.stat = damage;
+        this.boostedStat = boostedStat;
+        this.boostedStatVal = boostedStatVal;
         equippedSlot.add("Primaria");
     }
 

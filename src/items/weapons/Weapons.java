@@ -6,12 +6,11 @@ import java.util.ArrayList;
 
 public class Weapons extends Items {
     protected ArrayList<String> equippedSlot = new ArrayList<String>();
-    protected int damage;
-    protected String specialAbility;
+    protected int stat;
 
     @Override
     public String getDetails() {
-        return super.getDetails() + " | Danno: " + damage + " | Abilità Speciale: " + specialAbility;
+        return super.getDetails() + " | Danno: " + stat + " | " + boostedStat + ": " + boostedStatVal;
     }
 
     @Override

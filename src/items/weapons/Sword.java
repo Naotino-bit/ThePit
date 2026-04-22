@@ -1,14 +1,13 @@
 package items.weapons;
 
 
-import java.util.ArrayList;
-
 public class Sword extends Weapons {
-    public Sword(String name, String rarity, int damage, String specialAbility) {
+    public Sword(String name, String rarity, int damage, String boostedStat, int boostedStatVal) {
         this.name = name;
         this.rarity = rarity;
-        this.damage = damage;
-        this.specialAbility = specialAbility;
+        this.stat = damage;
+        this.boostedStat = boostedStat;
+        this.boostedStatVal = boostedStatVal;
         equippedSlot.add("Primaria");
     }
 

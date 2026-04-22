@@ -11,11 +11,12 @@ import java.util.concurrent.ScheduledFuture;
 public class Zombie extends Enemies {
     public Zombie() {
         this.name = "Zombie";
-        this.hpMax = 10; //*livello dello zombie
-        this.hp = hpMax;
+        this.totalStrength = 50;
+        this.totalHpMax = 100; //*livello dello zombie
+        this.totalHp = this.totalHpMax;
 
-        possibleDrops.add(new Sword("Spada di legno", "Comune", 10, ""));
-        possibleDrops.add(new Shield("Scudo di legno", "Comune", 10, ""));
+        possibleDrops.add(new Sword("Spada di legno", "Comune", 10, "Forza", 10));
+        possibleDrops.add(new Shield("Scudo di legno", "Comune", 10, "Undefined", 0));
     }
 
     public Items getDrop () {

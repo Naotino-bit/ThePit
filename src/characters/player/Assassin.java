@@ -7,12 +7,14 @@ import items.weapons.Dagger;
 public class Assassin extends Character {
     public Assassin() {
         name = "Assassino";
-        hpMax = 100;
-        hp = hpMax;
-        strength = 50;
-        agility = 81; //primaria
-        intelligence = 62;
-        precision = 62; //secondaria
+        baseHpMax = 100;
+        baseStrength = 50;
+        baseAgility = 81; //primaria
+        baseIntelligence = 62;
+        basePrecision = 62; //secondaria
+
+        updateStats();
+        this.totalHp = this.totalHpMax;
     }
 
     @Override
@@ -28,5 +30,6 @@ public class Assassin extends Character {
         } else {
             super.equip(item);
         }
+        updateStats();
     }
 }
