@@ -27,10 +27,14 @@ public class BattleManager {
         int sceltaNemico;
         try {
             sceltaNemico = Integer.parseInt(mossaGiocatoreSplitata[1]);
+            if (sceltaNemico > enemies.size() || sceltaNemico<0){
+                return "Non puoi attaccare un nemico che non esiste";
+            }
+            sceltaNemico -= 1;
+
         } catch (IndexOutOfBoundsException e) {
             sceltaNemico = 0;
         }
-
 
         String logCombattimento = "";
 
@@ -44,13 +48,16 @@ public class BattleManager {
             return "Mossa non valida nel combattimento.";
         }
 
-
-        // AGGIUNGERE CHE SE C'è GENTE NELL?ARRAY ENEMIS VUOL DIRE CHE LA BATTAGLIA DEVE CONTINUARE
-        // OGNI VOLTA CHE UN NEMICO MUORE VIENE RIMOSSO DALL ARRAY ENEMIES
-        // Controllo se il nemico è morto
+        // Controllo se il nemico che viene attaccato è morto
         if (enemies.get(sceltaNemico).getHp() <= 0) {
-            battagliaFinita = true;
-            return logCombattimento + "Hai sconfitto " + enemies.get(sceltaNemico).getName() + "!";
+            logCombattimento += "Hai sconfitto " + enemies.get(sceltaNemico).getName() + "!";
+            enemies.remove(sceltaNemico);
+            //Controllo fine combattimento
+            if(enemies.isEmpty()){
+                battagliaFinita = true;
+                return logCombattimento += "\nLa battaglia è finita";
+            }
+            return logCombattimento;
         }
 
         //RIFARE TUTTA LOGICA ATTACCA DAI NEMICI
@@ -68,7 +75,7 @@ public class BattleManager {
         }
         // Restituisco la "telecronaca" del turno al Server
         //aggiunta di stats player e nemico
-        logCombattimento += "\n-----\n" + player.getName() + ": " + player.getHp() + "/" + player.getHpMax() + " hp\n" + enemies.get(sceltaNemico).getName() + ": " + enemies.get(sceltaNemico).getHp() + "/" + enemies.get(sceltaNemico).getHpMax() + " hp\n";
+        logCombattimento += "\n-----\n" + player.getName() + ": " + player.getHp() + "/" + player.getHpMax() + " hp\n" + "[" + (sceltaNemico+1) + "] " +enemies.get(sceltaNemico).getName() + ": " + enemies.get(sceltaNemico).getHp() + "/" + enemies.get(sceltaNemico).getHpMax() + " hp\n";
 
         return logCombattimento;
     }

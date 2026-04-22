@@ -15,13 +15,24 @@ public class Game {
         this.scontroAttuale = null; // All'inizio non stai combattendo
     }
 
+    public String getEnemies(ArrayList<Enemies> enemies) {
+        String string = "E' apparso un nemico: \n";
+        if(enemies.size()>1) {
+            string = "Sono apparsi dei nemici: \n";
+        }
+        for(int i=0; i<enemies.size(); i++) {
+            string += "[" + (i+1) + "] - " + enemies.get(i).getName() + " " + enemies.get(i).getHp() + "/" + enemies.get(i).getHpMax()+ " hp\n";
+        }
+        return string;
+    }
+
     public Object processCommand(String comando){
         if(comando.equalsIgnoreCase("spawn zombie")){
             ArrayList<Enemies> enemies = new ArrayList<Enemies>();
             enemies.add(new Zombie());
-            enemies.add(new Enemies());
+            enemies.add(new Zombie());
             this.scontroAttuale = new BattleManager(player1, enemies);
-            return "E' apparso uno zombie!";
+            return getEnemies(enemies);
 
         }
 
