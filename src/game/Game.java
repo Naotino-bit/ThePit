@@ -30,9 +30,9 @@ public class Game {
         if(comando.equalsIgnoreCase("spawn zombie")){
             ArrayList<Enemies> enemies = new ArrayList<Enemies>();
             enemies.add(new Zombie());
-            enemies.add(new Enemies());
+            enemies.add(new Zombie());
             this.scontroAttuale = new BattleManager(player1, enemies);
-            return "E' apparso uno zombie!";
+            return getEnemies(enemies);
 
         }
 
