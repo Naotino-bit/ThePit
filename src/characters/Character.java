@@ -93,8 +93,8 @@ public abstract class Character {
     }
 
     public void takeDamage(int receivedDamage) {
-        //aggiungere calcolo difese
-        totalHp -= receivedDamage + armorDefence;
+        int dannoEffettivo = Math.max(0, receivedDamage - this.armorDefence);
+        this.totalHp -= dannoEffettivo;
     }
 
     public void attack(Character target) {
@@ -172,7 +172,7 @@ public abstract class Character {
 
         if(item instanceof Weapons){
             if(!canEquipWeapon(item)){
-                System.out.println("Non puoi usare: "+ this.getName());
+                System.out.println("Non puoi usare: "+ item.getName());
                 return;
             }
 
