@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Weapons extends Items {
     protected ArrayList<String> equippedSlot = new ArrayList<String>();
-    protected int stat;
+
 
     @Override
     public String getDetails() {

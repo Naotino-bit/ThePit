@@ -19,19 +19,7 @@ public class Warrior extends Character {
     }
 
     @Override
-    public void equip(Items item) {
-        if(!inInventory(item)) {
-            System.out.println("Non hai questo oggetto nell'inventario");
-            return;
-        }
-        inventory.remove(item);
-        if(item instanceof Sword){
-            equippedItems.replace("Primaria", item);
-        } else if (item instanceof Shield) {
-            equippedItems.replace("Secondaria", item);
-        } else {
-            super.equip(item);
-        }
-        updateStats();
+    public boolean canEquipWeapon(Items item) {
+        return item instanceof Sword || item instanceof Shield;
     }
 }

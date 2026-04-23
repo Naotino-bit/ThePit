@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public abstract class Items {
     protected String name;
     protected String rarity;
+    protected int stat; //spostata da weapons ad items poiché serve pure per armors
     protected String boostedStat;
     protected int boostedStatVal;
 
@@ -20,11 +21,12 @@ public abstract class Items {
         temp.add("Slot item");
         return temp;
     }
+    public int getBaseStat(){ return stat;}
 
     public String getDetails() {
         return "Nome: " + name + " | Rarità: " + rarity;
     }
 
-    public int getBoostedStaVal(){ return this.boostedStatVal;}
+    public int getBoostedStatVal(){ return this.boostedStatVal;}
     public String getBoostedStat(){ return this.boostedStat;}
 }

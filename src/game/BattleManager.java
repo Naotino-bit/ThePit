@@ -3,6 +3,7 @@ package game;
 import characters.enemies.Enemies;
 import characters.Character;
 import items.Items;
+import items.weapons.Shield;
 import items.weapons.Sword;
 
 import java.util.ArrayList;
@@ -25,9 +26,9 @@ public class BattleManager {
 
     public String manageRound(String mossaGiocatore) {
 
-        Items oggettoSword = (new Sword("Spada", "speciale", 5, "Forza", 5));
-        player.addToInventory(oggettoSword);
-        player.equip(oggettoSword);
+        Items oggettoShield = (new Shield("Scudo Vitale", "raro", 10, "Vitalità", 20));
+        player.addToInventory(oggettoShield);
+        player.equip(oggettoShield);
         if (battagliaFinita) return "La battaglia è già finita!";
         String[] mossaGiocatoreSplitata = mossaGiocatore.split(" ");
         int sceltaNemico;
