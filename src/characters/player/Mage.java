@@ -2,6 +2,7 @@ package characters.player;
 
 import characters.Character;
 import items.Items;
+import items.weapons.Bow;
 import items.weapons.Staff;
 
 public class Mage extends Character {
@@ -16,20 +17,8 @@ public class Mage extends Character {
         updateStats();
         this.totalHp = this.totalHpMax;
     }
-
     @Override
-    public void equip(Items item) {
-        if(!inInventory(item)) {
-            System.out.println("Non hai questo oggetto nell'inventario");
-            return;
-        }
-        inventory.remove(item);
-        if(item instanceof Staff){
-            equippedItems.replace("Primaria", item);
-            equippedItems.replace("Secondaria", item);
-        } else {
-            super.equip(item);
-        }
-        updateStats();
+    public boolean canEquipWeapon(Items item){
+        return item instanceof Staff;
     }
 }

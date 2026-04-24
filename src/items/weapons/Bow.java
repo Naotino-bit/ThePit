@@ -8,7 +8,6 @@ public class Bow extends Weapons {
         this.stat = damage;
         this.boostedStat = boostedStat;
         this.boostedStatVal = boostedStatVal;
-        equippedSlot.add("Primaria");
     }
 
 }

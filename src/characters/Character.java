@@ -3,30 +3,31 @@ package characters;
 import items.Items;
 import items.armors.Armors;
 import items.artefacts.Artefacts;
+import items.weapons.*;
 
-import java.lang.foreign.StructLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.TreeMap;
 
 public abstract class Character {
     protected String name;  //classe
 
     //statistiche BASE
     protected int baseHpMax;
-    protected int baseStrength; //CRIT DMG Multiplier
+    protected int baseStrength; //Danno personaggio
     protected int baseAgility; //Precedenza turno, probabilità schivata
     protected int baseIntelligence; //Quantità, velocità recupero mana
-    protected int basePrecision; //CRIT RATE Multiplier
+    protected int basePrecision; //CRIT RATE / DMG Multiplier
 
     //statistiche + stat oggetti
     protected int totalHpMax;
     protected int totalHp;
-    protected int totalStrength; //CRIT DMG Multiplier
+    protected int totalStrength; //Danno personaggio
     protected int totalAgility; //Precedenza turno, probabilità schivata
     protected int totalIntelligence; //Quantità, velocità recupero mana
-    protected int totalPrecision; //CRIT RATE Multiplier
+    protected int totalPrecision; //CRIT RATE / DMG Multiplier
+    protected int weaponDamage; //Danno aggiunto dall'arma
+    protected int armorDefence; //Difesa aumantata dallo scudo
 
     //SOLDI
     protected int money = 0;
@@ -47,6 +48,8 @@ public abstract class Character {
         equippedItems.put("Anello", null);
     }
 
+    public abstract boolean canEquipWeapon(Items item);
+
     protected void updateStats(){
         //resetto il personaggio alle stats base
         this.totalHpMax = this.baseHpMax;
@@ -55,20 +58,31 @@ public abstract class Character {
         this.totalIntelligence = this.baseIntelligence;
         this.totalPrecision = this.basePrecision;
 
-        for(Items item : equippedItems.values()){
+        this.weaponDamage = 0; //resetto danno arma
+        this.armorDefence = 0; //resetto difesa arma e armatura
+
+        //serve a non calcolare due volte le armi a due mani
+        java.util.HashSet<Items> uniqueEquipped = new java.util.HashSet<>(equippedItems.values());
+        for(Items item : uniqueEquipped){
             if(item != null){
+
+                if(item instanceof Shield || item instanceof Armors) this.armorDefence += item.getBaseStat();
+                else if(item instanceof Weapons) this.weaponDamage += item.getBaseStat();
                 switch(item.getBoostedStat()){
                     case "Forza":
-                        this.totalStrength += item.getBoostedStaVal();
+                        this.totalStrength += item.getBoostedStatVal();
                         break;
                     case "Intelligenza":
-                        this.totalIntelligence += item.getBoostedStaVal();
+                        this.totalIntelligence += item.getBoostedStatVal();
                         break;
                     case "Agilità":
-                        this.totalAgility += item.getBoostedStaVal();
+                        this.totalAgility += item.getBoostedStatVal();
                         break;
                     case "Precisione":
-                        this.totalPrecision += item.getBoostedStaVal();
+                        this.totalPrecision += item.getBoostedStatVal();
+                        break;
+                    case "Vitalità":
+                        this.totalHpMax += item.getBoostedStatVal();
                         break;
                     default:
                         break;
@@ -79,13 +93,13 @@ public abstract class Character {
     }
 
     public void takeDamage(int receivedDamage) {
-        //aggiungere calcolo difese
-        totalHp -= receivedDamage;
+        int dannoEffettivo = Math.max(0, receivedDamage - this.armorDefence);
+        this.totalHp -= dannoEffettivo;
     }
 
     public void attack(Character target) {
-        int damage = this.totalStrength;
-        target.takeDamage(damage);
+        int finalDamage = this.weaponDamage + this.totalStrength;
+        target.takeDamage(finalDamage);
     }
 
     public boolean isDead() {
@@ -151,33 +165,110 @@ public abstract class Character {
     public boolean inInventory(Items item){return inventory.contains(item);}
 
     public void equip(Items item){
-        if(inInventory(item)){
-            inventory.remove(item);
+        if(!inInventory(item)){
+            System.out.println("Non hai questo oggetto nell'inventario");
+            return;
         }
 
-        if(item instanceof Armors || item instanceof Artefacts){
-            equippedItems.replace(item.getEquippedSlot().getFirst(), item);
-            System.out.println("Hai equippaggiato: " + item.getName());
+        if(item instanceof Weapons){
+            if(!canEquipWeapon(item)){
+                System.out.println("Non puoi usare: "+ item.getName());
+                return;
+            }
 
-            updateStats(); //ocho al mocho
-        } else{
-            System.out.println("Non puoi equipaggiare: " + item.getName());
-            inventory.add(item);
+            inventory.remove(item);
+            equipWeaponLogic(item); //ANCORA DA IMPLEMENTARE
+        }
+
+        else if (item instanceof Armors || item instanceof Artefacts) {
+            inventory.remove(item);
+
+            if(equippedItems.get(item.getEquippedSlot().getFirst()) != null){
+                inventory.add(equippedItems.get(item.getEquippedSlot().getFirst()));
+            }
+
+            equippedItems.replace(item.getEquippedSlot().getFirst(), item);
+            System.out.println("Hai equipaggiato: " + item.getName());
+        }
+
+        updateStats();
+    }
+
+    private void equipWeaponLogic(Items item){
+        Items primaria = equippedItems.get("Primaria");
+        Items secondaria = equippedItems.get("Secondaria");
+
+        boolean isTwoHanded = (item instanceof Bow || item instanceof Staff || item instanceof Claymore);
+        if(isTwoHanded){
+            if(primaria != null){ inventory.add(primaria); }
+            if(secondaria != null && secondaria != primaria){ inventory.add(secondaria);}
+
+            equippedItems.replace("Primaria", item);
+            equippedItems.replace("Secondaria", item);
+
+            System.out.println("Hai equipaggiato " + item.getName() + " a due mani");
+        }
+
+        else if(item instanceof Dagger){
+            if(primaria == null){
+                equippedItems.replace("Primaria", item);
+            }
+            else if (secondaria == null) {
+                if(primaria == secondaria){
+                    inventory.add(primaria);
+                    equippedItems.replace("Primaria", item);
+                    equippedItems.replace("Secondaria", null);
+                }
+                else{
+                    equippedItems.replace("Secondaria", item);
+                }
+            }
+            else{
+                inventory.add(primaria);
+                equippedItems.replace("Primaria", item);
+            }
+            System.out.println("Hai equipaggiato " + item.getName());
+        }
+        else if(item instanceof Shield) {
+            if(secondaria != null && primaria != secondaria) inventory.add(secondaria);
+
+            if(primaria != null && primaria == secondaria){
+                inventory.add(primaria);
+                equippedItems.replace("Primaria", null);
+            }
+            equippedItems.replace("Secondaria", item);
+            System.out.println("Hai equipaggiato " + item.getName());
+        }
+        else if (item instanceof Sword) {
+            if(primaria != null && primaria != secondaria) inventory.add(primaria);
+            if(primaria != null && primaria == secondaria){
+                inventory.add(primaria);
+                equippedItems.replace("Secondaria", null);
+            }
+            equippedItems.replace("Primaria", item);
+            System.out.println("Hai equipaggiato " + item.getName());
         }
     }
 
     public void deEquip(String target){
         Items itemToDeEquip = equippedItems.get(target);
-        if (itemToDeEquip != null){
+        if(itemToDeEquip != null){
             inventory.add(itemToDeEquip);
+
+            if(target.equals("Primaria") && equippedItems.get("Secondaria") == itemToDeEquip){
+                equippedItems.replace("Secondaria", null);
+            }
+            else if (target.equals("Secondaria") && equippedItems.get("Primaria") == itemToDeEquip ){
+                equippedItems.replace("Primaria", null);
+            }
+
             equippedItems.replace(target, null);
             System.out.println("Hai rimosso: " + itemToDeEquip.getName());
 
             updateStats();
-        } else{
+        }
+        else{
             System.out.println("Lo slot " + target + " è già vuoto");
         }
     }
-
-
 }
