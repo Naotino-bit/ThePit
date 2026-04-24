@@ -11,7 +11,7 @@ import java.util.concurrent.ScheduledFuture;
 public class Zombie extends Enemies {
     public Zombie() {
         this.name = "Zombie";
-        this.totalStrength = 50;
+        this.totalStrength = 5;
         this.totalHpMax = 100; //*livello dello zombie
         this.totalHp = this.totalHpMax;
 
@@ -21,7 +21,7 @@ public class Zombie extends Enemies {
 
     public Items getDrop () {
         Random rand = new Random();
-        int randomInt = rand.nextInt(2); // Numero intero da 0 a 99 [6, 15]
+        int randomInt = rand.nextInt(2);
         return possibleDrops.get(randomInt);
     }
 

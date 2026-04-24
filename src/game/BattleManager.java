@@ -4,90 +4,146 @@ import characters.enemies.Enemies;
 import characters.Character;
 
 import java.util.ArrayList;
-
-import static java.lang.Thread.sleep;
+import java.util.Random;
 
 public class BattleManager {
     private Character player;
     private ArrayList<Enemies> enemies;
-    private boolean turnoGiocatore; // da sistemare con il peso in base all'agilità
     private boolean battagliaFinita;
 
-    // Costruttore: l'arbitro sale sul ring con i due lottatori
+    // Gestione turni avanzata
+    private ArrayList<Character> ordineAttacchi;
+    private int consecutiveAttacks;
+    private int counterRound = 0;
+    Random rand = new Random();
+
+    // Costruttore
     public BattleManager(Character player, ArrayList<Enemies> enemies) {
         this.player = player;
         this.enemies = enemies;
-        this.turnoGiocatore = true; // Magari il giocatore attacca sempre per primo DA LEVARE
         this.battagliaFinita = false;
+        preparaOrdineAttacchi();
+        this.consecutiveAttacks = getConsecutiveAttack(player);
     }
 
+    private void preparaOrdineAttacchi() {
+        // SOLO PER DEBUG DA AGGIORNARE QUANDO SI AVRà L'agilità
+        ordineAttacchi = new ArrayList<>();
+        ordineAttacchi.add(player);
+        for(Enemies enemy: enemies){
+            ordineAttacchi.add(enemy);
+        }
+        counterRound = 0;
+    }
 
-    //creare un contatore di turni che in base all'agilità decide chi far attaccare
-    // mostrare all'utente ogni quanto può attaccare lui e il nemico
+    public int getConsecutiveAttack(Character attacker) {
+        // viene passato in input chi sta attaccando e in base
+        // alla formula: round(agilitàAttacker/minAgilitàBattaglia)
+        // restitusice N attacchi consecutivi
+        return 2; // DEBUG: 2 attacchi per tutti
+    }
+
+    public String getBattleReport() {
+        StringBuilder report = new StringBuilder("\n---- STATO BATTAGLIA ----\n");
+        report.append(player.getName()).append(": ").append(player.getHp()).append("/").append(player.getHpMax()).append(" hp\n");
+
+        for (int i = 0; i < enemies.size(); i++) {
+            Enemies e = enemies.get(i);
+            report.append("[").append(i + 1).append("] ")
+                    .append(e.getName()).append(": ")
+                    .append(e.getHp()).append("/").append(e.getHpMax()).append(" hp\n");
+        }
+        report.append("--------------------------\n");
+        return report.toString();
+    }
 
     public String manageRound(String mossaGiocatore) {
         if (battagliaFinita) return "La battaglia è già finita!";
-        String[] mossaGiocatoreSplitata = mossaGiocatore.split(" ");
-        int sceltaNemico;
-        try {
-            sceltaNemico = Integer.parseInt(mossaGiocatoreSplitata[1]);
-            if (sceltaNemico > enemies.size() || sceltaNemico<0){
-                return "Non puoi attaccare un nemico che non esiste";
-            }
-            sceltaNemico -= 1;
 
-        } catch (IndexOutOfBoundsException e) {
-            sceltaNemico = 0;
-        }
-
-        String logCombattimento = "";
+        StringBuilder logCombattimento = new StringBuilder();
 
         // 1. TURNO DEL GIOCATORE
-        if (mossaGiocatoreSplitata[0].equalsIgnoreCase("ATTACCA")) {
-            player.attack(enemies.get(sceltaNemico));
-            logCombattimento += "Hai colpito " + enemies.get(sceltaNemico).getName() + "!\n";
-        } else if (mossaGiocatore.equalsIgnoreCase("CURATI")) {
-            // logica per curarsi...
-        } else {
-            return "Mossa non valida nel combattimento.";
-        }
+        if (ordineAttacchi.get(counterRound) == player) {
+            String[] mossaSplit = mossaGiocatore.split(" ");
+            int sceltaNemico = 0;
 
-        // Controllo se il nemico che viene attaccato è morto
-        if (enemies.get(sceltaNemico).getHp() <= 0) {
-            logCombattimento += "Hai sconfitto " + enemies.get(sceltaNemico).getName() + "!";
-            enemies.remove(sceltaNemico);
-            //Controllo fine combattimento
-            if(enemies.isEmpty()){
-                battagliaFinita = true;
-                return logCombattimento += "\nLa battaglia è finita";
+            try {
+                if (mossaSplit.length > 1) {
+                    sceltaNemico = Integer.parseInt(mossaSplit[1]) - 1;
+                }
+            } catch (NumberFormatException e) { sceltaNemico = 0; }
+
+            if (sceltaNemico < 0 || sceltaNemico >= enemies.size()) {
+                return "Bersaglio non valido. Scegli tra 1 e " + enemies.size();
             }
-            return logCombattimento;
+
+            if (mossaSplit[0].equalsIgnoreCase("ATTACCA")) {
+                Enemies target = enemies.get(sceltaNemico);
+                player.attack(target);
+                logCombattimento.append("Hai colpito ").append(target.getName()).append("!\n");
+
+                if (target.isDead()) {
+                    logCombattimento.append("Hai sconfitto ").append(target.getName()).append("!\n");
+                    enemies.remove(target);
+                    ordineAttacchi.remove(target);
+
+                    if(enemies.isEmpty()){
+                        battagliaFinita = true;
+                        return logCombattimento.append("\nLa battaglia è finita! Vittoria!").toString();
+                    }
+                }
+
+                consecutiveAttacks--;
+                if (consecutiveAttacks > 0) {
+                    logCombattimento.append("Puoi attaccare di nuovo (Rimanenti: ").append(consecutiveAttacks).append(")\n");
+                    logCombattimento.append(getBattleReport());
+                    return logCombattimento.toString();
+                } else {
+                    counterRound++; // Finiti gli attacchi, passa al prossimo
+                }
+            } else if (mossaSplit[0].equalsIgnoreCase("CURATI")) {
+                return "LOGICA PER CURARSI NON IMPLEMENTATA";
+            } else if (mossaSplit[0].equalsIgnoreCase("INVENTARIO")) {
+                return "LOGICA PER INVENTARIO NON IMPLEMENTATA";
+            } else {
+                return "Comando non riconosciuto. Usa 'ATTACCA [numero]' o 'CURATI'.\n" + getBattleReport();
+            }
         }
 
-        //RIFARE TUTTA LOGICA ATTACCA DAI NEMICI
+        // 2. TURNO DEI NEMICI (Processa tutti i nemici rimasti nella lista ordineAttacchi)
+        // Questo loop continua finché non arriviamo alla fine della lista o torna il turno del player
+        while (counterRound < ordineAttacchi.size() && !battagliaFinita) {
+            Character attuante = ordineAttacchi.get(counterRound);
 
-        // 2. TURNO DEL NEMICO (Automatico)
-        logCombattimento += "Turno del nemico...\n";
-        enemies.get(sceltaNemico).attack(player);
-        logCombattimento += enemies.get(sceltaNemico).getName() + " ti attacca!\n";
+            if (attuante instanceof Enemies && !attuante.isDead()) {
+                logCombattimento.append("\nTurno di ").append(attuante.getName()).append("...\n");
 
+                int attacchiN = getConsecutiveAttack(attuante);
+                for (int i = 0; i < attacchiN; i++) {
+                    attuante.attack(player);
+                    logCombattimento.append("[").append(attuante.getName()).append("] ti attacca!\n");
 
-        // Controllo se il giocatore è morto
-        if (player.getHp() <= 0) {
-            battagliaFinita = true;
-            logCombattimento += "Sei morto! GAME OVER.";
+                    if (player.getHp() <= 0) {
+                        battagliaFinita = true;
+                        logCombattimento.append("\nSei morto! GAME OVER.");
+                        return logCombattimento.toString();
+                    }
+                }
+            }
+            counterRound++;
         }
-        // Restituisco la "telecronaca" del turno al Server
-        //aggiunta di stats player e nemico
-        logCombattimento += "\n-----\n" + player.getName() + ": " + player.getHp() + "/" + player.getHpMax() + " hp\n" + "[" + (sceltaNemico+1) + "] " +enemies.get(sceltaNemico).getName() + ": " + enemies.get(sceltaNemico).getHp() + "/" + enemies.get(sceltaNemico).getHpMax() + " hp\n";
 
-        return logCombattimento;
+        
+        if (counterRound >= ordineAttacchi.size()) {
+            preparaOrdineAttacchi();
+            consecutiveAttacks = getConsecutiveAttack(player);
+        }
+
+        logCombattimento.append(getBattleReport());
+        return logCombattimento.toString();
     }
 
-    // Un metodo per far sapere a Game se l'arbitro ha finito
     public boolean isBattagliaFinita() {
         return battagliaFinita;
     }
-
 }
-
