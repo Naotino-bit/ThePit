@@ -7,6 +7,7 @@ import items.weapons.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 
 public abstract class Character {
@@ -62,7 +63,7 @@ public abstract class Character {
         this.armorDefence = 0; //resetto difesa arma e armatura
 
         //serve a non calcolare due volte le armi a due mani
-        java.util.HashSet<Items> uniqueEquipped = new java.util.HashSet<>(equippedItems.values());
+        HashSet<Items> uniqueEquipped = new HashSet<>(equippedItems.values());
         for(Items item : uniqueEquipped){
             if(item != null){
 
@@ -90,6 +91,16 @@ public abstract class Character {
             }
         }
         if(this.totalHp > this.totalHpMax) {this.totalHp = this.totalHpMax;}
+    }
+
+    public HashMap<String, Integer> getStats() {
+        HashMap<String, Integer> stats = new HashMap<>();
+        stats.put("HpMax", totalHpMax);
+        stats.put("Strength" , totalStrength);
+        stats.put("Agility", totalAgility);
+        stats.put("Intelligence", totalIntelligence);
+        stats.put("Precision", totalPrecision);
+        return stats;
     }
 
     public void takeDamage(int receivedDamage) {

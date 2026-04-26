@@ -11,7 +11,6 @@ public class BattleManager {
     private ArrayList<Enemies> enemies;
     private boolean battagliaFinita;
 
-    // Gestione turni avanzata
     private ArrayList<Character> ordineAttacchi;
     private int consecutiveAttacks;
     private int counterRound = 0;
@@ -40,7 +39,23 @@ public class BattleManager {
         // viene passato in input chi sta attaccando e in base
         // alla formula: round(agilitàAttacker/minAgilitàBattaglia)
         // restitusice N attacchi consecutivi
-        return 2; // DEBUG: 2 attacchi per tutti
+        Integer attAgility = attacker.getStats().get("Agility");
+        Integer minAgility = 999;
+        Integer temp;
+        //troviamo l'agilità minima in battaglia
+        for (Character entity: ordineAttacchi) {
+            temp = entity.getStats().get("Agility");
+            if(temp<minAgility){
+                minAgility = temp;
+            }
+        }
+        int attacchiConsecutivi = Math.round((float) attAgility /minAgility);
+        //mettiamo un cap massimo a 3 per evitare troppi attacchi consecutivi in boss fight
+        if(attacchiConsecutivi > 3) {
+            attacchiConsecutivi = 3;
+        }
+        System.out.println(attacchiConsecutivi + " " + attAgility + " " + minAgility);
+        return attacchiConsecutivi;
     }
 
     public String getBattleReport() {
