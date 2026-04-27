@@ -4,34 +4,39 @@ import characters.enemies.Enemies;
 import characters.Character;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 
 public class BattleManager {
     private Character player;
     private ArrayList<Enemies> enemies;
-    private boolean battagliaFinita;
+    private boolean battleOver;
 
-    private ArrayList<Character> ordineAttacchi;
+    private ArrayList<Character> attackOrder;
     private int consecutiveAttacks;
     private int counterRound = 0;
     Random rand = new Random();
 
-    // Costruttore
+
     public BattleManager(Character player, ArrayList<Enemies> enemies) {
         this.player = player;
         this.enemies = enemies;
-        this.battagliaFinita = false;
-        preparaOrdineAttacchi();
+        this.battleOver = false;
+        prepareAttackOrder();
         this.consecutiveAttacks = getConsecutiveAttack(player);
     }
 
-    private void preparaOrdineAttacchi() {
-        // SOLO PER DEBUG DA AGGIORNARE QUANDO SI AVRà L'agilità
-        ordineAttacchi = new ArrayList<>();
-        ordineAttacchi.add(player);
+    private void prepareAttackOrder() {
+        // L'array dell'ordine attacchi viene prima riempito a caso
+        // e poi ordinato con un sort in base all'agilita dei membri
+        // della battaglia
+        attackOrder = new ArrayList<>();
+        attackOrder.add(player);
         for(Enemies enemy: enemies){
-            ordineAttacchi.add(enemy);
+            attackOrder.add(enemy);
         }
+        attackOrder.sort( Comparator.comparing((Character a) -> a.getStats().get("Agility")).reversed());
+        System.out.println(attackOrder);
         counterRound = 0;
     }
 
@@ -43,7 +48,7 @@ public class BattleManager {
         Integer minAgility = 999;
         Integer temp;
         //troviamo l'agilità minima in battaglia
-        for (Character entity: ordineAttacchi) {
+        for (Character entity: attackOrder) {
             temp = entity.getStats().get("Agility");
             if(temp<minAgility){
                 minAgility = temp;
@@ -54,7 +59,6 @@ public class BattleManager {
         if(attacchiConsecutivi > 3) {
             attacchiConsecutivi = 3;
         }
-        System.out.println(attacchiConsecutivi + " " + attAgility + " " + minAgility);
         return attacchiConsecutivi;
     }
 
@@ -72,76 +76,76 @@ public class BattleManager {
         return report.toString();
     }
 
-    public String manageRound(String mossaGiocatore) {
-        if (battagliaFinita) return "La battaglia è già finita!";
+    public String manageRound(String playerMove) {
+        if (battleOver) return "La battaglia è già finita!";
 
-        StringBuilder logCombattimento = new StringBuilder();
+        StringBuilder fightLog = new StringBuilder();
 
         // 1. TURNO DEL GIOCATORE
-        if (ordineAttacchi.get(counterRound) == player) {
-            String[] mossaSplit = mossaGiocatore.split(" ");
-            int sceltaNemico = 0;
+        if (attackOrder.get(counterRound) == player) {
+            String[] moveSplit = playerMove.split(" ");
+            int enemyChoice = 0;
 
             try {
-                if (mossaSplit.length > 1) {
-                    sceltaNemico = Integer.parseInt(mossaSplit[1]) - 1;
+                if (moveSplit.length > 1) {
+                    enemyChoice = Integer.parseInt(moveSplit[1]) - 1;
                 }
-            } catch (NumberFormatException e) { sceltaNemico = 0; }
+            } catch (NumberFormatException e) { enemyChoice = 0; }
 
-            if (sceltaNemico < 0 || sceltaNemico >= enemies.size()) {
+            if (enemyChoice < 0 || enemyChoice >= enemies.size()) {
                 return "Bersaglio non valido. Scegli tra 1 e " + enemies.size();
             }
 
-            if (mossaSplit[0].equalsIgnoreCase("ATTACCA")) {
-                Enemies target = enemies.get(sceltaNemico);
+            if (moveSplit[0].equalsIgnoreCase("ATTACCA")) {
+                Enemies target = enemies.get(enemyChoice);
                 player.attack(target);
-                logCombattimento.append("Hai colpito ").append(target.getName()).append("!\n");
+                fightLog.append("Hai colpito ").append(target.getName()).append("!\n");
 
                 if (target.isDead()) {
-                    logCombattimento.append("Hai sconfitto ").append(target.getName()).append("!\n");
+                    fightLog.append("Hai sconfitto ").append(target.getName()).append("!\n");
                     enemies.remove(target);
-                    ordineAttacchi.remove(target);
+                    attackOrder.remove(target);
 
                     if(enemies.isEmpty()){
-                        battagliaFinita = true;
-                        return logCombattimento.append("\nLa battaglia è finita! Vittoria!").toString();
+                        battleOver = true;
+                        return fightLog.append("\nLa battaglia è finita! Vittoria!").toString();
                     }
                 }
 
                 consecutiveAttacks--;
                 if (consecutiveAttacks > 0) {
-                    logCombattimento.append("Puoi attaccare di nuovo (Rimanenti: ").append(consecutiveAttacks).append(")\n");
-                    logCombattimento.append(getBattleReport());
-                    return logCombattimento.toString();
+                    fightLog.append("Puoi attaccare di nuovo (Rimanenti: ").append(consecutiveAttacks).append(")\n");
+                    fightLog.append(getBattleReport());
+                    return fightLog.toString();
                 } else {
                     counterRound++; // Finiti gli attacchi, passa al prossimo
                 }
-            } else if (mossaSplit[0].equalsIgnoreCase("CURATI")) {
+            } else if (moveSplit[0].equalsIgnoreCase("CURATI")) {
                 return "LOGICA PER CURARSI NON IMPLEMENTATA";
-            } else if (mossaSplit[0].equalsIgnoreCase("INVENTARIO")) {
+            } else if (moveSplit[0].equalsIgnoreCase("INVENTARIO")) {
                 return "LOGICA PER INVENTARIO NON IMPLEMENTATA";
             } else {
                 return "Comando non riconosciuto. Usa 'ATTACCA [numero]' o 'CURATI'.\n" + getBattleReport();
             }
         }
 
-        // 2. TURNO DEI NEMICI (Processa tutti i nemici rimasti nella lista ordineAttacchi)
+        // 2. TURNO DEI NEMICI (Processa tutti i nemici rimasti nella lista attackOrder)
         // Questo loop continua finché non arriviamo alla fine della lista o torna il turno del player
-        while (counterRound < ordineAttacchi.size() && !battagliaFinita) {
-            Character attuante = ordineAttacchi.get(counterRound);
+        while (counterRound < attackOrder.size() && !battleOver) {
+            Character enemy = attackOrder.get(counterRound);
 
-            if (attuante instanceof Enemies && !attuante.isDead()) {
-                logCombattimento.append("\nTurno di ").append(attuante.getName()).append("...\n");
+            if (enemy instanceof Enemies && !enemy.isDead()) {
+                fightLog.append("\nTurno di ").append(enemy.getName()).append("...\n");
 
-                int attacchiN = getConsecutiveAttack(attuante);
-                for (int i = 0; i < attacchiN; i++) {
-                    attuante.attack(player);
-                    logCombattimento.append("[").append(attuante.getName()).append("] ti attacca!\n");
+                int consecutiveAttack = getConsecutiveAttack(enemy);
+                for (int i = 0; i < consecutiveAttack; i++) {
+                    enemy.attack(player);
+                    fightLog.append("[").append(enemy.getName()).append("] ti attacca!\n");
 
                     if (player.getHp() <= 0) {
-                        battagliaFinita = true;
-                        logCombattimento.append("\nSei morto! GAME OVER.");
-                        return logCombattimento.toString();
+                        battleOver = true;
+                        fightLog.append("\nSei morto! GAME OVER.");
+                        return fightLog.toString();
                     }
                 }
             }
@@ -149,16 +153,16 @@ public class BattleManager {
         }
 
         
-        if (counterRound >= ordineAttacchi.size()) {
-            preparaOrdineAttacchi();
+        if (counterRound >= attackOrder.size()) {
+            prepareAttackOrder();
             consecutiveAttacks = getConsecutiveAttack(player);
         }
 
-        logCombattimento.append(getBattleReport());
-        return logCombattimento.toString();
+        fightLog.append(getBattleReport());
+        return fightLog.toString();
     }
 
-    public boolean isBattagliaFinita() {
-        return battagliaFinita;
+    public boolean isBattleOver() {
+        return battleOver;
     }
 }

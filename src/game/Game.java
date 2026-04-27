@@ -37,13 +37,13 @@ public class Game {
         }
 
         // SMISTAMENTO: Sto combattendo o no?
-        if (scontroAttuale != null && !scontroAttuale.isBattagliaFinita()) {
+        if (scontroAttuale != null && !scontroAttuale.isBattleOver()) {
 
             // SE STO COMBATTENDO: Passo il comando all'arbitro!
             String risultato = scontroAttuale.manageRound(comando);
 
             // Se la battaglia è finita, "licenzio" l'arbitro
-            if (scontroAttuale.isBattagliaFinita()) {
+            if (scontroAttuale.isBattleOver()) {
                 scontroAttuale = null;
             }
             return risultato;

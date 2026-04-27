@@ -12,7 +12,7 @@ public class Zombie extends Enemies {
     public Zombie() {
         this.name = "Zombie";
         this.totalStrength = 5;
-        this.totalAgility = 10; //MESSA PER DEBUG A 10
+        this.totalAgility = 100; //MESSA PER DEBUG A 10
         this.totalHpMax = 100; //*livello dello zombie
         this.totalHp = this.totalHpMax;
 
