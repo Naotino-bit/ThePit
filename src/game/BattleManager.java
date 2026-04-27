@@ -36,7 +36,6 @@ public class BattleManager {
             attackOrder.add(enemy);
         }
         attackOrder.sort( Comparator.comparing((Character a) -> a.getStats().get("Agility")).reversed());
-        System.out.println(attackOrder);
         counterRound = 0;
     }
 
@@ -79,83 +78,119 @@ public class BattleManager {
     public String manageRound(String playerMove) {
         if (battleOver) return "La battaglia è già finita!";
 
+        // --- PRE-VALIDAZIONE INPUT ---
+        // Controlliamo subito se il comando ha senso. Se è una parola a caso,
+        // blocchiamo tutto prima ancora di far scorrere i turni!
+        String[] checkSplit = playerMove.split(" ");
+        String cmd = checkSplit[0].toUpperCase();
+        if (!cmd.equals("ATTACCA") && !cmd.equals("CURATI") && !cmd.equals("INVENTARIO")) {
+            return "Comando non riconosciuto. Usa 'ATTACCA [numero]' o 'CURATI'.\n" + getBattleReport();
+        }
+        // -----------------------------
+
         StringBuilder fightLog = new StringBuilder();
+        boolean playerActionProcessed = false; // serve per sapere se abbiamo già esegutio l'azione del player
 
-        // 1. TURNO DEL GIOCATORE
-        if (attackOrder.get(counterRound) == player) {
-            String[] moveSplit = playerMove.split(" ");
-            int enemyChoice = 0;
+        // Un singolo ciclo che gestisce tutti i turni in sequenza
+        while (!battleOver) {
 
-            try {
-                if (moveSplit.length > 1) {
-                    enemyChoice = Integer.parseInt(moveSplit[1]) - 1;
-                }
-            } catch (NumberFormatException e) { enemyChoice = 0; }
-
-            if (enemyChoice < 0 || enemyChoice >= enemies.size()) {
-                return "Bersaglio non valido. Scegli tra 1 e " + enemies.size();
+            // 1. FINE DEL ROUND: se abbiamo finito la lista, resettiamo
+            if (counterRound >= attackOrder.size()) {
+                prepareAttackOrder();
+                consecutiveAttacks = getConsecutiveAttack(player);
+                fightLog.append("\n--- NUOVO ROUND ---\n");
             }
 
-            if (moveSplit[0].equalsIgnoreCase("ATTACCA")) {
-                Enemies target = enemies.get(enemyChoice);
-                player.attack(target);
-                fightLog.append("Hai colpito ").append(target.getName()).append("!\n");
+            Character currentEntity = attackOrder.get(counterRound);
 
-                if (target.isDead()) {
-                    fightLog.append("Hai sconfitto ").append(target.getName()).append("!\n");
-                    enemies.remove(target);
-                    attackOrder.remove(target);
+            // 2. TURNO DEL GIOCATORE
+            if (currentEntity == player) {
 
-                    if(enemies.isEmpty()){
-                        battleOver = true;
-                        return fightLog.append("\nLa battaglia è finita! Vittoria!").toString();
-                    }
+                // Se abbiamo già processato l'azione del giocatore, significa
+                // che i nemici hanno finito e tocca di nuovo a lui.
+                // Ci fermiamo e aspettiamo che l'utente inserisca un nuovo comando!
+                if (playerActionProcessed) {
+                    break;
                 }
 
-                consecutiveAttacks--;
-                if (consecutiveAttacks > 0) {
-                    fightLog.append("Puoi attaccare di nuovo (Rimanenti: ").append(consecutiveAttacks).append(")\n");
-                    fightLog.append(getBattleReport());
-                    return fightLog.toString();
+                String[] moveSplit = playerMove.split(" ");
+                int enemyChoice = 0;
+
+                try {
+                    if (moveSplit.length > 1) {
+                        enemyChoice = Integer.parseInt(moveSplit[1]) - 1;
+                    }
+                } catch (NumberFormatException e) { enemyChoice = 0; }
+
+                if (enemyChoice < 0 || enemyChoice >= enemies.size()) {
+                    fightLog.append("Bersaglio non valido. Scegli tra 1 e ").append(enemies.size()).append("\n");
+                    break; // Interrompe il ciclo in attesa di un input corretto
+                }
+
+                if (moveSplit[0].equalsIgnoreCase("ATTACCA")) {
+                    Enemies target = enemies.get(enemyChoice);
+                    player.attack(target);
+                    fightLog.append("Hai colpito ").append(target.getName()).append("!\n");
+
+                    if (target.isDead()) {
+                        fightLog.append("Hai sconfitto ").append(target.getName()).append("!\n");
+                        enemies.remove(target);
+
+                        // NOTA BENE: Ho rimosso "attackOrder.remove(target)".
+                        // Rimuovere elementi dalla lista mentre la stiamo scorrendo sballa
+                        // gli indici e causa bug. Il nemico morto verrà semplicemente
+                        // "saltato" dal turno nemico e pulito al prossimo "prepareAttackOrder".
+
+                        if (enemies.isEmpty()) {
+                            battleOver = true;
+                            return fightLog.append("\nLa battaglia è finita! Vittoria!").toString();
+                        }
+                    }
+
+                    consecutiveAttacks--;
+                    if (consecutiveAttacks > 0) {
+                        fightLog.append("Puoi attaccare di nuovo (Rimanenti: ").append(consecutiveAttacks).append(")\n");
+                        break; // Interrompe il ciclo in attesa del prossimo attacco
+                    } else {
+                        counterRound++; // Turno del giocatore finito
+                        playerActionProcessed = true; // Segniamo che ha già agito
+                        // Il ciclo NON si interrompe: ora farà attaccare i nemici successivi!
+                    }
+
+                } else if (moveSplit[0].equalsIgnoreCase("CURATI")) {
+                    fightLog.append("LOGICA PER CURARSI NON IMPLEMENTATA\n");
+                    break; // Usa break invece di return!
+                } else if (moveSplit[0].equalsIgnoreCase("INVENTARIO")) {
+                    fightLog.append("LOGICA PER INVENTARIO NON IMPLEMENTATA\n");
+                    break; // Usa break invece di return!
                 } else {
-                    counterRound++; // Finiti gli attacchi, passa al prossimo
+                    fightLog.append("Comando non riconosciuto. Usa 'ATTACCA [numero]' o 'CURATI'.\n");
+                    break; // Usa break invece di return!
                 }
-            } else if (moveSplit[0].equalsIgnoreCase("CURATI")) {
-                return "LOGICA PER CURARSI NON IMPLEMENTATA";
-            } else if (moveSplit[0].equalsIgnoreCase("INVENTARIO")) {
-                return "LOGICA PER INVENTARIO NON IMPLEMENTATA";
-            } else {
-                return "Comando non riconosciuto. Usa 'ATTACCA [numero]' o 'CURATI'.\n" + getBattleReport();
+
             }
-        }
 
-        // 2. TURNO DEI NEMICI (Processa tutti i nemici rimasti nella lista attackOrder)
-        // Questo loop continua finché non arriviamo alla fine della lista o torna il turno del player
-        while (counterRound < attackOrder.size() && !battleOver) {
-            Character enemy = attackOrder.get(counterRound);
+            // 3. TURNO DEI NEMICI
+            else {
+                // I nemici morti (non rimossi da attackOrder) verranno ignorati qui
+                if (currentEntity instanceof Enemies && !currentEntity.isDead()) {
+                    fightLog.append("\nTurno di ").append(currentEntity.getName()).append("...\n");
 
-            if (enemy instanceof Enemies && !enemy.isDead()) {
-                fightLog.append("\nTurno di ").append(enemy.getName()).append("...\n");
+                    int consAttack = getConsecutiveAttack(currentEntity);
+                    for (int i = 0; i < consAttack; i++) {
+                        currentEntity.attack(player);
+                        fightLog.append("[").append(currentEntity.getName()).append("] ti attacca!\n");
 
-                int consecutiveAttack = getConsecutiveAttack(enemy);
-                for (int i = 0; i < consecutiveAttack; i++) {
-                    enemy.attack(player);
-                    fightLog.append("[").append(enemy.getName()).append("] ti attacca!\n");
-
-                    if (player.getHp() <= 0) {
-                        battleOver = true;
-                        fightLog.append("\nSei morto! GAME OVER.");
-                        return fightLog.toString();
+                        if (player.getHp() <= 0) {
+                            battleOver = true;
+                            fightLog.append("\nSei morto! GAME OVER.");
+                            return fightLog.toString();
+                        }
                     }
                 }
+                // Il nemico ha finito, passiamo al prossimo
+                counterRound++;
             }
-            counterRound++;
-        }
-
-        
-        if (counterRound >= attackOrder.size()) {
-            prepareAttackOrder();
-            consecutiveAttacks = getConsecutiveAttack(player);
         }
 
         fightLog.append(getBattleReport());
