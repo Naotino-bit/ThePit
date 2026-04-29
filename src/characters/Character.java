@@ -8,6 +8,7 @@ import items.weapons.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public abstract class Character {
     protected String name;  //classe
@@ -84,11 +85,64 @@ public abstract class Character {
                     case "Vitalità":
                         this.totalHpMax += item.getBoostedStatVal();
                         break;
-                    default:
-                        break;
+                }
+
+                if(item instanceof Artefacts){
+                    Artefacts artefact = (Artefacts) item;
+                    for (Map.Entry<String, Integer> subStat : artefact.getSubStats().entrySet()){
+                        String nameSubStat = subStat.getKey();
+                        int valSubStat = subStat.getValue();
+
+                        switch(nameSubStat) { //gasa lo switch scritto così
+                            case "Forza":
+                                this.totalStrength += valSubStat;
+                                break;
+                            case "Intelligenza":
+                                this.totalIntelligence += valSubStat;
+                                break;
+                            case "Agilità":
+                                this.totalAgility += valSubStat;
+                                break;
+                            case "Precisione":
+                                this.totalPrecision += valSubStat;
+                                break;
+                            case "Vitalità":
+                                this.totalHpMax += valSubStat;
+                                break;
+                        }
+                    }
                 }
             }
         }
+
+        HashMap<String, Integer> setCounter = new HashMap<>();
+
+        for(Items item : uniqueEquipped){
+            if (item instanceof Artefacts) {
+                Artefacts artefacts = (Artefacts) item;
+
+                String nomeSet = artefacts.getNameOfSet();
+                setCounter.put(nomeSet, setCounter.getOrDefault(nomeSet, 0) + 1);
+            }
+        }
+
+        //
+        for (Map.Entry<String, Integer> set : setCounter.entrySet()) {
+            String nameOfSet = set.getKey();
+            int equippedPieces = set.getValue();
+
+            // Nomi fittizzi per ora
+            if (nameOfSet.equals("Grande Albero")) {
+                if (equippedPieces >= 2) this.totalIntelligence += 80;
+                if (equippedPieces >= 4) this.totalStrength += 50;
+            }
+            else if (nameOfSet.equals("Gladiatore")) {
+                if (equippedPieces >= 2) this.totalStrength += 18;
+                if (equippedPieces >= 4) this.weaponDamage += 30;
+            }
+            // qua poi ne andranno altri
+        }
+
         if(this.totalHp > this.totalHpMax) {this.totalHp = this.totalHpMax;}
     }
 

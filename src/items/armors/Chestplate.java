@@ -1,11 +1,14 @@
 package items.armors;
 
-import java.util.ArrayList;
+public class Chestplate extends Armors {
 
-public class Chestplate extends Armors{
-    public Chestplate(String name, String rarity) {
+    public Chestplate(String name, String rarity, int defense, String boostedStat, int boostedStatVal) {
         this.name = name;
         this.rarity = rarity;
-        equippedSlot.add("Torso");
+        this.stat = defense;
+        this.boostedStat = boostedStat;
+        this.boostedStatVal = boostedStatVal;
+
+        this.equippedSlot.add("Torso");
     }
 }

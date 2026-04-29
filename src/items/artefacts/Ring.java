@@ -1,14 +1,16 @@
 package items.artefacts;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Ring extends Artefacts{
-    public Ring(String name, String rarity, HashMap<String, Integer> bonus){
-        this.name = name;
-        this.rarity = rarity;
+public class Ring extends Artefacts {
 
-        equippedSlot.add("Anello");
+    public Ring(String name, String rarity, String nameOfSet, String mainStat, int mainStatVal, HashMap<String, Integer> bonus) {
+
+
+        super(name, rarity, nameOfSet, mainStat, mainStatVal, "Anello");
+
+        if (bonus != null) {
+            this.getSubStats().putAll(bonus);
+        }
     }
-
 }

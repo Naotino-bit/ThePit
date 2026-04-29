@@ -3,6 +3,7 @@ package game;
 import characters.enemies.Enemies;
 import characters.enemies.Zombie;
 import characters.player.Warrior;
+import items.Items;
 
 import java.util.ArrayList;
 
@@ -10,9 +11,13 @@ public class Game {
     private Warrior player1;
     private BattleManager scontroAttuale;
 
+
+
     public Game() {
         this.player1 = new Warrior();
         this.scontroAttuale = null; // All'inizio non stai combattendo
+
+        XmlHandler.loadAllItems();
     }
 
     public String getEnemies(ArrayList<Enemies> enemies) {

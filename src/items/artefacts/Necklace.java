@@ -1,14 +1,16 @@
 package items.artefacts;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Necklace extends Artefacts{
-    public Necklace(String name, String rarity, HashMap<String, Integer> bonus) {
-        this.name = name;
-        this.rarity = rarity;
+public class Necklace extends Artefacts {
 
-        equippedSlot.add("Collana");
+    public Necklace(String name, String rarity, String nameOfSet, String mainStat, int mainStatVal, HashMap<String, Integer> bonus) {
+
+
+        super(name, rarity, nameOfSet, mainStat, mainStatVal, "Collana");
+
+        if (bonus != null) {
+            this.getSubStats().putAll(bonus);
+        }
     }
-
 }

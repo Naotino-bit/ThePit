@@ -1,11 +1,14 @@
 package items.armors;
 
-import java.util.ArrayList;
+public class Boots extends Armors {
 
-public class Boots extends Armors{
-    public Boots(String name, String rarity) {
+    public Boots(String name, String rarity, int defense, String boostedStat, int boostedStatVal) {
         this.name = name;
         this.rarity = rarity;
-        equippedSlot.add("Piedi");
+        this.stat = defense;
+        this.boostedStat = boostedStat;
+        this.boostedStatVal = boostedStatVal;
+
+        this.equippedSlot.add("Piedi");
     }
 }

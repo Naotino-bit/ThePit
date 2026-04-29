@@ -5,16 +5,14 @@ import java.util.ArrayList;
 public abstract class Items {
     protected String name;
     protected String rarity;
-    protected int stat; //spostata da weapons ad items poiché serve pure per armors
+    protected int stat;
     protected String boostedStat;
     protected int boostedStatVal;
 
     public String getName() {
         return this.name;
     }
-    public String getRarity() {
-        return this.rarity;
-    }
+    public String getRarity() { return this.rarity; }
 
     public ArrayList<String> getEquippedSlot(){
         ArrayList<String> temp = new ArrayList<String>();
