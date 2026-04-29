@@ -11,8 +11,11 @@ import java.util.concurrent.ScheduledFuture;
 public class Zombie extends Enemies {
     public Zombie() {
         this.name = "Zombie";
+        this.baseAgility = 10; //MESSA PER DEBUG A 10 //TODO definire le stats dei nemici
         this.baseStrength = 50;
         this.baseHpMax = 100; //*livello dello zombie
+
+
 
 
         this.updateStats();
