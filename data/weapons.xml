@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weapons>
+
+    <Weapon tipo="Sword" nome="Spada di Legno" rarita="Comune" dannoBase="10" stat="Forza" valStat="3"/>
+
+    <Weapon tipo="Dagger" nome="Pugnale di Ferro" rarita="Non Comune" dannoBase="8" stat="Agilità" valStat="5"/>
+
+    <Weapon tipo="Shield" nome="Scudo di Pietra" rarita="Raro" dannoBase="15" stat="Vitalità" valStat="10"/>
+
+    <Weapon tipo="Bow" nome="Arco Lungo" rarita="Epico" dannoBase="18" stat="Precisione" valStat="8"/>
+
+    <Weapon tipo="Claymore" nome="Spadone Ammazzadraghi" rarita="Leggendario" dannoBase="35" stat="Forza" valStat="15"/>
+
+</weapons>

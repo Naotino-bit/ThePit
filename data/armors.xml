@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<armors>
+
+    <Armor tipo="Helmet" nome="Elmo di Cuoio" rarita="Comune" difesaBase="2" stat="Vitalità" valStat="5" slot="Testa"/>
+    <Armor tipo="Helmet" nome="Corona del Re Folle" rarita="Leggendario" difesaBase="10" stat="Intelligenza" valStat="20" slot="Testa"/>
+
+    <Armor tipo="Chestplate" nome="Corazza di Ferro" rarita="Comune" difesaBase="15" stat="Forza" valStat="2" slot="Torso"/>
+    <Armor tipo="Chestplate" nome="Veste del Saggio" rarita="Raro" difesaBase="8" stat="Intelligenza" valStat="15" slot="Torso"/>
+
+    <Armor tipo="Leggings" nome="Schinieri d'Acciaio" rarita="Epico" difesaBase="10" stat="Vitalità" valStat="12" slot="Gambe"/>
+
+    <Armor tipo="Boots" nome="Stivali del Vento" rarita="Raro" difesaBase="4" stat="Agilità" valStat="15" slot="Piedi"/>
+
+</armors>
