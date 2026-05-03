@@ -1,5 +1,7 @@
 package client;
 
+import game.Game;
+
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
@@ -18,30 +20,60 @@ public class GameClient {
             System.out.println("Connesso al server!");
 
             // 2. Leggo e stampo subito il messaggio di benvenuto del Server
-            System.out.println(in.readLine());
+            //System.out.println(in.readLine()); // Possibile causa di messaggi letti a meta
 
             String userInput;
+            String prefix = "Menu ";
             // 3. Loop del gioco (lato giocatore)
             while (true) {
-                System.out.print("Scegli la tua mossa: ");
-                userInput = scanner.nextLine(); // Leggo la tastiera
 
-                out.println(userInput); // SPEDISCO IL COMANDO AL SERVER
+                // FASE 1: ASCOLTO IL SERVER (Leggo finché non dice {END})
+                String rigaDalServer;
+                while ((rigaDalServer = in.readLine()) != null) {
+                    if (rigaDalServer.startsWith("{END")) {
+                        //estrae lo stato es {END:Inventario} estrae Inventario
+                        prefix = rigaDalServer.split(":")[1].replace("}","");
 
-                // Se ho scritto ESCI, chiudo il client
-                if (userInput.equalsIgnoreCase("ESCI")) {
-                    System.out.println(in.readLine()); // Leggo il saluto finale
-                    break;
+                        switch (prefix) {
+                            case "MENU":
+                            case "CONFIRM_SELECTION":
+                                prefix = "Accampamento";
+                                break;
+                            case "IDLE":
+                                prefix = "Esplorazione";
+                                break;
+                            case "BATTLE":
+                                prefix = "Combattimento";
+                                break;
+                            case "INVENTORY_MAIN":
+                            case "INVENTORY_ACTION":
+                                prefix = "Inventario";
+                                break;
+                            case "INVENTORY_OVERFLOW":
+                                prefix = "Inventario pieno";
+                                break;
+                            case "PLAYER_INFO":
+                                prefix = "Personaggio";
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    }
+                    System.out.println(rigaDalServer);
                 }
 
-                // 4. Aspetto che il server calcoli il risultato e lo stampo a schermo!
-                String rigaDalServer;
-                // Continua a leggere finché la riga non è uguale a "[END]"
-                while ((rigaDalServer = in.readLine()) != null) {
-                    if (rigaDalServer.equals("{END}")) {
-                        break; // Il server ha finito, esco dal mini-ciclo di lettura!
-                    }
-                    System.out.println(rigaDalServer); // Stampa la riga normalmente
+                // FASE 2: TOCCA A ME PARLARE
+                System.out.print(prefix + " > ");
+                userInput = scanner.nextLine().trim();
+
+                // SPEDISCO IL COMANDO AL SERVER
+                out.println(userInput);
+
+                // FASE 3: CONTROLLO SE DEVO USCIRE
+                if (userInput.equalsIgnoreCase("DISCONNETTI")) {
+                    System.out.println("Disconnessione in corso...");
+                    break;
                 }
             }
         } catch (IOException e) {

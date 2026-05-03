@@ -147,6 +147,7 @@ public abstract class Character {
         if(this.totalHp > this.totalHpMax) {this.totalHp = this.totalHpMax;}
     }
 
+
     public HashMap<String, Integer> getStats() {
         HashMap<String, Integer> stats = new HashMap<>();
         stats.put("HpMax", totalHpMax);
@@ -154,6 +155,16 @@ public abstract class Character {
         stats.put("Agility", totalAgility);
         stats.put("Intelligence", totalIntelligence);
         stats.put("Precision", totalPrecision);
+        return stats;
+    }
+
+    public HashMap<String, Integer> getBaseStats() {
+        HashMap<String, Integer> stats = new HashMap<>();
+        stats.put("HpMax", baseHpMax);
+        stats.put("Strength" , baseStrength);
+        stats.put("Agility", baseAgility);
+        stats.put("Intelligence", baseIntelligence);
+        stats.put("Precision", basePrecision);
         return stats;
     }
 
@@ -180,25 +191,22 @@ public abstract class Character {
     public String getName() {return name;}
     public int getHpMax(){return totalHpMax;}
     public int getHp(){return  totalHp;}
-    public void getEquippedItems() {
-        System.out.println("\n----- Equipaggiamento -----");
+    public String getEquippedItems() {
+        String temp ="\n----- Equipaggiamento -----\n";
         for( String i : equippedItems.keySet()) {
             try {
-                System.out.println(i + ": " + equippedItems.get(i).getName());
+                temp += i + ": " + equippedItems.get(i).getName() + "\n";
             } catch (NullPointerException e) {
-                System.out.println(i + ": " + "Non equipaggiato");
+                temp += i + ": " + "Non equipaggiato\n";
             }
             if(i.equals("Piedi") || i.equals("Secondaria")) {
-                System.out.println("/");
+                temp += "/\n";
             }
         }
+        return temp;
     }
-    public Object getInventory(){
-        if(inventory.isEmpty()){
-            return "Inventario vuoto";
-        } else{
-            return inventory;
-        }
+    public ArrayList<Items> getInventory(){
+        return inventory;
     }
 
     //STAMPA DEL PERSONAGGIO
@@ -213,15 +221,19 @@ public abstract class Character {
     }
 
 
-    public void addToInventory (Items item) {
+    public boolean addToInventory (Items item) {
         if(inventoryFull()) {
-            System.out.println("Inventario pieno");
-            return;
+            return false;
         }
         inventory.add(item);
+        return true;
     }
 
-    public boolean inventoryFull() {return inventory.size() >= 20;}
+    public void removeFromInventory (Items item){
+        inventory.remove(item);
+    }
+
+    public boolean inventoryFull() {return inventory.size() >= 2;}
 
     public ArrayList<String> getItemSlot(Items item) {
         return item.getEquippedSlot();
@@ -242,7 +254,7 @@ public abstract class Character {
             }
 
             inventory.remove(item);
-            equipWeaponLogic(item); //ANCORA DA IMPLEMENTARE
+            equipWeaponLogic(item); //TODO ANCORA DA IMPLEMENTARE
         }
 
         else if (item instanceof Armors || item instanceof Artefacts) {

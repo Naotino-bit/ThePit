@@ -2,6 +2,7 @@ package game;
 
 import characters.enemies.Enemies;
 import characters.Character;
+import items.Items;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,6 +17,7 @@ public class BattleManager {
     private int consecutiveAttacks;
     private int counterRound = 0;
     Random rand = new Random();
+    private ArrayList<Items> pendingLoot = new ArrayList<>();
 
 
     public BattleManager(Character player, ArrayList<Enemies> enemies) {
@@ -83,13 +85,15 @@ public class BattleManager {
         // blocchiamo tutto prima ancora di far scorrere i turni!
         String[] checkSplit = playerMove.split(" ");
         String cmd = checkSplit[0].toUpperCase();
-        if (!cmd.equals("ATTACCA") && !cmd.equals("CURATI") && !cmd.equals("INVENTARIO")) {
+        if (!cmd.equals("ATTACCA") && !cmd.equals("CURATI")) {
             return "Comando non riconosciuto. Usa 'ATTACCA [numero]' o 'CURATI'.\n" + getBattleReport();
         }
         // -----------------------------
 
         StringBuilder fightLog = new StringBuilder();
         boolean playerActionProcessed = false; // serve per sapere se abbiamo già esegutio l'azione del player
+        ArrayList<Items> itemDropped = new ArrayList<>();
+
 
         // Un singolo ciclo che gestisce tutti i turni in sequenza
         while (!battleOver) {
@@ -134,6 +138,12 @@ public class BattleManager {
 
                     if (target.isDead()) {
                         fightLog.append("Hai sconfitto ").append(target.getName()).append("!\n");
+                        itemDropped = enemies.get(enemyChoice).getDrops();
+                        for(Items item: itemDropped){
+                            if (!player.addToInventory(item)) {
+                                pendingLoot.add(item);
+                            }
+                        }
                         enemies.remove(target);
 
                         // NOTA BENE: Ho rimosso "attackOrder.remove(target)".
@@ -159,9 +169,6 @@ public class BattleManager {
 
                 } else if (moveSplit[0].equalsIgnoreCase("CURATI")) {
                     fightLog.append("LOGICA PER CURARSI NON IMPLEMENTATA\n");
-                    break; // Usa break invece di return!
-                } else if (moveSplit[0].equalsIgnoreCase("INVENTARIO")) {
-                    fightLog.append("LOGICA PER INVENTARIO NON IMPLEMENTATA\n");
                     break; // Usa break invece di return!
                 } else {
                     fightLog.append("Comando non riconosciuto. Usa 'ATTACCA [numero]' o 'CURATI'.\n");
@@ -199,5 +206,9 @@ public class BattleManager {
 
     public boolean isBattleOver() {
         return battleOver;
+    }
+
+    public ArrayList<Items> getPendingLoot() {
+        return pendingLoot;
     }
 }
