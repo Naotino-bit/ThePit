@@ -15,10 +15,19 @@ public class Assassin extends Character {
 
         updateStats();
         this.totalHp = this.totalHpMax;
+        this.currentMana = this.manaMax;
     }
     @Override
     public boolean canEquipWeapon(Items item){
         return item instanceof Dagger;
     }
 
+    @Override
+    protected void applyLevelUpStats() {
+        this.baseAgility += 7;//boost primaria
+        this.basePrecision += 5;//boost secondaria
+        this.baseStrength += 2;
+        this.baseIntelligence += 1;
+        this.baseHpMax += 10;
+    }
 }

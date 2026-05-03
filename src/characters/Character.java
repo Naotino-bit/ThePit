@@ -1,3 +1,8 @@
+//TODO implementare Leveling (TEORICAMENTE FINITA LA LOGICA MA BISOGNA IMPLENTARE NEL GAMEPLAY)
+// gestire tutti gli effetti secondari delle armi, armature ecc
+
+
+
 package characters;
 
 import items.Items;
@@ -31,11 +36,30 @@ public abstract class Character {
     protected int weaponDamage; //Danno aggiunto dall'arma
     protected int armorDefence; //Difesa aumantata dallo scudo
 
+    protected int manaMax;
+    protected int currentMana;
+    protected int manaRegen;
+    protected int hpRegen;
+
+    protected int critRate;
+    protected double critMultiplier = 1.5;
+
+    protected int dodgeChance;    // Probabilità di schivare un colpo
+
+    //Sistema per livellare
+    protected int level = 1;
+    protected int exp = 0;
+    protected int expToNextLevel = 100;
+
     //SOLDI
     protected int money = 0;
 
     protected ArrayList<Items> inventory = new ArrayList<Items>();
     protected HashMap<String, Items> equippedItems = new LinkedHashMap<String, Items>();
+    protected HashMap<String, Integer> activeEffects = new HashMap<>();
+
+    protected Character lastTarget = null;
+    protected int predatorStacks = 0;
 
     public Character(){
         equippedItems.put("Testa", null);
@@ -60,8 +84,9 @@ public abstract class Character {
         this.totalIntelligence = this.baseIntelligence;
         this.totalPrecision = this.basePrecision;
 
-        this.weaponDamage = 0; //resetto danno arma
-        this.armorDefence = 0; //resetto difesa arma e armatura
+        this.weaponDamage = 0;
+        this.armorDefence = 0;
+        this.hpRegen = 0;
 
         //serve a non calcolare due volte le armi a due mani
         HashSet<Items> uniqueEquipped = new HashSet<>(equippedItems.values());
@@ -132,21 +157,104 @@ public abstract class Character {
             String nameOfSet = set.getKey();
             int equippedPieces = set.getValue();
 
-            // Nomi fittizzi per ora
-            if (nameOfSet.equals("Grande Albero")) {
-                if (equippedPieces >= 2) this.totalIntelligence += 80;
-                if (equippedPieces >= 4) this.totalStrength += 50;
+            // TODO SISTEMA STI CAZZO DI SET
+            if (nameOfSet.equals("Crimson Seed")) {
+                if (equippedPieces >= 2) this.hpRegen += 10;
+                if (equippedPieces >= 4) this.hpRegen += 20;
             }
-            else if (nameOfSet.equals("Gladiatore")) {
-                if (equippedPieces >= 2) this.totalStrength += 18;
-                if (equippedPieces >= 4) this.weaponDamage += 30;
+            else if (nameOfSet.equals("Crimson Amber")) {
+                if (equippedPieces >= 2) this.totalHpMax += 25;
+                if (equippedPieces >= 4) this.totalHpMax += 60;
             }
-            // qua poi ne andranno altri
+            else if (nameOfSet.equals("Cerulean Seed")) {
+                if (equippedPieces >= 2) this.manaRegen += 10;
+                if (equippedPieces >= 4) this.manaRegen += 20;
+            }
+            else if (nameOfSet.equals("Cerulean Amber")) {
+                if (equippedPieces >= 2) this.manaMax += 25;
+                if (equippedPieces >= 4) this.manaMax += 60;
+            }
+            else if (nameOfSet.equals("Turquoise Turtle")) {
+                if (equippedPieces >= 2) this.totalAgility += 25;
+                if (equippedPieces >= 4) this.totalAgility += 60;
+            }
+            else if (nameOfSet.equals("Emerald Amber")) {
+                if (equippedPieces >= 2) this.totalAgility += (this.baseAgility * 20) / 100; //il 20% in più
+                if (equippedPieces >= 4) this.totalAgility += (this.baseAgility * 45) / 100; //il 45% in più
+            }
+            else if (nameOfSet.equals("Sharpshot")) {
+                if (equippedPieces >= 2) this.totalPrecision += 25;
+                if (equippedPieces >= 4) this.totalPrecision += 60;
+            }
+            else if (nameOfSet.equals("Arrow Sting")) {
+                if (equippedPieces >= 2) this.totalPrecision += (this.basePrecision * 20) / 100;
+                if (equippedPieces >= 4) this.totalPrecision += (this.basePrecision * 45) / 100;
+            }
+            else if (nameOfSet.equals("Barbarian")) {
+                if (equippedPieces >= 2) this.totalStrength += 25;
+                if (equippedPieces >= 4) this.totalStrength += 60;
+            }
+            else if (nameOfSet.equals("Zoro")) {
+                if (equippedPieces >= 2) this.totalStrength += (this.baseStrength * 20) / 100;
+                if (equippedPieces >= 4) this.totalStrength += (this.baseStrength * 45) / 100;
+            }
+            else if (nameOfSet.equals("Stargazer")) {
+                if (equippedPieces >= 2) this.totalIntelligence += 25;
+                if (equippedPieces >= 4) this.totalIntelligence += 60;
+            }
+            else if (nameOfSet.equals("High Priest")) {
+                if (equippedPieces >= 2) this.totalIntelligence += (this.baseIntelligence * 20) / 100;
+                if (equippedPieces >= 4) this.totalIntelligence += (this.baseIntelligence * 45) / 100;
+            }
+            else if (nameOfSet.equals("Turtle Shell")) {
+                if (equippedPieces >= 2) this.armorDefence += 25;
+                if (equippedPieces >= 4) this.armorDefence += 60;
+            }
+            else if (nameOfSet.equals("Dragon Scale")) { //COSI E' OP VA RIVISTA QUESTA IN PARTICOLARE
+                if (equippedPieces >= 2) this.armorDefence += (this.armorDefence * 20) / 100;
+                if (equippedPieces >= 4) this.armorDefence += (this.armorDefence * 45) / 100;
+            }
+            // quelli singoli NON vanno messi ovviamente
         }
 
         if(this.totalHp > this.totalHpMax) {this.totalHp = this.totalHpMax;}
+
+        updateDerivedStats();
     }
 
+    //se lo cerchi è in fondo a updateStats()
+    public void updateDerivedStats(){
+
+        if (activeEffects.containsKey("Ghiaccio")) {
+            this.totalAgility /= 2;
+        }
+
+        Items mainWeapon = this.equippedItems.get("Primaria");
+        if(mainWeapon != null && mainWeapon instanceof Weapons){
+            String passive = ((Weapons) mainWeapon).getEffect();
+
+            if(passive.equals("RecuperoVita")){
+                this.hpRegen += 10;
+            }
+            else if(passive.equals("Balestra")){
+                this.totalAgility -= 15;
+                if (this.totalAgility < 1) this.totalAgility = 1;
+            }
+        }
+
+        this.manaMax = this.totalIntelligence * 2;
+        this.manaRegen = (this.totalIntelligence / 10) +1;
+
+        if(this.currentMana > this.manaMax){
+            this.currentMana = this.manaMax;
+        }
+
+        this.critRate = this.totalPrecision / 2;
+        if (this.critRate > 100) this.critRate = 100;
+
+        this.dodgeChance = this.totalAgility / 4;
+        if (this.dodgeChance > 50) this.dodgeChance = 50;
+    }
 
     public HashMap<String, Integer> getStats() {
         HashMap<String, Integer> stats = new HashMap<>();
@@ -169,13 +277,122 @@ public abstract class Character {
     }
 
     public void takeDamage(int receivedDamage) {
-        int dannoEffettivo = Math.max(0, receivedDamage - this.armorDefence);
-        this.totalHp -= dannoEffettivo;
+        this.takeDamage(receivedDamage, false);
     }
 
-    public void attack(Character target) {
-        int finalDamage = this.weaponDamage + this.totalStrength;
-        target.takeDamage(finalDamage);
+    public void takeDamage(int receivedDamage, boolean ignoreArmor) {
+
+
+        Items scudo = this.equippedItems.get("Secondaria");
+        String shieldEffect = "Nessuno";
+
+        if (scudo != null && scudo instanceof Weapons) {
+            shieldEffect = ((Weapons) scudo).getEffect();
+        }
+
+        if (shieldEffect.equals("Immortale")) {
+            java.util.Random rand = new java.util.Random();
+            if (rand.nextInt(100) < 20) {
+                System.out.println("Il " + scudo.getName() + " di " + this.getName() + " assorbe l'impatto! 0 Danni!");
+                return;
+            }
+        }
+
+        if (ignoreArmor) {
+            this.totalHp -= receivedDamage;
+            System.out.println("L'attacco ignora le difese! Subiti " + receivedDamage + " Danni Puri!");
+        } else {
+            int  actualDamage= Math.max(0, receivedDamage - this.armorDefence);
+            this.totalHp -= actualDamage;
+        }
+    }
+    protected int getBaseDamage(){
+        return this.weaponDamage + this.totalStrength;
+    }
+
+    public void attack(Character target){
+        this.attack(target, null);
+    }
+
+    public void attack(Character target, ArrayList<Character> enemyList) {
+        int finalDamage = this.getBaseDamage();
+        boolean isPureDamage = false;
+
+        Items mainWeapon = this.equippedItems.get("Primaria");
+        String weaponEffect = "Nessuno";
+
+
+        if (mainWeapon != null && mainWeapon instanceof Weapons) {
+            Weapons weapon = (Weapons) mainWeapon;
+           weaponEffect = weapon.getEffect();
+        }
+
+        if(weaponEffect.equalsIgnoreCase("Puro")) {
+            isPureDamage = true;
+        }
+
+        if(target.rollDodge()){
+            System.out.println(target.getName() + " ha schivato l'attacco!");
+            return;
+        }
+
+        int finalCritRate = this.critRate;
+
+        if(weaponEffect.equals("Ripetizione")){
+            if(this.lastTarget == target){
+                this.predatorStacks++;
+            } else{
+                this.lastTarget = target;
+                this.predatorStacks = 1;
+            }
+
+            finalCritRate += (this.predatorStacks * 25);
+        }
+
+        boolean isCrit = this.rollCrit(finalCritRate);
+        if(isCrit){
+            System.out.println(this.getName() + " ha fatto un colpo critico!");
+            finalDamage = (int)(finalDamage * this.critMultiplier);
+        }
+
+        target.takeDamage(finalDamage, isPureDamage);
+
+        if (weaponEffect.equals("Veleno")) {
+            target.applyEffect("Veleno", 3);
+        }
+        else if (weaponEffect.equals("Fuoco")) {
+            target.applyEffect("Fuoco", 2);
+        }
+        else if (weaponEffect.equals("Ghiaccio")) {
+            target.applyEffect("Ghiaccio", 2);
+        }
+        else if (weaponEffect.equals("DannoArea") && enemyList != null){
+            int splashDamage = Math.max(1, (int) (finalDamage * 0.25));
+            System.out.println("Attacco ad area!");
+            for (Character enemy : enemyList) {
+                if(enemy != target && !enemy.isDead()){
+                    enemy.takeDamage(splashDamage, false);
+                }
+            }
+        }
+
+        if(isCrit){
+            Items collana = this.equippedItems.get("Collana");
+            if(collana != null && collana.getName().equals("Assassin's Crimson Dagger")){
+                int lifesteal = (int)(finalDamage * 0.30);
+                this.setHp(this.totalHp + lifesteal);
+                System.out.println(this.getName() + " ha recuperato " + lifesteal + "HP!");
+            }
+        }
+
+
+    }
+
+    public void applyEffect(String effectName, int turns){
+        int currentTurns = activeEffects.getOrDefault(effectName, 0);
+        activeEffects.put(effectName, Math.max(currentTurns, turns));
+        System.out.println(this.getName() + " subisce l'effetto: [" + effectName.toUpperCase() +  "] per +" + turns + " turni!" );
+        updateStats();
     }
 
     public boolean isDead() {
@@ -185,6 +402,12 @@ public abstract class Character {
     //SETTERS
     public void setHp(int hp) {
         this.totalHp = hp;
+        if (this.totalHp > this.totalHpMax) this.totalHp = this.totalHpMax;
+    }
+    public void setCurrentMana(int amount){
+        this.currentMana = amount;
+        if(this.currentMana > this.manaMax) this.currentMana = this.manaMax;
+        if(this.currentMana < 0) this.currentMana = 0;
     }
 
     //GETTERS
@@ -208,6 +431,12 @@ public abstract class Character {
     public ArrayList<Items> getInventory(){
         return inventory;
     }
+    public int getLevel() {return level;}
+    public int getMoney(){ return money;}
+    public int getCurrentMana(){ return this.currentMana; }
+    public int getManaMax(){ return this.manaMax; }
+    public int getManaRegen(){ return this.manaRegen; }
+    public double getCritMultiplier(){ return this.critMultiplier; }
 
     //STAMPA DEL PERSONAGGIO
     public void presentation(){
@@ -233,11 +462,7 @@ public abstract class Character {
         inventory.remove(item);
     }
 
-    public boolean inventoryFull() {return inventory.size() >= 2;}
-
-    public ArrayList<String> getItemSlot(Items item) {
-        return item.getEquippedSlot();
-    } // non è tipo inutile questa broder?
+    public boolean inventoryFull() {return inventory.size() >= 20;}
 
     public boolean inInventory(Items item){return inventory.contains(item);}
 
@@ -254,7 +479,7 @@ public abstract class Character {
             }
 
             inventory.remove(item);
-            equipWeaponLogic(item); //TODO ANCORA DA IMPLEMENTARE
+            equipWeaponLogic(item);
         }
 
         else if (item instanceof Armors || item instanceof Artefacts) {
@@ -348,4 +573,91 @@ public abstract class Character {
             System.out.println("Lo slot " + target + " è già vuoto");
         }
     }
+
+    public String gainExp(int amount){
+        this.exp += amount;
+        String log = "Hai ottenuto " + amount + " EXP.\n";
+        while(this.exp >= this.expToNextLevel){
+            log += levelUp();
+        }
+        return log;
+    }
+    protected abstract void applyLevelUpStats();
+    public String levelUp(){
+        this.exp -= this.expToNextLevel;
+        this.level++;
+        this.expToNextLevel = (int) (this.expToNextLevel * 1.5);
+
+        //AUMENTI ALLE STATS BASE
+        applyLevelUpStats();
+
+        this.totalHp = this.baseHpMax;
+        updateStats();
+
+        return "Sei salito al livello " + this.level + "!\n";
+     }
+
+    public void gainMoney(int amount){
+        this.money += amount;
+    }
+    public boolean spendMoney(int amount) {
+        if (this.money >= amount) {
+            this.money -= amount;
+            return true;
+        }
+        System.out.println("Non hai abbastanza soldi! Te ne servono " + amount + " ma ne hai solo " + this.money);
+        return false;
+    }
+
+    public void endTurn(){
+        this.setCurrentMana(this.currentMana + this.manaRegen);
+
+        if(this.hpRegen > 0){
+            this.setHp(this.totalHp + this.hpRegen);
+        }
+
+        if(!activeEffects.isEmpty()){
+            ArrayList<String> toRemove = new ArrayList<>();
+
+            for(Map.Entry<String, Integer> entry : activeEffects.entrySet()){
+                String effect = entry.getKey();
+                int turnsLeft = entry.getValue();
+
+                if(effect.equals("Veleno")){
+                    int poisonDamage = Math.max(1, (int) (this.totalHpMax * 0.05));
+                    this.totalHp -= poisonDamage;
+                    System.out.println(this.getName() + " subisce " + poisonDamage + " danno da veleno");
+                }
+                else if(effect.equals("Fuoco")){
+                    this.totalHp -= 15;
+                    System.out.println(this.getName() + " subisce  15 danno da scottatura");
+                }
+
+                turnsLeft--;
+                if (turnsLeft <= 0) toRemove.add(effect);
+                else activeEffects.put(effect, turnsLeft);
+            }
+            for (String effect : toRemove) {
+                activeEffects.remove(effect);
+                System.out.println("L'effetto [" + effect.toUpperCase() + "] su " + this.getName() + " è svanito.");
+            }
+            if (!toRemove.isEmpty()) updateStats();
+
+        }
+
+    }
+
+    public boolean rollCrit(int rate){
+        java.util.Random rand = new java.util.Random();
+        return (rand.nextInt(100) + 1) <= rate;
+    }
+    public boolean rollCrit(){
+        return this.rollCrit(this.critRate);
+    }
+    public boolean rollDodge(){
+        java.util.Random rand = new java.util.Random();
+        return (rand.nextInt(100)+1) <= this.dodgeChance;
+    }
+
 }
+

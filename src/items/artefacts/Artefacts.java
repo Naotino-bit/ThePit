@@ -11,7 +11,7 @@ public class Artefacts extends Items {
     private String nameOfSet; //nome del set per identificare il bonus set
     private HashMap<String, Integer> subStats; //tutte le substats del singolo pezzo
 
-    public Artefacts (String name, String rarity, String nameOfSet, String mainStat, int mainStatVal, String slotTarget) {
+    public Artefacts (String name, String rarity, String nameOfSet, String mainStat, int mainStatVal, String slotTarget, int economicValue) {
         this.name = name;
         this.rarity = rarity;
 
@@ -21,6 +21,8 @@ public class Artefacts extends Items {
         this.nameOfSet = nameOfSet;
         this.equippedSlot.add(slotTarget);
         this.subStats = new HashMap<>();
+
+        this.economicValue = economicValue;
     }
 
     public void addSubStat(String statName, int value){

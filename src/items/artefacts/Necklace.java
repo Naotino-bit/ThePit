@@ -4,10 +4,10 @@ import java.util.HashMap;
 
 public class Necklace extends Artefacts {
 
-    public Necklace(String name, String rarity, String nameOfSet, String mainStat, int mainStatVal, HashMap<String, Integer> bonus) {
+    public Necklace(String name, String rarity, String nameOfSet, String mainStat, int mainStatVal, HashMap<String, Integer> bonus, int economicValue) {
 
 
-        super(name, rarity, nameOfSet, mainStat, mainStatVal, "Collana");
+        super(name, rarity, nameOfSet, mainStat, mainStatVal, "Collana", economicValue);
 
         if (bonus != null) {
             this.getSubStats().putAll(bonus);

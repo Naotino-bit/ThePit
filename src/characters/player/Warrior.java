@@ -16,10 +16,20 @@ public class Warrior extends Character {
 
         updateStats();
         this.totalHp = this.totalHpMax;
+        this.currentMana = this.manaMax;
     }
 
     @Override
     public boolean canEquipWeapon(Items item) {
         return item instanceof Sword || item instanceof Shield;
+    }
+
+    @Override
+    protected void applyLevelUpStats() {
+        this.baseStrength += 7; //primaria
+        this.baseAgility += 3; //secondaria
+        this.basePrecision += 2;
+        this.baseIntelligence += 1;
+        this.baseHpMax += 15;
     }
 }

@@ -3,12 +3,15 @@ package characters.enemies;
 import characters.Character;
 import game.XmlHandler;
 import items.Items;
-
+//TODO ANCHE I MOSTRI SCALANO IN BASE AL LIVELLO DEL PLAYER
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Enemies extends Character {
     protected ArrayList<Items> possibleDrops;
+    public int expReward;
+    protected int minMoneyDrop;
+    protected int maxMoneyDrop;
 
     public Enemies() {
 
@@ -33,4 +36,15 @@ public class Enemies extends Character {
 
     @Override
     public boolean canEquipWeapon(Items item) {return false;}
+
+    @Override
+    protected void applyLevelUpStats() { return; }
+
+    public int getExpReward(){ return expReward; }
+
+    public int generateMoneyDrop(){
+        java.util.Random rand = new java.util.Random();
+
+        return rand.nextInt((maxMoneyDrop - minMoneyDrop)+1)+ minMoneyDrop;
+    }
 }
