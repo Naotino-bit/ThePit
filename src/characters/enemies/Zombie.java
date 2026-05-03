@@ -14,12 +14,15 @@ public class Zombie extends Enemies {
         this.baseAgility = 10; //MESSA PER DEBUG A 10 //TODO definire le stats dei nemici
         this.baseStrength = 50;
         this.baseHpMax = 100; //*livello dello zombie
-
+        this.expReward = 50; //exp droppata
+        this.minMoneyDrop = 15;
+        this.maxMoneyDrop = 30;
 
 
 
         this.updateStats();
         this.totalHp = this.totalHpMax;
+        this.currentMana = this.manaMax;
 
        this.generateLoot(2);
     }

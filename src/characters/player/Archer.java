@@ -15,10 +15,20 @@ public class Archer extends Character {
 
         updateStats();
         this.totalHp = this.totalHpMax;
+        this.currentMana = this.manaMax;
     }
 
     @Override
     public boolean canEquipWeapon(Items item){
         return item instanceof Bow;
+    }
+
+    @Override
+    protected void applyLevelUpStats() {
+        this.basePrecision += 7;
+        this.baseAgility += 5;
+        this.baseStrength += 2;
+        this.baseIntelligence += 1;
+        this.baseHpMax += 15;
     }
 }

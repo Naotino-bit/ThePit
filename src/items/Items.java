@@ -9,6 +9,8 @@ public abstract class Items {
     protected String boostedStat;
     protected int boostedStatVal;
 
+    protected int economicValue;
+
     public String getName() {
         return this.name;
     }
@@ -27,4 +29,6 @@ public abstract class Items {
 
     public int getBoostedStatVal(){ return this.boostedStatVal;}
     public String getBoostedStat(){ return this.boostedStat;}
+
+    public int getEconomicValue(){ return this.economicValue; }
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<usables>
+
+    <!-- ========================================== -->
+    <!-- POZIONI DI CURA (VITALITÀ)                 -->
+    <!-- ========================================== -->
+    <Usable tipo="HealthPotion" nome="Pozione di Cura Piccola" rarita="Comune" prezzo="20" stat="Vitalità" valStat="25"/>
+
+    <Usable tipo="HealthPotion" nome="Pozione di Cura Media" rarita="Raro" prezzo="50" stat="Vitalità" valStat="60"/>
+
+    <Usable tipo="HealthPotion" nome="Pozione di Cura Grande" rarita="Epico" prezzo="120" stat="Vitalità" valStat="120"/>
+
+
+    <!-- ========================================== -->
+    <!-- POZIONI DI MANA (MANA)                     -->
+    <!-- ========================================== -->
+    <Usable tipo="ManaPotion" nome="Pozione di Mana Piccola" rarita="Comune" prezzo="20" stat="Mana" valStat="20"/>
+
+    <Usable tipo="ManaPotion" nome="Pozione di Mana Media" rarita="Raro" prezzo="50" stat="Mana" valStat="50"/>
+
+    <Usable tipo="ManaPotion" nome="Pozione di Mana Grande" rarita="Epico" prezzo="120" stat="Mana" valStat="100"/>
+
+
+    <!-- ========================================== -->
+    <!-- THROWABLES (DANNO SINGOLO)                 -->
+    <!-- ========================================== -->
+    <Usable tipo="Throwable" nome="Coltello da Lancio" rarita="Comune" prezzo="20" stat="Danno" valStat="20"/>
+
+
+    <!-- ========================================== -->
+    <!-- THROWABLES FUTURI (STATUS ED EFFETTI)      -->
+    <!-- ========================================== -->
+    <!--
+    Da scommentare quando gli status verranno implementati
+
+    <Usable tipo="Throwable" nome="Bomba Incendiaria" rarita="Raro" prezzo="50" stat="DannoFuoco" valStat="15" effetto="Bruciatura" turni="3"/>
+
+    <Usable tipo="Throwable" nome="Fiala Velenosa" rarita="Raro" prezzo="50" stat="DannoVeleno" valStat="5" effetto="Veleno" turni="5"/>
+
+    <Usable tipo="Throwable" nome="Bomba Fumogena" rarita="Epico" prezzo="120" stat="Debuff" valStat="-30" effetto="RiduciPrecisioneNemico" turni="2"/>
+    -->
+
+</usables>

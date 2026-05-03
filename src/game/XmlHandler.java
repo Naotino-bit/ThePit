@@ -1,8 +1,11 @@
 package game;
 
 import items.Items;
+import items.usables.ManaPotion;
 import items.weapons.*;
-import items.armors.*; // Fondamentale per vedere le tue 4 sottoclassi!
+import items.armors.*;
+import items.usables.HealthPotion;
+import items.usables.Throwables;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,50 +20,70 @@ public class XmlHandler {
 
     public static ArrayList<Items> everyWeapon;
     public static ArrayList<Items> everyArmor;
-    public static ArrayList<Items> everyArtifact;
+    public static ArrayList<Items> everyArtefact;
+    public static ArrayList<Items> everyUsable;
     public static ArrayList<Items> everyItem;
 
     public static void loadAllItems(){
         everyWeapon = loadWeapons();
         everyArmor = loadArmors();
-        everyArtifact = loadArtifacts();
+        everyArtefact = loadArtefacts();
+        everyUsable = loadUsables();
 
         everyItem = new ArrayList<>();
         if(everyWeapon != null) everyItem.addAll(everyWeapon);
         if(everyArmor != null) everyItem.addAll(everyArmor);
-        if(everyArtifact != null) everyItem.addAll(everyArtifact);
-
+        if(everyArtefact != null) everyItem.addAll(everyArtefact);
+        if(everyUsable != null) everyItem.addAll(everyUsable);
     }
+
     public static ArrayList<Items> loadWeapons() {
         ArrayList<Items> everyWeapon = new ArrayList<>();
 
         try {
-            File fileXML = new File("data/weapons.xml");
+            File xmlFile = new File("data/weapons.xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(fileXML);
+            Document doc = dBuilder.parse(xmlFile);
             doc.getDocumentElement().normalize();
 
-            NodeList listaNodi = doc.getElementsByTagName("Weapon");
+            NodeList nodeList = doc.getElementsByTagName("Weapon");
 
-            for (int i = 0; i < listaNodi.getLength(); i++) {
-                Node nodo = listaNodi.item(i);
-                if (nodo.getNodeType() == Node.ELEMENT_NODE) {
-                    Element elemento = (Element) nodo;
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Node node = nodeList.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) node;
 
-                    String tipo = elemento.getAttribute("tipo");
-                    String nome = elemento.getAttribute("nome");
-                    String rarita = elemento.getAttribute("rarita");
-                    int dannoBase = Integer.parseInt(elemento.getAttribute("dannoBase"));
-                    String stat = elemento.getAttribute("stat");
-                    int valStat = Integer.parseInt(elemento.getAttribute("valStat"));
+                    String type = element.getAttribute("tipo");
+                    String name = element.getAttribute("nome");
+                    String rarity = element.getAttribute("rarita");
+                    int baseDamage = Integer.parseInt(element.getAttribute("dannoBase"));
+                    String stat = element.getAttribute("stat");
+                    int statVal = Integer.parseInt(element.getAttribute("valStat"));
+                    int price = Integer.parseInt(element.getAttribute("prezzo"));
 
-                    switch (tipo) {
-                        case "Sword": everyWeapon.add(new Sword(nome, rarita, dannoBase, stat, valStat)); break;
-                        case "Dagger": everyWeapon.add(new Dagger(nome, rarita, dannoBase, stat, valStat)); break;
-                        case "Bow": everyWeapon.add(new Bow(nome, rarita, dannoBase, stat, valStat)); break;
-                        case "Claymore": everyWeapon.add(new Claymore(nome, rarita, dannoBase, stat, valStat)); break;
-                        case "Shield": everyWeapon.add(new Shield(nome, rarita, dannoBase, stat, valStat)); break;
+                    String effect = element.getAttribute("effetto");
+                    if(effect.isEmpty()) effect = "Nessuno";
+
+                    switch (type) {
+                        case "Sword":
+                            everyWeapon.add(new Sword(name, rarity, baseDamage, stat, statVal, price, effect));
+                            break;
+                        case "Dagger":
+                            everyWeapon.add(new Dagger(name, rarity, baseDamage, stat, statVal, price, effect));
+                            break;
+                        case "Bow":
+                            everyWeapon.add(new Bow(name, rarity, baseDamage, stat, statVal, price, effect));
+                            break;
+                        case "Claymore":
+                            everyWeapon.add(new Claymore(name, rarity, baseDamage, stat, statVal, price, effect));
+                            break;
+                        case "Shield":
+                            everyWeapon.add(new Shield(name, rarity, baseDamage, stat, statVal, price, effect));
+                            break;
+                        case "Staff":
+                            everyWeapon.add(new Staff(name, rarity, baseDamage, stat, statVal, price, effect));
+                            break;
                     }
                 }
             }
@@ -71,42 +94,46 @@ public class XmlHandler {
         }
         return everyWeapon;
     }
+
     public static ArrayList<Items> loadArmors() {
         ArrayList<Items> everyArmor = new ArrayList<>();
 
         try {
-            File fileXML = new File("data/armors.xml");
+            File xmlFile = new File("data/armors.xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(fileXML);
+            Document doc = dBuilder.parse(xmlFile);
             doc.getDocumentElement().normalize();
 
-            NodeList listaNodi = doc.getElementsByTagName("Armor");
+            NodeList nodeList = doc.getElementsByTagName("Armor");
 
-            for (int i = 0; i < listaNodi.getLength(); i++) {
-                Node nodo = listaNodi.item(i);
-                if (nodo.getNodeType() == Node.ELEMENT_NODE) {
-                    Element elemento = (Element) nodo;
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Node node = nodeList.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) node;
 
-                    String tipo = elemento.getAttribute("tipo");
-                    String nome = elemento.getAttribute("nome");
-                    String rarita = elemento.getAttribute("rarita");
-                    int difesaBase = Integer.parseInt(elemento.getAttribute("difesaBase"));
-                    String stat = elemento.getAttribute("stat");
-                    int valStat = Integer.parseInt(elemento.getAttribute("valStat"));
+                    String type = element.getAttribute("tipo");
+                    String name = element.getAttribute("nome");
+                    String rarity = element.getAttribute("rarita");
+                    int baseDefense = Integer.parseInt(element.getAttribute("difesaBase"));
+                    String stat = element.getAttribute("stat");
+                    int statVal = Integer.parseInt(element.getAttribute("valStat"));
 
-                    switch (tipo) {
+                    // ESTRAZIONE DEL PREZZO
+                    int price = Integer.parseInt(element.getAttribute("prezzo"));
+
+                    switch (type) {
                         case "Helmet":
-                            everyArmor.add(new Helmet(nome, rarita, difesaBase, stat, valStat));
+                            everyArmor.add(new Helmet(name, rarity, baseDefense, stat, statVal, price));
                             break;
                         case "Chestplate":
-                            everyArmor.add(new Chestplate(nome, rarita, difesaBase, stat, valStat));
+                            everyArmor.add(new Chestplate(name, rarity, baseDefense, stat, statVal, price));
                             break;
-                        case "Leggins": // Ho usato il nome che ho visto nel tuo screenshot!
-                            everyArmor.add(new Leggins(nome, rarita, difesaBase, stat, valStat));
+                        case "Leggins":
+                            everyArmor.add(new Leggins(name, rarity, baseDefense, stat, statVal, price));
                             break;
                         case "Boots":
-                            everyArmor.add(new Boots(nome, rarita, difesaBase, stat, valStat));
+                            everyArmor.add(new Boots(name, rarity, baseDefense, stat, statVal, price));
                             break;
                     }
                 }
@@ -118,37 +145,40 @@ public class XmlHandler {
         }
         return everyArmor;
     }
-    public static ArrayList<Items> loadArtifacts() {
-        ArrayList<Items> everyArtifact = new ArrayList<>();
+
+    public static ArrayList<Items> loadArtefacts() {
+        ArrayList<Items> everyArtefact = new ArrayList<>();
 
         try {
-            File fileXML = new File("data/artifacts.xml"); // Assicurati che il nome combaci con il file!
+            File xmlFile = new File("data/artefacts.xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(fileXML);
+            Document doc = dBuilder.parse(xmlFile);
             doc.getDocumentElement().normalize();
 
-            // Peschiamo tutti gli artefatti
-            NodeList listaNodi = doc.getElementsByTagName("Artefatto");
+            NodeList nodeList = doc.getElementsByTagName("Artefatto");
 
-            for (int i = 0; i < listaNodi.getLength(); i++) {
-                Node nodo = listaNodi.item(i);
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Node node = nodeList.item(i);
 
-                if (nodo.getNodeType() == Node.ELEMENT_NODE) {
-                    Element elemento = (Element) nodo;
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) node;
 
-                    String tipo = elemento.getAttribute("tipo");
-                    String nome = elemento.getAttribute("nome");
-                    String rarita = elemento.getAttribute("rarita");
-                    String set = elemento.getAttribute("set");
+                    String type = element.getAttribute("tipo");
+                    String name = element.getAttribute("nome");
+                    String rarity = element.getAttribute("rarita");
+                    String set = element.getAttribute("set");
 
-                    Element mainStatNode = (Element) elemento.getElementsByTagName("MainStat").item(0);
+                    // ESTRAZIONE DEL PREZZO
+                    int price = Integer.parseInt(element.getAttribute("prezzo"));
+
+                    Element mainStatNode = (Element) element.getElementsByTagName("MainStat").item(0);
                     String mainStat = mainStatNode.getAttribute("stat");
                     int mainStatVal = Integer.parseInt(mainStatNode.getAttribute("valore"));
 
                     java.util.HashMap<String, Integer> subStatsMap = new java.util.HashMap<>();
 
-                    NodeList subStatsList = elemento.getElementsByTagName("Stat");
+                    NodeList subStatsList = element.getElementsByTagName("Stat");
 
                     for (int j = 0; j < subStatsList.getLength(); j++) {
                         Node subNode = subStatsList.item(j);
@@ -161,36 +191,83 @@ public class XmlHandler {
                         }
                     }
 
-                    switch (tipo) {
+                    switch (type) {
                         case "Ring":
-                            everyArtifact.add(new items.artefacts.Ring(nome, rarita, set, mainStat, mainStatVal, subStatsMap));
+                            everyArtefact.add(new items.artefacts.Ring(name, rarity, set, mainStat, mainStatVal, subStatsMap, price));
                             break;
                         case "Cloack":
-                            everyArtifact.add(new items.artefacts.Cloack(nome, rarita, set, mainStat, mainStatVal, subStatsMap));
+                            everyArtefact.add(new items.artefacts.Cloack(name, rarity, set, mainStat, mainStatVal, subStatsMap, price));
                             break;
                         case "Earrings":
-                            everyArtifact.add(new items.artefacts.Earrings(nome, rarita, set, mainStat, mainStatVal, subStatsMap));
+                            everyArtefact.add(new items.artefacts.Earrings(name, rarity, set, mainStat, mainStatVal, subStatsMap, price));
                             break;
                         case "Necklace":
-                            everyArtifact.add(new items.artefacts.Necklace(nome, rarita, set, mainStat, mainStatVal, subStatsMap));
+                            everyArtefact.add(new items.artefacts.Necklace(name, rarity, set, mainStat, mainStatVal, subStatsMap, price));
                             break;
                     }
                 }
             }
-            System.out.println("Caricati " + everyArtifact.size() + " artefatti dal file XML!");
+            System.out.println("Caricati " + everyArtefact.size() + " artefatti dal file XML!");
 
         } catch (Exception e) {
-            System.out.println("Errore nel caricamento di artifacts.xml: " + e.getMessage());
+            System.out.println("Errore nel caricamento di artefacts.xml: " + e.getMessage());
             e.printStackTrace();
         }
 
-        return everyArtifact;
+        return everyArtefact;
+    }
+
+    public static ArrayList<Items> loadUsables() {
+        ArrayList<Items> everyUsable = new ArrayList<>();
+
+        try {
+            File xmlFile = new File("data/usables.xml");
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(xmlFile);
+            doc.getDocumentElement().normalize();
+
+            NodeList nodeList = doc.getElementsByTagName("Usable");
+
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Node node = nodeList.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) node;
+
+                    String type = element.getAttribute("tipo");
+                    String name = element.getAttribute("nome");
+                    String rarity = element.getAttribute("rarita");
+                    String stat = element.getAttribute("stat");
+                    int statVal = Integer.parseInt(element.getAttribute("valStat"));
+
+                    // ESTRAZIONE DEL PREZZO
+                    int price = Integer.parseInt(element.getAttribute("prezzo"));
+
+                    switch (type) {
+                        case "HealthPotion":
+                            everyUsable.add(new HealthPotion(name, rarity, stat, statVal, price));
+                            break;
+                        case "ManaPotion":
+                            everyUsable.add(new ManaPotion(name, rarity, stat, statVal, price));
+                            break;
+                        case "Throwable":
+                            everyUsable.add(new Throwables(name, rarity, stat, statVal, price));
+                            break;
+                    }
+                }
+            }
+            System.out.println("Caricati " + everyUsable.size() + " consumabili dal file XML!");
+        } catch (Exception e) {
+            System.out.println("Errore nel caricamento di usables.xml: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return everyUsable;
     }
 
     public static Items rollRandomItem(){
         java.util.Random rand = new java.util.Random();
 
-        int roll = rand.nextInt(100) +1;
+        int roll = rand.nextInt(100) + 1;
         String rarity;
 
         if (roll <= 50) rarity = "Comune";
@@ -207,8 +284,5 @@ public class XmlHandler {
 
         if(fullItemPool.isEmpty()) return null;
         return fullItemPool.get(rand.nextInt(fullItemPool.size()));
-
-
     }
-
 }

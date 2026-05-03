@@ -1,14 +1,118 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <armors>
 
-    <Armor tipo="Helmet" nome="Elmo di Cuoio" rarita="Comune" difesaBase="2" stat="Vitalità" valStat="5" slot="Testa"/>
-    <Armor tipo="Helmet" nome="Corona del Re Folle" rarita="Leggendario" difesaBase="10" stat="Intelligenza" valStat="20" slot="Testa"/>
+    <!-- ========================================== -->
+    <!-- SET CONDIVISI (COMUNI E RARI)              -->
+    <!-- ========================================== -->
 
-    <Armor tipo="Chestplate" nome="Corazza di Ferro" rarita="Comune" difesaBase="15" stat="Forza" valStat="2" slot="Torso"/>
-    <Armor tipo="Chestplate" nome="Veste del Saggio" rarita="Raro" difesaBase="8" stat="Intelligenza" valStat="15" slot="Torso"/>
+    <!-- SET COTTA DI MAGLIA (Comune - Warrior, Tank) -->
+    <Armor tipo="Helmet" nome="Elmo di Maglia" rarita="Comune" prezzo="60" difesaBase="4" stat="Forza" valStat="1"/>
+    <Armor tipo="Chestplate" nome="Cotta di Maglia" rarita="Comune" prezzo="80" difesaBase="8" stat="Forza" valStat="3"/>
+    <Armor tipo="Leggins" nome="Gambali di Maglia" rarita="Comune" prezzo="60" difesaBase="5" stat="Forza" valStat="2"/>
+    <Armor tipo="Boots" nome="Stivali di Maglia" rarita="Comune" prezzo="60" difesaBase="3" stat="Forza" valStat="1"/>
 
-    <Armor tipo="Leggings" nome="Schinieri d'Acciaio" rarita="Epico" difesaBase="10" stat="Vitalità" valStat="12" slot="Gambe"/>
+    <!-- SET IN CUOIO (Comune - Assassin, Archer, Mage) -->
+    <Armor tipo="Helmet" nome="Cappuccio in Cuoio" rarita="Comune" prezzo="60" difesaBase="2" stat="Agilità" valStat="2"/>
+    <Armor tipo="Chestplate" nome="Pettorale in Cuoio" rarita="Comune" prezzo="80" difesaBase="5" stat="Agilità" valStat="4"/>
+    <Armor tipo="Leggins" nome="Pantaloni in Cuoio" rarita="Comune" prezzo="60" difesaBase="3" stat="Agilità" valStat="2"/>
+    <Armor tipo="Boots" nome="Stivali in Cuoio" rarita="Comune" prezzo="60" difesaBase="2" stat="Agilità" valStat="1"/>
 
-    <Armor tipo="Boots" nome="Stivali del Vento" rarita="Raro" difesaBase="4" stat="Agilità" valStat="15" slot="Piedi"/>
+    <!-- SET DI FERRO (Raro - Warrior, Tank) -->
+    <Armor tipo="Helmet" nome="Elmo di Ferro" rarita="Raro" prezzo="250" difesaBase="8" stat="Vitalità" valStat="4"/>
+    <Armor tipo="Chestplate" nome="Corazza di Ferro" rarita="Raro" prezzo="350" difesaBase="15" stat="Vitalità" valStat="8"/>
+    <Armor tipo="Leggins" nome="Gambali di Ferro" rarita="Raro" prezzo="250" difesaBase="10" stat="Vitalità" valStat="5"/>
+    <Armor tipo="Boots" nome="Stivali di Ferro" rarita="Raro" prezzo="250" difesaBase="6" stat="Vitalità" valStat="3"/>
+
+
+    <!-- ========================================== -->
+    <!-- SET SPECIFICI PER CLASSE                   -->
+    <!-- ========================================== -->
+
+    <!-- ============ WARRIOR ============ -->
+    <!-- SET GLADIATORE (Epico) -->
+    <Armor tipo="Helmet" nome="Elmo del Gladiatore" rarita="Epico" prezzo="1000" difesaBase="12" stat="Forza" valStat="8"/>
+    <Armor tipo="Chestplate" nome="Pettorale del Gladiatore" rarita="Epico" prezzo="1400" difesaBase="22" stat="Forza" valStat="14"/>
+    <Armor tipo="Leggins" nome="Schinieri del Gladiatore" rarita="Epico" prezzo="1000" difesaBase="16" stat="Forza" valStat="10"/>
+    <Armor tipo="Boots" nome="Calzari del Gladiatore" rarita="Epico" prezzo="1000" difesaBase="10" stat="Forza" valStat="6"/>
+
+    <!-- SET CAVALIERE SCARLATTO (Leggendario) -->
+    <Armor tipo="Helmet" nome="Elmo Scarlatto" rarita="Leggendario" prezzo="3500" difesaBase="20" stat="Forza" valStat="15"/>
+    <Armor tipo="Chestplate" nome="Armatura Scarlatta" rarita="Leggendario" prezzo="5000" difesaBase="35" stat="Forza" valStat="25"/>
+    <Armor tipo="Leggins" nome="Gambali Scarlatti" rarita="Leggendario" prezzo="3500" difesaBase="25" stat="Forza" valStat="18"/>
+    <Armor tipo="Boots" nome="Sabatons Scarlatti" rarita="Leggendario" prezzo="3500" difesaBase="15" stat="Forza" valStat="12"/>
+
+
+    <!-- ============ ASSASSIN ============ -->
+    <!-- SET NINJA (Raro) -->
+    <Armor tipo="Helmet" nome="Maschera da Ninja" rarita="Raro" prezzo="250" difesaBase="5" stat="Agilità" valStat="6"/>
+    <Armor tipo="Chestplate" nome="Veste da Ninja" rarita="Raro" prezzo="350" difesaBase="10" stat="Agilità" valStat="10"/>
+    <Armor tipo="Leggins" nome="Pantaloni da Ninja" rarita="Raro" prezzo="250" difesaBase="7" stat="Agilità" valStat="7"/>
+    <Armor tipo="Boots" nome="Calzari da Ninja" rarita="Raro" prezzo="250" difesaBase="4" stat="Agilità" valStat="4"/>
+
+    <!-- SET LAMA NERA (Epico) -->
+    <Armor tipo="Helmet" nome="Cappuccio della Lama Nera" rarita="Epico" prezzo="1000" difesaBase="10" stat="Agilità" valStat="12"/>
+    <Armor tipo="Chestplate" nome="Veste della Lama Nera" rarita="Epico" prezzo="1400" difesaBase="18" stat="Agilità" valStat="20"/>
+    <Armor tipo="Leggins" nome="Gambali della Lama Nera" rarita="Epico" prezzo="1000" difesaBase="14" stat="Agilità" valStat="14"/>
+    <Armor tipo="Boots" nome="Stivali della Lama Nera" rarita="Epico" prezzo="1000" difesaBase="8" stat="Agilità" valStat="9"/>
+
+    <!-- SET CAVALIERE NOTTURNO (Leggendario) -->
+    <Armor tipo="Helmet" nome="Elmo Notturno" rarita="Leggendario" prezzo="3500" difesaBase="15" stat="Agilità" valStat="20"/>
+    <Armor tipo="Chestplate" nome="Armatura Notturna" rarita="Leggendario" prezzo="5000" difesaBase="28" stat="Agilità" valStat="35"/>
+    <Armor tipo="Leggins" nome="Gambali Notturni" rarita="Leggendario" prezzo="3500" difesaBase="20" stat="Agilità" valStat="25"/>
+    <Armor tipo="Boots" nome="Stivali Notturni" rarita="Leggendario" prezzo="3500" difesaBase="12" stat="Agilità" valStat="15"/>
+
+
+    <!-- ============ ARCHER ============ -->
+    <!-- SET DELL'ELFO (Raro) -->
+    <Armor tipo="Helmet" nome="Cappuccio dell'Elfo" rarita="Raro" prezzo="250" difesaBase="4" stat="Precisione" valStat="6"/>
+    <Armor tipo="Chestplate" nome="Tunica dell'Elfo" rarita="Raro" prezzo="350" difesaBase="9" stat="Precisione" valStat="10"/>
+    <Armor tipo="Leggins" nome="Pantaloni dell'Elfo" rarita="Raro" prezzo="250" difesaBase="6" stat="Precisione" valStat="7"/>
+    <Armor tipo="Boots" nome="Stivali dell'Elfo" rarita="Raro" prezzo="250" difesaBase="3" stat="Precisione" valStat="4"/>
+
+    <!-- SET ESECUTORE (Epico) -->
+    <Armor tipo="Helmet" nome="Maschera dell'Esecutore" rarita="Epico" prezzo="1000" difesaBase="9" stat="Precisione" valStat="12"/>
+    <Armor tipo="Chestplate" nome="Veste dell'Esecutore" rarita="Epico" prezzo="1400" difesaBase="17" stat="Precisione" valStat="20"/>
+    <Armor tipo="Leggins" nome="Pantaloni dell'Esecutore" rarita="Epico" prezzo="1000" difesaBase="13" stat="Precisione" valStat="14"/>
+    <Armor tipo="Boots" nome="Stivali dell'Esecutore" rarita="Epico" prezzo="1000" difesaBase="7" stat="Precisione" valStat="9"/>
+
+    <!-- SET GOD'S EYE (Leggendario) -->
+    <Armor tipo="Helmet" nome="Visore God's Eye" rarita="Leggendario" prezzo="3500" difesaBase="14" stat="Precisione" valStat="20"/>
+    <Armor tipo="Chestplate" nome="Veste God's Eye" rarita="Leggendario" prezzo="5000" difesaBase="26" stat="Precisione" valStat="35"/>
+    <Armor tipo="Leggins" nome="Gambali God's Eye" rarita="Leggendario" prezzo="3500" difesaBase="18" stat="Precisione" valStat="25"/>
+    <Armor tipo="Boots" nome="Calzari God's Eye" rarita="Leggendario" prezzo="3500" difesaBase="10" stat="Precisione" valStat="15"/>
+
+
+    <!-- ============ TANK ============ -->
+    <!-- SET SENTINELLA (Epico) -->
+    <Armor tipo="Helmet" nome="Elmo della Sentinella" rarita="Epico" prezzo="1000" difesaBase="18" stat="Vitalità" valStat="15"/>
+    <Armor tipo="Chestplate" nome="Corazza della Sentinella" rarita="Epico" prezzo="1400" difesaBase="30" stat="Vitalità" valStat="25"/>
+    <Armor tipo="Leggins" nome="Gambali della Sentinella" rarita="Epico" prezzo="1000" difesaBase="22" stat="Vitalità" valStat="18"/>
+    <Armor tipo="Boots" nome="Sabatons della Sentinella" rarita="Epico" prezzo="1000" difesaBase="14" stat="Vitalità" valStat="12"/>
+
+    <!-- SET WARMOG (Leggendario - Effetto: Mega Healing Pazzo) -->
+    <Armor tipo="Helmet" nome="Elmo di Warmog" rarita="Leggendario" prezzo="3500" difesaBase="28" stat="Vitalità" valStat="30"/>
+    <Armor tipo="Chestplate" nome="Cuore di Warmog" rarita="Leggendario" prezzo="5000" difesaBase="50" stat="Vitalità" valStat="50"/>
+    <Armor tipo="Leggins" nome="Gambali di Warmog" rarita="Leggendario" prezzo="3500" difesaBase="35" stat="Vitalità" valStat="35"/>
+    <Armor tipo="Boots" nome="Stivali di Warmog" rarita="Leggendario" prezzo="3500" difesaBase="22" stat="Vitalità" valStat="20"/>
+
+
+    <!-- ============ MAGE ============ -->
+    <!-- SET APPRENDISTA (Raro) -->
+    <Armor tipo="Helmet" nome="Cappello dell'Apprendista" rarita="Raro" prezzo="250" difesaBase="3" stat="Intelligenza" valStat="6"/>
+    <Armor tipo="Chestplate" nome="Tunica dell'Apprendista" rarita="Raro" prezzo="350" difesaBase="7" stat="Intelligenza" valStat="10"/>
+    <Armor tipo="Leggins" nome="Pantaloni dell'Apprendista" rarita="Raro" prezzo="250" difesaBase="5" stat="Intelligenza" valStat="7"/>
+    <Armor tipo="Boots" nome="Scarpe dell'Apprendista" rarita="Raro" prezzo="250" difesaBase="2" stat="Intelligenza" valStat="4"/>
+
+    <!-- SET MAGO ERRANTE (Epico) -->
+    <Armor tipo="Helmet" nome="Cappello del Mago Errante" rarita="Epico" prezzo="1000" difesaBase="6" stat="Intelligenza" valStat="12"/>
+    <Armor tipo="Chestplate" nome="Veste del Mago Errante" rarita="Epico" prezzo="1400" difesaBase="14" stat="Intelligenza" valStat="20"/>
+    <Armor tipo="Leggins" nome="Pantaloni del Mago Errante" rarita="Epico" prezzo="1000" difesaBase="10" stat="Intelligenza" valStat="14"/>
+    <Armor tipo="Boots" nome="Stivali del Mago Errante" rarita="Epico" prezzo="1000" difesaBase="5" stat="Intelligenza" valStat="9"/>
+
+    <!-- SET SOMMO SACERDOTE (Leggendario) -->
+    <Armor tipo="Helmet" nome="Mitra del Sommo Sacerdote" rarita="Leggendario" prezzo="3500" difesaBase="10" stat="Intelligenza" valStat="20"/>
+    <Armor tipo="Chestplate" nome="Veste Sacra" rarita="Leggendario" prezzo="5000" difesaBase="20" stat="Intelligenza" valStat="35"/>
+    <Armor tipo="Leggins" nome="Pantaloni del Sommo Sacerdote" rarita="Leggendario" prezzo="3500" difesaBase="14" stat="Intelligenza" valStat="25"/>
+    <Armor tipo="Boots" nome="Sandali del Sommo Sacerdote" rarita="Leggendario" prezzo="3500" difesaBase="8" stat="Intelligenza" valStat="15"/>
 
 </armors>

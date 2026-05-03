@@ -1,5 +1,5 @@
 package game;
-
+//TODO ASSIEME ---> QUANDO IL NEMICO MUORE DOBBIAMO CONTROLLARE SE USA OGGETTI CHE GLI FACCIANO PRENDERE PIU' SOLDI / EXP / LOOT E IN CASO DARGLI DI PIU'
 import characters.enemies.Enemies;
 import characters.Character;
 
