@@ -1,5 +1,5 @@
 # ThePit
-# [![Ask DeepWiki](https://devin.ai/assets/askdeepwiki.png)](https://deepwiki.com/Naotino-bit/ThePit)
+[//]: # [![Ask DeepWiki](https://devin.ai/assets/askdeepwiki.png)](https://deepwiki.com/Naotino-bit/ThePit)
 
 
 
