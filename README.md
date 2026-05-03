@@ -1,5 +1,7 @@
 # ThePit
-[![Ask DeepWiki](https://devin.ai/assets/askdeepwiki.png)](https://deepwiki.com/Naotino-bit/ThePit)
+# [![Ask DeepWiki](https://devin.ai/assets/askdeepwiki.png)](https://deepwiki.com/Naotino-bit/ThePit)
+
+
 
 ThePit is a text-based, turn-based RPG developed in Java. It utilizes a client-server architecture where the server manages game logic, and players connect via a client to interact with the world. The game features a classic RPG structure with character classes, item management, and a strategic combat system.
 
