@@ -270,6 +270,12 @@ public class XmlHandler {
         int roll = rand.nextInt(100) + 1;
         String rarity;
 
+        //TODO POSSIBILITA' DI NON OTTENERE NULLA
+
+
+        if(roll<= 50) return null; //possibilità di non droppare nulla
+
+        roll = rand.nextInt(100)+1; //resettiamo le chanche e rolliamo la rarità
         if (roll <= 50) rarity = "Comune";
         else if (roll <= 80) rarity = "Raro";
         else if (roll <= 95) rarity = "Epico";
@@ -282,7 +288,6 @@ public class XmlHandler {
             }
         }
 
-        if(fullItemPool.isEmpty()) return null;
         return fullItemPool.get(rand.nextInt(fullItemPool.size()));
     }
 }
