@@ -222,7 +222,6 @@ public abstract class Character {
         updateDerivedStats();
     }
 
-    //se lo cerchi è in fondo a updateStats()
     public void updateDerivedStats(){
 
         if (activeEffects.containsKey("Ghiaccio")) {
@@ -256,25 +255,6 @@ public abstract class Character {
         if (this.dodgeChance > 50) this.dodgeChance = 50;
     }
 
-    public HashMap<String, Integer> getStats() {
-        HashMap<String, Integer> stats = new HashMap<>();
-        stats.put("HpMax", totalHpMax);
-        stats.put("Strength" , totalStrength);
-        stats.put("Agility", totalAgility);
-        stats.put("Intelligence", totalIntelligence);
-        stats.put("Precision", totalPrecision);
-        return stats;
-    }
-
-    public HashMap<String, Integer> getBaseStats() {
-        HashMap<String, Integer> stats = new HashMap<>();
-        stats.put("HpMax", baseHpMax);
-        stats.put("Strength" , baseStrength);
-        stats.put("Agility", baseAgility);
-        stats.put("Intelligence", baseIntelligence);
-        stats.put("Precision", basePrecision);
-        return stats;
-    }
 
     public void takeDamage(int receivedDamage) {
         this.takeDamage(receivedDamage, false);
@@ -437,6 +417,24 @@ public abstract class Character {
     public int getManaMax(){ return this.manaMax; }
     public int getManaRegen(){ return this.manaRegen; }
     public double getCritMultiplier(){ return this.critMultiplier; }
+    public HashMap<String, Integer> getStats() {
+        HashMap<String, Integer> stats = new HashMap<>();
+        stats.put("HpMax", totalHpMax);
+        stats.put("Strength" , totalStrength);
+        stats.put("Agility", totalAgility);
+        stats.put("Intelligence", totalIntelligence);
+        stats.put("Precision", totalPrecision);
+        return stats;
+    }
+    public HashMap<String, Integer> getBaseStats() {
+        HashMap<String, Integer> stats = new HashMap<>();
+        stats.put("HpMax", baseHpMax);
+        stats.put("Strength" , baseStrength);
+        stats.put("Agility", baseAgility);
+        stats.put("Intelligence", baseIntelligence);
+        stats.put("Precision", basePrecision);
+        return stats;
+    }
 
     //STAMPA DEL PERSONAGGIO
     public void presentation(){
@@ -574,6 +572,7 @@ public abstract class Character {
         }
     }
 
+    //TODO IMPLEMENTA GAIN EXP
     public String gainExp(int amount){
         this.exp += amount;
         String log = "Hai ottenuto " + amount + " EXP.\n";
@@ -597,6 +596,7 @@ public abstract class Character {
         return "Sei salito al livello " + this.level + "!\n";
      }
 
+     //TODO IMPLEMENTA GAIN MONEY
     public void gainMoney(int amount){
         this.money += amount;
     }
@@ -609,6 +609,7 @@ public abstract class Character {
         return false;
     }
 
+    //TODO IMPLEMENTA END TURN
     public void endTurn(){
         this.setCurrentMana(this.currentMana + this.manaRegen);
 

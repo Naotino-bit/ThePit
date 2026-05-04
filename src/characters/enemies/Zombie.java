@@ -11,20 +11,26 @@ import java.util.concurrent.ScheduledFuture;
 public class Zombie extends Enemies {
     public Zombie() {
         this.name = "Zombie";
-        this.baseAgility = 10; //MESSA PER DEBUG A 10 //TODO definire le stats dei nemici
+        this.baseHpMax = 100; // scala sul livello del player
+        this.baseAgility = 10; //MESSA PER DEBUG A 10 TODO definire le stats dei nemici
         this.baseStrength = 50;
-        this.baseHpMax = 100; //*livello dello zombie
+        this.baseIntelligence = 0;
+        this.basePrecision = 15;
+        
+
+
+        //OGNI TIPO DI DROP
         this.expReward = 50; //exp droppata
         this.minMoneyDrop = 15;
         this.maxMoneyDrop = 30;
-
+        this.generateLoot(2);
 
 
         this.updateStats();
         this.totalHp = this.totalHpMax;
         this.currentMana = this.manaMax;
 
-       this.generateLoot(2);
+
     }
 
     //metodo per morte del npc

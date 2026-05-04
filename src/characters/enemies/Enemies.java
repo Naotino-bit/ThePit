@@ -40,6 +40,9 @@ public class Enemies extends Character {
     @Override
     protected void applyLevelUpStats() { return; }
 
+
+    //TODO IMPLEMENTARE getExpReward e generateMoneyDrop
+    
     public int getExpReward(){ return expReward; }
 
     public int generateMoneyDrop(){
