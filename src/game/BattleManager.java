@@ -102,6 +102,30 @@ public class BattleManager {
             if (counterRound >= attackOrder.size()) {
                 prepareAttackOrder();
                 consecutiveAttacks = getConsecutiveAttack(player);
+                for(Character entity : attackOrder) {
+                    entity.endTurn();
+                    if (entity.isDead()) {
+                        fightLog.append("Hai sconfitto ").append(entity.getName()).append("!\n");
+                        itemDropped = enemies.get(enemies.indexOf(entity)).getDrops();
+                        for(Items item: itemDropped){
+                            fightLog.append(entity.getName() + " ha droppato: " + item.getName());
+                            if (!player.addToInventory(item)) {
+                                pendingLoot.add(item);
+                            }
+                        }
+                        enemies.remove(entity);
+
+                        // NOTA BENE: Ho rimosso "attackOrder.remove(target)".
+                        // Rimuovere elementi dalla lista mentre la stiamo scorrendo sballa
+                        // gli indici e causa bug. Il nemico morto verrà semplicemente
+                        // "saltato" dal turno nemico e pulito al prossimo "prepareAttackOrder".
+
+                        if (enemies.isEmpty()) {
+                            battleOver = true;
+                            return fightLog.append("\nLa battaglia è finita! Vittoria!").toString();
+                        }
+                    }
+                }
                 fightLog.append("\n--- NUOVO ROUND ---\n");
             }
 
@@ -133,13 +157,14 @@ public class BattleManager {
 
                 if (moveSplit[0].equalsIgnoreCase("ATTACCA")) {
                     Enemies target = enemies.get(enemyChoice);
-                    player.attack(target);
+                    player.attack(target, enemies);
                     fightLog.append("Hai colpito ").append(target.getName()).append("!\n");
 
                     if (target.isDead()) {
                         fightLog.append("Hai sconfitto ").append(target.getName()).append("!\n");
                         itemDropped = enemies.get(enemyChoice).getDrops();
                         for(Items item: itemDropped){
+                            fightLog.append(target.getName() + " ha droppato: " + item.getName() + "\n");
                             if (!player.addToInventory(item)) {
                                 pendingLoot.add(item);
                             }
@@ -168,7 +193,7 @@ public class BattleManager {
                     }
 
                 } else if (moveSplit[0].equalsIgnoreCase("CURATI")) {
-                    fightLog.append("LOGICA PER CURARSI NON IMPLEMENTATA\n");
+                    fightLog.append("LOGICA PER CURARSI NON IMPLEMENTATA\n");//TODO IMPLEMENTARE CURATI
                     break; // Usa break invece di return!
                 } else {
                     fightLog.append("Comando non riconosciuto. Usa 'ATTACCA [numero]' o 'CURATI'.\n");
@@ -191,6 +216,7 @@ public class BattleManager {
                         if (player.getHp() <= 0) {
                             battleOver = true;
                             fightLog.append("\nSei morto! GAME OVER.");
+                            //TODO AGGIUNGERE HANDLER PER FINE PARTITA E RESTARERE TUTTO
                             return fightLog.toString();
                         }
                     }

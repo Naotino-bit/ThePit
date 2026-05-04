@@ -11,9 +11,9 @@ import java.util.concurrent.ScheduledFuture;
 public class Zombie extends Enemies {
     public Zombie() {
         this.name = "Zombie";
-        this.baseHpMax = 100; // scala sul livello del player
+        this.baseHpMax = 1000; // scala sul livello del player
         this.baseAgility = 10; //MESSA PER DEBUG A 10 TODO definire le stats dei nemici
-        this.baseStrength = 50;
+        this.baseStrength = 5;
         this.baseIntelligence = 0;
         this.basePrecision = 15;
         

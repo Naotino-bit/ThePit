@@ -47,10 +47,10 @@ public class GameClient {
                                 break;
                             case "INVENTORY_MAIN":
                             case "INVENTORY_ACTION":
-                                prefix = "Inventario";
+                                prefix = "Zaino";
                                 break;
                             case "INVENTORY_OVERFLOW":
-                                prefix = "Inventario pieno";
+                                prefix = "Zaino pieno";
                                 break;
                             case "PLAYER_INFO":
                                 prefix = "Personaggio";

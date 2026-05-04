@@ -4,6 +4,7 @@ import characters.Character;
 import characters.enemies.Enemies;
 import characters.enemies.Zombie;
 import items.Items;
+import items.weapons.Sword;
 
 import java.util.ArrayList;
 
@@ -26,7 +27,8 @@ public class Game {
         this.player = playerClass;
         this.currentBattle = null; // All'inizio non stai combattendo
 
-
+        player.addToInventory(new Sword("GiannaGhiaccio", "EPICO", 1, "Forza", 1, 1800, "Ghiaccio"));
+        player.addToInventory(new Sword("GiannaArea", "EPICO", 1, "Forza", 1, 1800, "Veleno"));
         XmlHandler.loadAllItems();
     }
 
@@ -47,7 +49,7 @@ public class Game {
 
         // se l'utente è in freeroam
         if(currentView == playerView.IDLE) {
-            if(comando.equalsIgnoreCase("INVENTARIO")){
+            if(comando.equalsIgnoreCase("ZAINO")){
                 currentView = playerView.INVENTORY_MAIN;
                 return getInventoryString() + "Selezionare un oggetto oppure 'ESCI'";
             }
@@ -73,7 +75,7 @@ public class Game {
         else if (currentView == playerView.INVENTORY_MAIN) {
             if (comando.equalsIgnoreCase("ESCI")) {
                 currentView = playerView.IDLE;
-                return "Inventario chiuso";
+                return "Zaino chiuso";
             }
             try {
                 int index = Integer.parseInt(comando) - 1; // -1 perché l'utente digita 1 per l'indice 0
@@ -191,7 +193,7 @@ public class Game {
                 pendingLoot = currentBattle.getPendingLoot();
                 if (!pendingLoot.isEmpty()) {
                     currentView = playerView.INVENTORY_OVERFLOW;
-                    risultato += "\n[!] Inventario pieno! [!] \nCi sono degli oggetti che puoi prendere.\n" + getInventoryString() + "\nScrivi un NUMERO per sostituirlo o LASCIA.";
+                    risultato += "\n[!] Zaino pieno! [!] \nCi sono degli oggetti che puoi prendere.\n" + getInventoryString() + "\nScrivi un NUMERO per sostituirlo o LASCIA.";
                     risultato += "\nA terra c'è: " + pendingLoot.getFirst().getName();
                 } else {
                     currentView = playerView.IDLE;
@@ -202,14 +204,14 @@ public class Game {
             return risultato;
         }
 
-        return "Comando non riconosciuto. Esegui 'INVENTARIO', 'SPAWN ZOMBIE' "; //TODO SISTEMARE COMANDI
+        return "Comando non riconosciuto. Esegui 'ZAINO', 'SPAWN ZOMBIE' "; //TODO SISTEMARE COMANDI
     }
 
     private String getInventoryString() {
-        String temp = "\n----- Inventario -----\n";
+        String temp = "\n----- Zaino -----\n";
         ArrayList<Items> inventory = player.getInventory();
         if(inventory.isEmpty()){
-            return temp + "Inventario vuoto\n";
+            return temp + "Zaino vuoto\n";
         }
         for (int i = 0; i < inventory.size(); i++) {
             temp += (i + 1) + ": " + inventory.get(i).getName() + "\n";

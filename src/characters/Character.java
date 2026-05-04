@@ -294,7 +294,7 @@ public abstract class Character {
         this.attack(target, null);
     }
 
-    public void attack(Character target, ArrayList<Character> enemyList) {
+    public void attack(Character target, ArrayList<? extends Character> enemyList) {
         int finalDamage = this.getBaseDamage();
         boolean isPureDamage = false;
 
