@@ -65,7 +65,7 @@ public class Game {
             //mostra quello che hai equipaggiato attualmente
             if(comando.equalsIgnoreCase("PERSONAGGIO")){
                 currentView = playerView.PLAYER_INFO;
-                return "Mostra le statistiche 'statistiche' oppure l'equipaggiamento attuale 'Equipaggiamento'";
+                return "Mostra le statistiche con 'Statistiche'\nL'equipaggiamento attuale con 'Equipaggiamento'\nDisequipaggia qualcosa con 'Disequipaggia [SLOT]'";
             }
         }
 
@@ -160,8 +160,18 @@ public class Game {
                 return temp[0];
             } else if (comando.equalsIgnoreCase("Equipaggiamento")) {
                 return player.getEquippedItems();
+            } else if (comando.toLowerCase().startsWith("disequipaggia")) {
+                try {
+                    comando = comando.split(" ")[1];
+                    //così che l'input viene a prescindere reso valido con la prima lettera maiuscola e il resto minuscolo
+                    player.deEquip(comando.substring(0,1).toUpperCase() + comando.substring(1).toLowerCase());
+                    return "Hai disequipaggiato " + comando.toLowerCase();
+                } catch (Exception e) {
+                    return "Errore durante il comando. Uso Disequipaggia [SLOT] Es: Disequipaggia torso";
+                }
+
             } else {
-                return "Comando non valido. 'Equipaggiamento', 'Statistiche', 'Esci' ";
+                return "Comando non valido. 'Equipaggiamento', 'Statistiche', 'Disequipaggia', 'Esci' ";
             }
 
 
