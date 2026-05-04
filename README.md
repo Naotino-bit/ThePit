@@ -1,4 +1,4 @@
-![alt text] (https://github.com/Naotino-bit/ThePit/blob/master/ThePit.png)
+![the pit image](https://github.com/Naotino-bit/ThePit/blob/master/ThePit.png)
 <!-- [![Ask DeepWiki](https://devin.ai/assets/askdeepwiki.png)](https://deepwiki.com/Naotino-bit/ThePit) -->
 
 
