@@ -157,7 +157,6 @@ public abstract class Character {
             String nameOfSet = set.getKey();
             int equippedPieces = set.getValue();
 
-            // TODO SISTEMA STI CAZZO DI SET
             if (nameOfSet.equals("Crimson Seed")) {
                 if (equippedPieces >= 2) this.hpRegen += 10;
                 if (equippedPieces >= 4) this.hpRegen += 20;
@@ -293,7 +292,7 @@ public abstract class Character {
     public void attack(Character target){
         this.attack(target, null);
     }
-
+    //DEVI PASSARE ENEMY LIST SE NON LO PASSI LO CONTA NULL
     public void attack(Character target, ArrayList<? extends Character> enemyList) {
         int finalDamage = this.getBaseDamage();
         boolean isPureDamage = false;
@@ -600,6 +599,8 @@ public abstract class Character {
     public void gainMoney(int amount){
         this.money += amount;
     }
+
+    //Da implementare in un futuro NEGOZIO
     public boolean spendMoney(int amount) {
         if (this.money >= amount) {
             this.money -= amount;

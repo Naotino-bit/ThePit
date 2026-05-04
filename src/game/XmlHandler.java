@@ -270,9 +270,6 @@ public class XmlHandler {
         int roll = rand.nextInt(100) + 1;
         String rarity;
 
-        //TODO POSSIBILITA' DI NON OTTENERE NULLA
-
-
         if(roll<= 50) return null; //possibilità di non droppare nulla
 
         roll = rand.nextInt(100)+1; //resettiamo le chanche e rolliamo la rarità

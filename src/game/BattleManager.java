@@ -7,7 +7,7 @@ import items.Items;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
-
+//TODO DOPO CHE ANTO HA SISTEMATO TUTTI I CHECK DELLA MORTE DEL PERSONAGGIO FABIO DEVE IMPLEMENTARE IL CHECK PER GLI ARTEFATTI SPECIALI CHE BOOSTANO EXP, SOLDI, DROP (TUTTO CIO' VA ANCORA IMPLEMENTATO)
 public class BattleManager {
     private Character player;
     private ArrayList<Enemies> enemies;
@@ -105,10 +105,23 @@ public class BattleManager {
                 for(Character entity : attackOrder) {
                     entity.endTurn();
                     if (entity.isDead()) {
+                        Enemies deadEnemy = (Enemies) entity;
+                        int expGained = deadEnemy.getExpReward();
+                        int moneyGained = deadEnemy.generateMoneyDrop();
+
+                        fightLog.append(player.gainExp(expGained));
+                        player.gainMoney(moneyGained);
+
+
                         fightLog.append("Hai sconfitto ").append(entity.getName()).append("!\n");
-                        itemDropped = enemies.get(enemies.indexOf(entity)).getDrops();
+                        fightLog.append("Hai ottenuto ").append(moneyGained).append(" monete.\n");
+
+                        itemDropped = deadEnemy.getDrops();
                         for(Items item: itemDropped){
                             fightLog.append(entity.getName() + " ha droppato: " + item.getName());
+
+
+
                             if (!player.addToInventory(item)) {
                                 pendingLoot.add(item);
                             }
@@ -162,9 +175,19 @@ public class BattleManager {
 
                     if (target.isDead()) {
                         fightLog.append("Hai sconfitto ").append(target.getName()).append("!\n");
-                        itemDropped = enemies.get(enemyChoice).getDrops();
+
+                        int expGained = target.getExpReward();
+                        int moneyGained = target.generateMoneyDrop();
+
+                        fightLog.append(player.gainExp(expGained));
+                        player.gainMoney(moneyGained);
+                        fightLog.append("Hai ottenuto ").append(moneyGained).append(" monete.\n");
+
+                        itemDropped = target.getDrops();
+                        player.gainExp(target.getExpReward()); //BISOGNA CASTARE A ENEMY
                         for(Items item: itemDropped){
-                            fightLog.append(target.getName() + " ha droppato: " + item.getName() + "\n");
+                            fightLog.append(target.getName()).append(" ha droppato: ").append(item.getName()).append("\n");
+
                             if (!player.addToInventory(item)) {
                                 pendingLoot.add(item);
                             }
