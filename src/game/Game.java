@@ -5,6 +5,7 @@ import characters.enemies.Enemies;
 import characters.enemies.Zombie;
 import items.Items;
 import items.weapons.Sword;
+import items.weapons.Weapons;
 
 import java.util.ArrayList;
 
@@ -27,8 +28,11 @@ public class Game {
         this.player = playerClass;
         this.currentBattle = null; // All'inizio non stai combattendo
 
-        player.addToInventory(new Sword("GiannaGhiaccio", "EPICO", 1, "Forza", 1, 1800, "Ghiaccio"));
-        player.addToInventory(new Sword("GiannaArea", "EPICO", 1, "Forza", 1, 1800, "Veleno"));
+        player.addToInventory(new Sword("GiannaArea", "EPICO", 1, "Forza", 1, 1800, ""));
+        player.addToInventory(new Sword("GiannaArea", "EPICO", 1, "Forza", 1, 1800, ""));
+        player.addToInventory(new Sword("GiannaArea", "EPICO", 1, "Forza", 1, 1800, ""));
+        player.addToInventory(new Sword("GiannaArea", "EPICO", 1, "Forza", 1, 1800, ""));
+
         XmlHandler.loadAllItems();
     }
 
@@ -85,6 +89,7 @@ public class Game {
                 currentView = playerView.INVENTORY_ACTION; // Cambio stato!
 
                 //TODO FORSE AGGIUNGERE PIù INFORMAZIONI ALL'ISPEZIONA
+                //TODO AGGIUNGERE QUI QUELLO CHE HAI ORA EQUIPAGGIATO SE LO HAI E MOSTRARLO
                 return "Hai selezionato: "  + selectedItem.getDetails() + "\nVuoi EQUIPAGGIARE, BUTTARE o ANNULLARE?";
 
             } catch (Exception e) {
@@ -119,7 +124,7 @@ public class Game {
                     currentView = playerView.IDLE;
                     return "Hai buttato l'oggetto. Tornato in esplorazione";
                 } else {
-                    return "Hai abbandonato l'oggetto. C'è ancora altro a terra:\nVuoi prendere [" + pendingLoot.getFirst().getName() + "]?\nScrivi un NUMERO per sostituirlo, o LASCIA.";
+                    return "Hai abbandonato l'oggetto. C'è ancora altro a terra:\nVuoi prendere [" + pendingLoot.getFirst().getName() + " " + pendingLoot.getFirst().getDetails() + "]?\nScrivi un NUMERO per sostituirlo, o LASCIA.";
                 }
             }
 
@@ -129,23 +134,22 @@ public class Game {
 
                 Items droppedItem = inventory.get(indexToDrop);
 
-                // Rimuovo il vecchio, inserisco il nuovo!
                 inventory.remove(indexToDrop);
                 inventory.add(item);
-                pendingLoot.removeFirst(); // Lo tolgo dalla coda a terra
+                pendingLoot.removeFirst();
 
                 String msg = "Hai gettato " + droppedItem.getName() + " e raccolto " + item.getName() + "\n";
 
-                // Controllo di nuovo se c'è altra roba in coda
+                // controllo di nuovo se c'è altra roba in coda
                 if (pendingLoot.isEmpty()) {
                     currentView = playerView.IDLE;
                     return msg + "Non c'è altro a terra. Tornato in esplorazione.";
                 } else {
-                    return msg + "C'è ancora altro a terra:\nVuoi prendere " + pendingLoot.getFirst().getName() + "?\nScrivi un NUMERO per sostituirlo, o LASCIA.";
+                    return msg + "C'è ancora altro a terra:\nVuoi prendere " + pendingLoot.getFirst().getName() + " " + pendingLoot.getFirst().getDetails() + "?\nScrivi un NUMERO per sostituirlo, o LASCIA.";
                 }
 
             } catch (Exception e) {
-                return "Comando non valido.\nA terra c'è: " + item.getName() + "\nScrivi un NUMERO per sostituirlo o LASCIA.";
+                return "Comando non valido.\nA terra c'è: " + item.getName() + " " + item.getDetails() + "\nScrivi un NUMERO per sostituirlo o LASCIA.";
             }
         }
 
@@ -156,9 +160,11 @@ public class Game {
                 return "Scheda personaggio chiusa";
             } else if (comando.equalsIgnoreCase("Statistiche")){
                 final String[] temp = {""}; //fatto ad array e non stringa perchè dava errore non so il motivo
+                temp[0] += "Livello: " + player.getLevel() + "\n";
                 player.getStats().forEach((stat, value) -> {
                     temp[0] += stat + ": " + value + "\n";
                 });
+
                 return temp[0];
             } else if (comando.equalsIgnoreCase("Equipaggiamento")) {
                 return player.getEquippedItems();
@@ -194,7 +200,7 @@ public class Game {
                 if (!pendingLoot.isEmpty()) {
                     currentView = playerView.INVENTORY_OVERFLOW;
                     risultato += "\n[!] Zaino pieno! [!] \nCi sono degli oggetti che puoi prendere.\n" + getInventoryString() + "\nScrivi un NUMERO per sostituirlo o LASCIA.";
-                    risultato += "\nA terra c'è: " + pendingLoot.getFirst().getName();
+                    risultato += "\nA terra c'è: " + pendingLoot.getFirst().getName() + " " +pendingLoot.getFirst().getDetails();
                 } else {
                     currentView = playerView.IDLE;
                 }
@@ -204,7 +210,7 @@ public class Game {
             return risultato;
         }
 
-        return "Comando non riconosciuto. Esegui 'ZAINO', 'SPAWN ZOMBIE' "; //TODO SISTEMARE COMANDI
+        return "Comando non riconosciuto. Esegui 'ZAINO', 'SPAWN ZOMBIE', 'PERSONAGGIO' "; //TODO SISTEMARE COMANDI
     }
 
     private String getInventoryString() {

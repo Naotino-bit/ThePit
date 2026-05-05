@@ -10,11 +10,7 @@ import items.armors.Armors;
 import items.artefacts.Artefacts;
 import items.weapons.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public abstract class Character {
     protected String name;  //classe
@@ -270,7 +266,7 @@ public abstract class Character {
         }
 
         if (shieldEffect.equals("Immortale")) {
-            java.util.Random rand = new java.util.Random();
+            Random rand = new Random();
             if (rand.nextInt(100) < 20) {
                 System.out.println("Il " + scudo.getName() + " di " + this.getName() + " assorbe l'impatto! 0 Danni!");
                 return;
@@ -407,6 +403,11 @@ public abstract class Character {
         }
         return temp;
     }
+
+    public HashMap<String, Items> getEquippedItemsRaw() {
+        return equippedItems;
+    }
+
     public ArrayList<Items> getInventory(){
         return inventory;
     }
@@ -650,16 +651,59 @@ public abstract class Character {
     }
 
     public boolean rollCrit(int rate){
-        java.util.Random rand = new java.util.Random();
+        Random rand = new Random();
         return (rand.nextInt(100) + 1) <= rate;
     }
     public boolean rollCrit(){
         return this.rollCrit(this.critRate);
     }
     public boolean rollDodge(){
-        java.util.Random rand = new java.util.Random();
+        Random rand = new Random();
         return (rand.nextInt(100)+1) <= this.dodgeChance;
     }
 
+    public void handleDeath() {
+        //gestiamo il respawn, per ora ritorna a maxhp e perde parte dell'inventario
+        setHp(totalHpMax);
+        Random rand = new Random();
+
+        ArrayList<Items> totalPlayerItem = new ArrayList<>();
+        totalPlayerItem.addAll(inventory);
+        totalPlayerItem.addAll(getEquippedItemsRaw().values());
+        totalPlayerItem.removeAll(Collections.singleton(null));//togliamo tutti i null
+        System.out.println(totalPlayerItem);
+        int roll = rand.nextInt(totalPlayerItem.size());
+        if(roll>3) roll = 3;//massimo 3 item da far perdere //TODO scaling in base a difficolta
+        System.out.println("ITEMS DA DROPPARE :" + roll);
+
+        try {
+            for(int i = 0; i<roll; i++){
+                roll = rand.nextInt(totalPlayerItem.size()); //un item a caso da levare
+                Items itemToDrop = totalPlayerItem.get(roll);
+                System.out.println("DOVREBBE DROPPARE: " + itemToDrop);
+                if (inventory.contains(itemToDrop)){
+                    removeFromInventory(itemToDrop);
+                    System.out.println("BUTTATO CAUSA MORTE: " + itemToDrop);
+                } else {
+                    ArrayList<String> itemsEquippedKey = new ArrayList<>(getEquippedItemsRaw().keySet());
+                    ArrayList<Items> itemsEquippedValue = new ArrayList<>(getEquippedItemsRaw().values());
+                    for(int j = 0; j<itemsEquippedKey.size(); j++){
+                        if(itemsEquippedValue.get(j) != null) {
+                            if(itemsEquippedValue.get(j).equals(itemToDrop)){
+                                deEquip(itemsEquippedKey.get(j));
+                                removeFromInventory(itemToDrop);
+                                System.out.println("BUTTATO CAUSA MORTE (DALL'EQUIPAGGIAMENTO): " + itemToDrop);
+                            }
+                        }
+                    }
+                }
+
+            }
+        } catch (Exception e) {
+            System.out.println("Errore durante la perdità oggetti causa morte");
+        }
+
+
+    }
 }
 

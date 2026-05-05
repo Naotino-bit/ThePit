@@ -7,9 +7,9 @@ import items.Items;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
-//TODO DOPO CHE ANTO HA SISTEMATO TUTTI I CHECK DELLA MORTE DEL PERSONAGGIO FABIO DEVE IMPLEMENTARE IL CHECK PER GLI ARTEFATTI SPECIALI CHE BOOSTANO EXP, SOLDI, DROP (TUTTO CIO' VA ANCORA IMPLEMENTATO)
+//TODO ANTO HA SISTEMATO I METODI CHECK MORTE -> FABIO DEVE IMPLEMENTARE IL CHECK PER GLI ARTEFATTI SPECIALI CHE BOOSTANO EXP, SOLDI, DROP (TUTTO CIO' VA ANCORA IMPLEMENTATO)
 //TODO AGGIUNGERE COSA HAI EQUIPAGGIATO PRIMA DI SOSTITUIRLO
-// AGGIUNGERE ANCHE INFO SU COSA STAI PRENDENDO DA TERRA E COSA STAI GETTANDO QUANDO HAI LO ZAINO PIENO
+// INFO DI COSA STAI GETTANDO QUANDO HAI LO ZAINO PIENO
 public class BattleManager {
     private Character player;
     private ArrayList<Enemies> enemies;
@@ -20,7 +20,8 @@ public class BattleManager {
     private int counterRound = 0;
     Random rand = new Random();
     private ArrayList<Items> pendingLoot = new ArrayList<>();
-
+    private StringBuilder fightLog = new StringBuilder();
+    private ArrayList<Items> itemDropped = new ArrayList<>();
 
     public BattleManager(Character player, ArrayList<Enemies> enemies) {
         this.player = player;
@@ -92,9 +93,9 @@ public class BattleManager {
         }
         // -----------------------------
 
-        StringBuilder fightLog = new StringBuilder();
+
         boolean playerActionProcessed = false; // serve per sapere se abbiamo già esegutio l'azione del player
-        ArrayList<Items> itemDropped = new ArrayList<>();
+
 
 
         // Un singolo ciclo che gestisce tutti i turni in sequenza
@@ -104,41 +105,12 @@ public class BattleManager {
             if (counterRound >= attackOrder.size()) {
                 prepareAttackOrder();
                 consecutiveAttacks = getConsecutiveAttack(player);
+                //FINE TURNO E CHECK MORTE PER EVENTUALI DANNI DA ABILITA'
                 for(Character entity : attackOrder) {
                     entity.endTurn();
-                    if (entity.isDead()) {
-                        Enemies deadEnemy = (Enemies) entity;
-                        int expGained = deadEnemy.getExpReward();
-                        int moneyGained = deadEnemy.generateMoneyDrop();
 
-                        fightLog.append(player.gainExp(expGained));
-                        player.gainMoney(moneyGained);
-
-
-                        fightLog.append("Hai sconfitto ").append(entity.getName()).append("!\n");
-                        fightLog.append("Hai ottenuto ").append(moneyGained).append(" monete.\n");
-
-                        itemDropped = deadEnemy.getDrops();
-                        for(Items item: itemDropped){
-                            fightLog.append(entity.getName() + " ha droppato: " + item.getName());
-
-
-
-                            if (!player.addToInventory(item)) {
-                                pendingLoot.add(item);
-                            }
-                        }
-                        enemies.remove(entity);
-
-                        // NOTA BENE: Ho rimosso "attackOrder.remove(target)".
-                        // Rimuovere elementi dalla lista mentre la stiamo scorrendo sballa
-                        // gli indici e causa bug. Il nemico morto verrà semplicemente
-                        // "saltato" dal turno nemico e pulito al prossimo "prepareAttackOrder".
-
-                        if (enemies.isEmpty()) {
-                            battleOver = true;
-                            return fightLog.append("\nLa battaglia è finita! Vittoria!").toString();
-                        }
+                    if(checkDeath(entity)){
+                        return fightLog.toString();
                     }
                 }
                 fightLog.append("\n--- NUOVO ROUND ---\n");
@@ -175,36 +147,8 @@ public class BattleManager {
                     player.attack(target, enemies);
                     fightLog.append("Hai colpito ").append(target.getName()).append("!\n");
 
-                    if (target.isDead()) {
-                        fightLog.append("Hai sconfitto ").append(target.getName()).append("!\n");
-
-                        int expGained = target.getExpReward();
-                        int moneyGained = target.generateMoneyDrop();
-
-                        fightLog.append(player.gainExp(expGained));
-                        player.gainMoney(moneyGained);
-                        fightLog.append("Hai ottenuto ").append(moneyGained).append(" monete.\n");
-
-                        itemDropped = target.getDrops();
-                        player.gainExp(target.getExpReward()); //BISOGNA CASTARE A ENEMY
-                        for(Items item: itemDropped){
-                            fightLog.append(target.getName()).append(" ha droppato: ").append(item.getName()).append("\n");
-
-                            if (!player.addToInventory(item)) {
-                                pendingLoot.add(item);
-                            }
-                        }
-                        enemies.remove(target);
-
-                        // NOTA BENE: Ho rimosso "attackOrder.remove(target)".
-                        // Rimuovere elementi dalla lista mentre la stiamo scorrendo sballa
-                        // gli indici e causa bug. Il nemico morto verrà semplicemente
-                        // "saltato" dal turno nemico e pulito al prossimo "prepareAttackOrder".
-
-                        if (enemies.isEmpty()) {
-                            battleOver = true;
-                            return fightLog.append("\nLa battaglia è finita! Vittoria!").toString();
-                        }
+                    if(checkDeath(target)){
+                        return fightLog.toString();
                     }
 
                     consecutiveAttacks--;
@@ -242,6 +186,7 @@ public class BattleManager {
                             battleOver = true;
                             fightLog.append("\nSei morto! GAME OVER.");
                             //TODO AGGIUNGERE HANDLER PER FINE PARTITA E RESTARERE TUTTO
+                            player.handleDeath();
                             return fightLog.toString();
                         }
                     }
@@ -261,5 +206,44 @@ public class BattleManager {
 
     public ArrayList<Items> getPendingLoot() {
         return pendingLoot;
+    }
+
+    public boolean checkDeath(Character entity){
+        if (entity.isDead()) {
+            Enemies deadEnemy = (Enemies) entity;
+            int expGained = deadEnemy.getExpReward();
+            int moneyGained = deadEnemy.generateMoneyDrop();
+
+            fightLog.append(player.gainExp(expGained));
+            player.gainMoney(moneyGained);
+
+
+            fightLog.append("Hai sconfitto ").append(entity.getName()).append("!\n");
+            fightLog.append("Hai ottenuto ").append(moneyGained).append(" monete.\n");
+
+            itemDropped = deadEnemy.getDrops();
+            for(Items item: itemDropped){
+                fightLog.append(entity.getName() + " ha droppato: " + item.getName());
+
+
+
+                if (!player.addToInventory(item)) {
+                    pendingLoot.add(item);
+                }
+            }
+            enemies.remove(entity);
+
+            // NOTA BENE: Ho rimosso "attackOrder.remove(target)".
+            // Rimuovere elementi dalla lista mentre la stiamo scorrendo sballa
+            // gli indici e causa bug. Il nemico morto verrà semplicemente
+            // "saltato" dal turno nemico e pulito al prossimo "prepareAttackOrder".
+
+            if (enemies.isEmpty()) {
+                battleOver = true;
+                fightLog.append("\nLa battaglia è finita! Vittoria!").toString();
+                return true;
+            }
+        }
+        return false;
     }
 }
