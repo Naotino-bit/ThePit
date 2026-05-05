@@ -93,9 +93,9 @@ public class BattleManager {
         }
         // -----------------------------
 
-
+        StringBuilder fightLog = new StringBuilder();
         boolean playerActionProcessed = false; // serve per sapere se abbiamo già esegutio l'azione del player
-
+        ArrayList<Items> itemDropped = new ArrayList<>();
 
 
         // Un singolo ciclo che gestisce tutti i turni in sequenza
@@ -217,21 +217,18 @@ public class BattleManager {
             fightLog.append(player.gainExp(expGained));
             player.gainMoney(moneyGained);
 
-
-            fightLog.append("Hai sconfitto ").append(entity.getName()).append("!\n");
+            fightLog.append("Hai sconfitto ").append(deadEnemy.getName()).append("!\n");
             fightLog.append("Hai ottenuto ").append(moneyGained).append(" monete.\n");
 
             itemDropped = deadEnemy.getDrops();
             for(Items item: itemDropped){
-                fightLog.append(entity.getName() + " ha droppato: " + item.getName());
-
-
+                fightLog.append(deadEnemy.getName()).append(" ha droppato: ").append(item.getName()).append("\n");
 
                 if (!player.addToInventory(item)) {
                     pendingLoot.add(item);
                 }
             }
-            enemies.remove(entity);
+            enemies.remove(deadEnemy);
 
             // NOTA BENE: Ho rimosso "attackOrder.remove(target)".
             // Rimuovere elementi dalla lista mentre la stiamo scorrendo sballa
