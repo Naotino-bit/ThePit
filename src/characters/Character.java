@@ -48,7 +48,7 @@ public abstract class Character {
 
     //Sistema per livellare
     protected int level = 1;
-    protected int exp = 0;
+        protected int exp = 0;
     protected int expToNextLevel = 100;
 
     //SOLDI
@@ -434,18 +434,18 @@ public abstract class Character {
         stats.put("Precision", basePrecision);
         return stats;
     }
-
+/*
     //STAMPA DEL PERSONAGGIO
     public void presentation(){
         System.out.println("\n-----STATS-----\n" +
                 "Classe: " + name + "" +
-                "\nPunti vita: " + totalHpMax + "/" + totalHpMax +
+                "\nPunti vita: " + totalHp + "/" + totalHpMax +
                 "\nForza: " + totalStrength +
                 "\nAgilità: " + totalAgility +
                 "\nIntelligenza: " + totalIntelligence +
                 "\nPrecisione: " + totalPrecision);
     }
-
+*/
 
     public boolean addToInventory (Items item) {
         if(inventoryFull()) {
@@ -586,12 +586,14 @@ public abstract class Character {
         this.level++;
         this.expToNextLevel = (int) (this.expToNextLevel * 1.5);
 
+        int tempHpMax = this.totalHpMax;
+
         //AUMENTI ALLE STATS BASE
         applyLevelUpStats();
-
-        this.totalHp = this.baseHpMax;
         updateStats();
 
+        int hpDifference = this.totalHpMax - tempHpMax;
+        this.totalHp += hpDifference;
         return "Sei salito al livello " + this.level + "!\n";
      }
 

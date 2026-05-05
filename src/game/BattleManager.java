@@ -186,7 +186,6 @@ public class BattleManager {
                         fightLog.append("Hai ottenuto ").append(moneyGained).append(" monete.\n");
 
                         itemDropped = target.getDrops();
-                        player.gainExp(target.getExpReward()); //BISOGNA CASTARE A ENEMY
                         for(Items item: itemDropped){
                             fightLog.append(target.getName()).append(" ha droppato: ").append(item.getName()).append("\n");
 
