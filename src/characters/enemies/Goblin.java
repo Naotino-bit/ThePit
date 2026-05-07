@@ -15,10 +15,6 @@ public class Goblin extends Enemies {
         this.minMoneyDrop = 10;
         this.maxMoneyDrop = 20;
 
-        this.updateStats();
-        this.totalHp = this.totalHpMax;
-        this.currentMana = this.manaMax;
-
         this.generateLoot(1);
     }
 }

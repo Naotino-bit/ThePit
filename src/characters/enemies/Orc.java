@@ -15,10 +15,6 @@ public class Orc extends Enemies {
         this.minMoneyDrop = 30;
         this.maxMoneyDrop = 60;
 
-        this.updateStats();
-        this.totalHp = this.totalHpMax;
-        this.currentMana = this.manaMax;
-
         this.generateLoot(3);
     }
 }

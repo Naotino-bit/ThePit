@@ -28,11 +28,6 @@ public class Game {
         this.player = playerClass;
         this.currentBattle = null; // All'inizio non stai combattendo
 
-        player.addToInventory(new Sword("GiannaArea", "EPICO", 1, "Forza", 1, 1800, ""));
-        player.addToInventory(new Sword("GiannaArea", "EPICO", 1, "Forza", 1, 1800, ""));
-        player.addToInventory(new Sword("GiannaArea", "EPICO", 1, "Forza", 1, 1800, ""));
-        player.addToInventory(new Sword("GiannaArea", "EPICO", 1, "Forza", 1, 1800, ""));
-
         XmlHandler.loadAllItems();
     }
 
@@ -59,10 +54,12 @@ public class Game {
             }
 
             //DEBUG ONLY
-            if(comando.equalsIgnoreCase("spawn zombie")){
+            if(comando.equalsIgnoreCase("spawn")){
                 ArrayList<Enemies> enemies = new ArrayList<Enemies>();
-                enemies.add(new Zombie());
-                enemies.add(new Zombie());
+
+                enemies.add(spawnEnemy(new Zombie()));
+                enemies.add(spawnEnemy(new Zombie()));
+
                 this.currentBattle = new BattleManager(player, enemies);
                 currentView = playerView.BATTLE;
                 return getEnemies(enemies);
@@ -227,5 +224,10 @@ public class Game {
 
     public String getCurrentState() {
         return currentView.name();
+    }
+
+    private Enemies spawnEnemy(Enemies enemy) {
+        enemy.setLevelAndScale(player.getLevel());
+        return enemy;
     }
 }
