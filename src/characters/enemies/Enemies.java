@@ -3,8 +3,6 @@ package characters.enemies;
 import characters.Character;
 import game.XmlHandler;
 import items.Items;
-//TODO ANCHE I MOSTRI SCALANO IN BASE AL LIVELLO DEL PLAYER
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Enemies extends Character {
@@ -41,7 +39,6 @@ public class Enemies extends Character {
     protected void applyLevelUpStats() { return; }
 
 
-    //TODO IMPLEMENTARE getExpReward e generateMoneyDrop
     
     public int getExpReward(){ return expReward; }
 
