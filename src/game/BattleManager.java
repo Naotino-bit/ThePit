@@ -20,7 +20,7 @@ public class BattleManager {
     private int counterRound = 0;
     Random rand = new Random();
     private ArrayList<Items> pendingLoot = new ArrayList<>();
-    private StringBuilder fightLog = new StringBuilder();
+    private final StringBuilder fightLog = new StringBuilder();
     private ArrayList<Items> itemDropped = new ArrayList<>();
 
     public BattleManager(Character player, ArrayList<Enemies> enemies) {
@@ -93,9 +93,9 @@ public class BattleManager {
         }
         // -----------------------------
 
-        StringBuilder fightLog = new StringBuilder();
+        //StringBuilder fightLog = new StringBuilder();
         boolean playerActionProcessed = false; // serve per sapere se abbiamo già esegutio l'azione del player
-        ArrayList<Items> itemDropped = new ArrayList<>();
+        //ArrayList<Items> itemDropped = new ArrayList<>();
 
 
         // Un singolo ciclo che gestisce tutti i turni in sequenza
