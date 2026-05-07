@@ -1,13 +1,14 @@
 package game;
-//TODO ASSIEME ---> QUANDO IL NEMICO MUORE DOBBIAMO CONTROLLARE SE USA OGGETTI CHE GLI FACCIANO PRENDERE PIU' SOLDI / EXP / LOOT E IN CASO DARGLI DI PIU'
+
 import characters.enemies.Enemies;
 import characters.Character;
 import items.Items;
 import items.usables.Usables;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Random;
 
-//TODO ANTO HA SISTEMATO I METODI CHECK MORTE -> FABIO DEVE IMPLEMENTARE IL CHECK PER GLI ARTEFATTI SPECIALI CHE BOOSTANO EXP, SOLDI, DROP (TUTTO CIO' VA ANCORA IMPLEMENTATO)
 //TODO AGGIUNGERE COSA HAI EQUIPAGGIATO PRIMA DI SOSTITUIRLO
 // INFO DI COSA STAI GETTANDO QUANDO HAI LO ZAINO PIENO
 public class BattleManager {
@@ -33,7 +34,6 @@ public class BattleManager {
         this.battleOver = false;
         prepareAttackOrder();
         this.consecutiveAttacks = getConsecutiveAttack(player);
-
     }
 
     private void prepareAttackOrder() {
@@ -244,14 +244,38 @@ public class BattleManager {
             Enemies deadEnemy = (Enemies) entity;
             int expGained = deadEnemy.getExpReward();
             int moneyGained = deadEnemy.generateMoneyDrop();
+            itemDropped = deadEnemy.getDrops();
 
+            boolean hasGoldScarab = false;
+            boolean hasSilverScarab = false;
+            boolean hasDragonsEgg = false;
+
+            for (Items item : player.getEquippedItemsRaw().values()) {
+                if (item != null) {
+                    if (item.getName().equals("Gold Scarab")) hasGoldScarab = true;
+                    if (item.getName().equals("Silver Scarab")) hasSilverScarab = true;
+                    if (item.getName().equals("Dragon's Egg")) hasDragonsEgg = true;
+                }
+            }
+
+            if (hasDragonsEgg) {
+                expGained = (int) (expGained * 1.5);
+            }
+            if (hasGoldScarab) {
+                moneyGained = (int) (moneyGained * 1.5);
+            }
+            if (hasSilverScarab) {
+                Items extraLoot = XmlHandler.rollRandomItem();
+                if (extraLoot != null) {
+                    itemDropped.add(extraLoot);
+                }
+            }
             fightLog.append(player.gainExp(expGained));
             player.gainMoney(moneyGained);
 
             fightLog.append("Hai sconfitto ").append(deadEnemy.getName()).append("!\n");
             fightLog.append("Hai ottenuto ").append(moneyGained).append(" monete.\n");
 
-            itemDropped = deadEnemy.getDrops();
             for(Items item: itemDropped){
                 fightLog.append(deadEnemy.getName()).append(" ha droppato: ").append(item.getName()).append("\n");
 

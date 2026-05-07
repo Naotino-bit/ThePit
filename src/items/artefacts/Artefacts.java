@@ -40,6 +40,16 @@ public class Artefacts extends Items {
 
     @Override
     public String getDetails() {
-        return super.getDetails() + " | Set: " + nameOfSet + " | Main Stat: " + boostedStat + " +" + boostedStatVal;
+        StringBuilder details = new StringBuilder(super.getDetails() + " | Set: " + this.nameOfSet + " | " + boostedStat + ": +" + boostedStatVal);
+
+        if (subStats != null && !subStats.isEmpty()) {
+            details.append(" | SubStats: [");
+            for (Map.Entry<String, Integer> entry : subStats.entrySet()) {
+                details.append(entry.getKey()).append(": +").append(entry.getValue()).append(" ");
+            }
+            details.append("]");
+        }
+
+        return details.toString().replace(" ]", "]");
     }
 }

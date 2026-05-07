@@ -15,10 +15,6 @@ public class Skeleton extends Enemies {
         this.minMoneyDrop = 15;
         this.maxMoneyDrop = 25;
 
-        this.updateStats();
-        this.totalHp = this.totalHpMax;
-        this.currentMana = this.manaMax;
-
         this.generateLoot(1);
     }
 }

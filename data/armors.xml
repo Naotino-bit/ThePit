@@ -89,7 +89,7 @@
     <Armor tipo="Leggins" nome="Gambali della Sentinella" rarita="Epico" prezzo="1000" difesaBase="22" stat="Vitalità" valStat="18"/>
     <Armor tipo="Boots" nome="Sabatons della Sentinella" rarita="Epico" prezzo="1000" difesaBase="14" stat="Vitalità" valStat="12"/>
 
-    <!-- SET WARMOG (Leggendario - Effetto: Mega Healing Pazzo) -->
+    <!-- SET WARMOG (Leggendario) -->
     <Armor tipo="Helmet" nome="Elmo di Warmog" rarita="Leggendario" prezzo="3500" difesaBase="28" stat="Vitalità" valStat="30"/>
     <Armor tipo="Chestplate" nome="Cuore di Warmog" rarita="Leggendario" prezzo="5000" difesaBase="50" stat="Vitalità" valStat="50"/>
     <Armor tipo="Leggins" nome="Gambali di Warmog" rarita="Leggendario" prezzo="3500" difesaBase="35" stat="Vitalità" valStat="35"/>

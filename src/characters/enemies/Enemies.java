@@ -3,8 +3,6 @@ package characters.enemies;
 import characters.Character;
 import game.XmlHandler;
 import items.Items;
-//TODO ANCHE I MOSTRI SCALANO IN BASE AL LIVELLO DEL PLAYER
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Enemies extends Character {
@@ -41,7 +39,6 @@ public class Enemies extends Character {
     protected void applyLevelUpStats() { return; }
 
 
-    //TODO IMPLEMENTARE getExpReward e generateMoneyDrop
     
     public int getExpReward(){ return expReward; }
 
@@ -49,5 +46,35 @@ public class Enemies extends Character {
         java.util.Random rand = new java.util.Random();
 
         return rand.nextInt((maxMoneyDrop - minMoneyDrop)+1)+ minMoneyDrop;
+    }
+
+    // Metodo per far scalare il nemico in base al livello del player
+    public void setLevelAndScale(int playerLevel) {
+        java.util.Random rand = new java.util.Random();
+
+        int varianza = rand.nextInt(4) - 1; //i mostri ora hanno un livello semicasuale che varia attorno al livello del player
+
+        //prendiamo effettivamente il livello del nostro mostro
+        this.level = playerLevel + varianza;
+        if (this.level < 1) this.level = 1; // Niente mostri di livello 0!
+
+        //gem ha sostituito di scrivere i nomi così e onestamente l'ha gasata
+        this.name = this.name + " (Lv." + this.level + ")";
+
+        int levelDiff = this.level - 1;
+
+        if (levelDiff > 0) {
+            this.baseHpMax += (int) (this.baseHpMax * 0.20 * levelDiff);     // +20% HP per livello
+            this.baseStrength += (int) (this.baseStrength * 0.15 * levelDiff); // +15% Forza
+            this.baseAgility += (int) (this.baseAgility * 0.05 * levelDiff);   // +5% Agilità
+
+            this.expReward += (int) (this.expReward * 0.25 * levelDiff);       // +25% EXP in più
+            this.minMoneyDrop += (int) (this.minMoneyDrop * 0.15 * levelDiff); // +15% Soldi
+            this.maxMoneyDrop += (int) (this.maxMoneyDrop * 0.15 * levelDiff);
+        }
+
+        this.updateStats();
+        this.totalHp = this.totalHpMax;
+        this.currentMana = this.manaMax;
     }
 }

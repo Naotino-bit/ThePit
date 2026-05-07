@@ -15,11 +15,6 @@ public class Witch extends Enemies {
         this.minMoneyDrop = 20;
         this.maxMoneyDrop = 45;
 
-        this.updateStats();
-        this.totalHp = this.totalHpMax;
-        this.currentMana = this.manaMax;
-
-
         this.generateLoot(2);
 
     }

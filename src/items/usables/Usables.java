@@ -22,4 +22,9 @@ public abstract class Usables extends Items {
         temp.add("Inventario");
         return temp;
     }
+
+    @Override
+    public String getDetails() {
+        return super.getDetails() + " | Effetto: Ripristina " + boostedStatVal + " " + boostedStat;
+    }
 }

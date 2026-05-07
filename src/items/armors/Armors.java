@@ -14,4 +14,8 @@ public class Armors extends Items {
         return equippedSlot;
     }
 
+    @Override
+    public String getDetails() {
+        return super.getDetails() + " | Difesa: " + stat + " | " + boostedStat + ": +" + boostedStatVal;
+    }
 }

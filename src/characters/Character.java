@@ -1,4 +1,4 @@
-//TODO implementare Leveling (TEORICAMENTE FINITA LA LOGICA MA BISOGNA IMPLENTARE NEL GAMEPLAY)
+
 // gestire tutti gli effetti secondari delle armi, armature ecc
 
 
@@ -582,7 +582,6 @@ public abstract class Character {
         }
     }
 
-    //TODO IMPLEMENTA GAIN EXP
     public String gainExp(int amount){
         this.exp += amount;
         String log = "Hai ottenuto " + amount + " EXP.\n";
@@ -608,7 +607,6 @@ public abstract class Character {
         return "Sei salito al livello " + this.level + "!\n";
      }
 
-     //TODO IMPLEMENTA GAIN MONEY
     public void gainMoney(int amount){
         this.money += amount;
     }
@@ -623,7 +621,6 @@ public abstract class Character {
         return false;
     }
 
-    //TODO IMPLEMENTA END TURN
     public void endTurn(){
         this.setCurrentMana(this.currentMana + this.manaRegen);
 
