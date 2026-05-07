@@ -16,6 +16,7 @@ public class HealthPotion extends Usables {
             if (caster.getHp() > caster.getHpMax()) {
                 caster.setHp(caster.getHpMax());
             }
+            caster.removeFromInventory(this);
             return caster.getName() + " ha bevuto " + this.name + " e ha recuperato " + this.boostedStatVal + " HP!";
         }
         return "Nessun effetto applicabile.";

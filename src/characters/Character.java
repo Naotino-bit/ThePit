@@ -8,6 +8,7 @@ package characters;
 import items.Items;
 import items.armors.Armors;
 import items.artefacts.Artefacts;
+import items.usables.Usables;
 import items.weapons.*;
 
 import java.util.*;
@@ -411,6 +412,15 @@ public abstract class Character {
     public ArrayList<Items> getInventory(){
         return inventory;
     }
+    public ArrayList<Usables> getInventoryUsables(){
+        ArrayList<Usables> inventoryUsable = new ArrayList<>();
+        for(Items item: inventory) {
+            if(item instanceof Usables) {
+                inventoryUsable.add((Usables) item);
+            }
+        }
+        return inventoryUsable;
+    }
     public int getLevel() {return level;}
     public int getMoney(){ return money;}
     public int getCurrentMana(){ return this.currentMana; }
@@ -704,8 +714,6 @@ public abstract class Character {
         } catch (Exception e) {
             System.out.println("Errore durante la perdità oggetti causa morte");
         }
-
-
     }
 }
 

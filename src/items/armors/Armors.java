@@ -13,4 +13,5 @@ public class Armors extends Items {
     public ArrayList<String> getEquippedSlot() {
         return equippedSlot;
     }
+
 }

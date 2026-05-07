@@ -4,6 +4,8 @@ import characters.Character;
 import characters.enemies.Enemies;
 import characters.enemies.Zombie;
 import items.Items;
+import items.usables.HealthPotion;
+import items.usables.Usables;
 import items.weapons.Sword;
 import items.weapons.Weapons;
 
@@ -28,10 +30,7 @@ public class Game {
         this.player = playerClass;
         this.currentBattle = null; // All'inizio non stai combattendo
 
-        player.addToInventory(new Sword("GiannaArea", "EPICO", 1, "Forza", 1, 1800, ""));
-        player.addToInventory(new Sword("GiannaArea", "EPICO", 1, "Forza", 1, 1800, ""));
-        player.addToInventory(new Sword("GiannaArea", "EPICO", 1, "Forza", 1, 1800, ""));
-        player.addToInventory(new Sword("GiannaArea", "EPICO", 1, "Forza", 1, 1800, ""));
+        player.addToInventory(new HealthPotion("Pozione vita", "LEGGENDARIO", "Vitalità", 25, 5000));
 
         XmlHandler.loadAllItems();
     }
@@ -41,6 +40,7 @@ public class Game {
         if(enemies.size()>1) {
             string = "Sono apparsi dei nemici: \n";
         }
+        string += player.getName() + ": " + player.getHp() +"/" + player.getHpMax() + " hp\n";
         for(int i=0; i<enemies.size(); i++) {
             string += "[" + (i+1) + "] - " + enemies.get(i).getName() + " " + enemies.get(i).getHp() + "/" + enemies.get(i).getHpMax()+ " hp\n";
         }
@@ -90,7 +90,11 @@ public class Game {
 
                 //TODO FORSE AGGIUNGERE PIù INFORMAZIONI ALL'ISPEZIONA
                 //TODO AGGIUNGERE QUI QUELLO CHE HAI ORA EQUIPAGGIATO SE LO HAI E MOSTRARLO
-                return "Hai selezionato: "  + selectedItem.getDetails() + "\nVuoi EQUIPAGGIARE, BUTTARE o ANNULLARE?";
+                if (selectedItem instanceof Usables) {
+                    return "Hai selezionato: "  + selectedItem.getDetails() + "\nVuoi USARE, BUTTARE o ANNULLARE?";
+                } else {
+                    return "Hai selezionato: "  + selectedItem.getDetails() + "\nVuoi EQUIPAGGIARE, BUTTARE o ANNULLARE?";
+                }
 
             } catch (Exception e) {
                 return "Inserisci un numero valido o scrivi ESCI.";
@@ -100,9 +104,20 @@ public class Game {
         //azione sul'oggetto selezionato
         else if (currentView == playerView.INVENTORY_ACTION) {
             if(comando.equalsIgnoreCase("EQUIPAGGIA")) {
+                if (selectedItem instanceof Usables) {
+                    return "Non puoi equipaggiare";
+                }
                 player.equip(selectedItem);
                 currentView = playerView.INVENTORY_MAIN;
                 return "Hai equipaggiato " + selectedItem.getName() + getInventoryString();
+            } else if (comando.equalsIgnoreCase("USA")) {
+                if (!(selectedItem instanceof Usables)) {
+                    return "Non è un consumabile";
+                }
+                ((Usables) selectedItem).use(player,player);
+                currentView = playerView.INVENTORY_MAIN;
+                return "Hai usato " + selectedItem.getName() + getInventoryString();
+
             } else if (comando.equalsIgnoreCase("BUTTA")) {
                 player.removeFromInventory(selectedItem);
                 currentView = playerView.INVENTORY_MAIN;

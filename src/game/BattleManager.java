@@ -3,10 +3,10 @@ package game;
 import characters.enemies.Enemies;
 import characters.Character;
 import items.Items;
+import items.usables.Usables;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Random;
+import java.util.*;
+
 //TODO ANTO HA SISTEMATO I METODI CHECK MORTE -> FABIO DEVE IMPLEMENTARE IL CHECK PER GLI ARTEFATTI SPECIALI CHE BOOSTANO EXP, SOLDI, DROP (TUTTO CIO' VA ANCORA IMPLEMENTATO)
 //TODO AGGIUNGERE COSA HAI EQUIPAGGIATO PRIMA DI SOSTITUIRLO
 // INFO DI COSA STAI GETTANDO QUANDO HAI LO ZAINO PIENO
@@ -20,8 +20,12 @@ public class BattleManager {
     private int counterRound = 0;
     Random rand = new Random();
     private ArrayList<Items> pendingLoot = new ArrayList<>();
-    private final StringBuilder fightLog = new StringBuilder();
     private ArrayList<Items> itemDropped = new ArrayList<>();
+    private enum playerStatus {
+        BATTLE,
+        INVENTORY
+    }
+    private playerStatus playerCurrentStatus = playerStatus.BATTLE;
 
     public BattleManager(Character player, ArrayList<Enemies> enemies) {
         this.player = player;
@@ -29,6 +33,7 @@ public class BattleManager {
         this.battleOver = false;
         prepareAttackOrder();
         this.consecutiveAttacks = getConsecutiveAttack(player);
+
     }
 
     private void prepareAttackOrder() {
@@ -81,6 +86,28 @@ public class BattleManager {
     }
 
     public String manageRound(String playerMove) {
+        StringBuilder fightLog = new StringBuilder();
+        if(playerCurrentStatus == playerStatus.INVENTORY) {
+            if (playerMove.equalsIgnoreCase("ESCI")) {
+                playerCurrentStatus = playerStatus.BATTLE;
+                return "Zaino chiuso";
+            }
+
+            try {
+                int index = Integer.parseInt(playerMove) - 1; // -1 perché l'utente digita 1 per l'indice 0
+                ArrayList<Usables> inventory = player.getInventoryUsables();
+
+                Usables itemToUse = inventory.get(index);
+                consecutiveAttacks--;
+                return itemToUse.use(player, player);
+
+
+            } catch (Exception e) {
+                return "Inserisci un numero valido o scrivi ESCI.";
+            }
+
+        }
+
         if (battleOver) return "La battaglia è già finita!";
 
         // --- PRE-VALIDAZIONE INPUT ---
@@ -88,14 +115,14 @@ public class BattleManager {
         // blocchiamo tutto prima ancora di far scorrere i turni!
         String[] checkSplit = playerMove.split(" ");
         String cmd = checkSplit[0].toUpperCase();
-        if (!cmd.equals("ATTACCA") && !cmd.equals("CURATI")) {
-            return "Comando non riconosciuto. Usa 'ATTACCA [numero]' o 'CURATI'.\n" + getBattleReport();
+        if (!cmd.equals("ATTACCA") && !cmd.equals("ZAINO")) {
+            return "Comando non riconosciuto. Usa 'ATTACCA [numero]' o 'ZAINO'.\n" + getBattleReport();
         }
         // -----------------------------
 
-        //StringBuilder fightLog = new StringBuilder();
+
         boolean playerActionProcessed = false; // serve per sapere se abbiamo già esegutio l'azione del player
-        //ArrayList<Items> itemDropped = new ArrayList<>();
+
 
 
         // Un singolo ciclo che gestisce tutti i turni in sequenza
@@ -109,7 +136,7 @@ public class BattleManager {
                 for(Character entity : attackOrder) {
                     entity.endTurn();
 
-                    if(checkDeath(entity)){
+                    if(checkDeath(entity, fightLog)){
                         return fightLog.toString();
                     }
                 }
@@ -123,7 +150,7 @@ public class BattleManager {
 
                 // Se abbiamo già processato l'azione del giocatore, significa
                 // che i nemici hanno finito e tocca di nuovo a lui.
-                // Ci fermiamo e aspettiamo che l'utente inserisca un nuovo comando!
+                // Ci fermiamo e aspettiamo che l'utente inserisca un nuovo comando
                 if (playerActionProcessed) {
                     break;
                 }
@@ -147,7 +174,7 @@ public class BattleManager {
                     player.attack(target, enemies);
                     fightLog.append("Hai colpito ").append(target.getName()).append("!\n");
 
-                    if(checkDeath(target)){
+                    if(checkDeath(target, fightLog)){
                         return fightLog.toString();
                     }
 
@@ -161,12 +188,16 @@ public class BattleManager {
                         // Il ciclo NON si interrompe: ora farà attaccare i nemici successivi!
                     }
 
-                } else if (moveSplit[0].equalsIgnoreCase("CURATI")) {
-                    fightLog.append("LOGICA PER CURARSI NON IMPLEMENTATA\n");//TODO IMPLEMENTARE CURATI
-                    break; // Usa break invece di return!
+                } else if (moveSplit[0].equalsIgnoreCase("ZAINO")) {
+                    playerCurrentStatus = playerStatus.INVENTORY;
+                    fightLog.append("--- Zaino - Consumabili ---\n");
+                    for(Items item: player.getInventoryUsables()){
+                        fightLog.append(player.getInventory().indexOf(item)+1).append(". ").append(item.getName()).append(" ").append(item.getDetails()).append("\n");
+                    }
+                    return fightLog.toString();
                 } else {
-                    fightLog.append("Comando non riconosciuto. Usa 'ATTACCA [numero]' o 'CURATI'.\n");
-                    break; // Usa break invece di return!
+                    fightLog.append("Comando non riconosciuto. Usa 'ATTACCA [numero]' o 'ZAINO'.\n");
+                    break;
                 }
 
             }
@@ -208,7 +239,7 @@ public class BattleManager {
         return pendingLoot;
     }
 
-    public boolean checkDeath(Character entity){
+    public boolean checkDeath(Character entity, StringBuilder fightLog){
         if (entity.isDead()) {
             Enemies deadEnemy = (Enemies) entity;
             int expGained = deadEnemy.getExpReward();
