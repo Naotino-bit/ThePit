@@ -15,7 +15,12 @@ public class Weapons extends Items {
 
     @Override
     public String getDetails() {
-        return super.getDetails() + " | Danno: " + stat + " | " + boostedStat + ": " + boostedStatVal;
+        String baseDetails = super.getDetails() + " | Danno: " + stat + " | " + boostedStat + ": +" + boostedStatVal;
+
+        if (this.effect != null && !this.effect.equalsIgnoreCase("Nessuno")) {
+            baseDetails += " | Effetto: " + this.effect;
+        }
+        return baseDetails;
     }
 
     @Override
