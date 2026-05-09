@@ -40,16 +40,17 @@ public class Artefacts extends Items {
 
     @Override
     public String getDetails() {
-        StringBuilder details = new StringBuilder(super.getDetails() + " | Set: " + this.nameOfSet + " | " + boostedStat + ": +" + boostedStatVal);
+        StringBuilder details = new StringBuilder(super.getDetails() + " | Set: " + getNameOfSet() + " | " + boostedStat + ": +" + boostedStatVal);
 
-        if (subStats != null && !subStats.isEmpty()) {
+        if (getSubStats() != null && !getSubStats().isEmpty()) {
             details.append(" | SubStats: [");
-            for (Map.Entry<String, Integer> entry : subStats.entrySet()) {
+            for (Map.Entry<String, Integer> entry : getSubStats().entrySet()) {
                 details.append(entry.getKey()).append(": +").append(entry.getValue()).append(" ");
             }
             details.append("]");
         }
 
-        return details.toString().replace(" ]", "]");
+        return details.toString().replace(" ]", "]") + " | Valore: " + economicValue + " monete";
+    }
     }
 }

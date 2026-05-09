@@ -16,6 +16,6 @@ public class Armors extends Items {
 
     @Override
     public String getDetails() {
-        return super.getDetails() + " | Difesa: " + stat + " | " + boostedStat + ": +" + boostedStatVal;
+        return super.getDetails() + " | Difesa: " + stat + " | " + boostedStat + ": +" + boostedStatVal + " | Valore: " + economicValue + " monete";
     }
 }

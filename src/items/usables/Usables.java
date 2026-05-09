@@ -25,6 +25,6 @@ public abstract class Usables extends Items {
 
     @Override
     public String getDetails() {
-        return super.getDetails() + " | Effetto: Ripristina " + boostedStatVal + " " + boostedStat;
+        return super.getDetails() + " | Effetto: Ripristina " + boostedStatVal + " " + boostedStat + " | Valore: " + economicValue + " monete";
     }
 }
