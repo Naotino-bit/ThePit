@@ -52,5 +52,4 @@ public class Artefacts extends Items {
 
         return details.toString().replace(" ]", "]") + " | Valore: " + economicValue + " monete";
     }
-    }
 }

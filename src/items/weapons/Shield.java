@@ -10,5 +10,6 @@ public class Shield extends Weapons{
         this.boostedStatVal = boostedStatVal;
         this.economicValue = economicValue;
         this.effect = effect;
+        equippedSlot.add("Secondaria");
     }
 }

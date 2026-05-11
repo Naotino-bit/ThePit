@@ -216,7 +216,6 @@ public class BattleManager {
                         if (player.getHp() <= 0) {
                             battleOver = true;
                             fightLog.append("\nSei morto! GAME OVER.");
-                            //TODO AGGIUNGERE HANDLER PER FINE PARTITA E RESTARERE TUTTO
                             player.handleDeath();
                             return fightLog.toString();
                         }

@@ -4,11 +4,15 @@ import characters.Character;
 import characters.enemies.Enemies;
 import characters.enemies.Zombie;
 import items.Items;
+import items.armors.Armors;
+import items.armors.Helmet;
 import items.usables.HealthPotion;
 import items.usables.Usables;
+import items.weapons.Claymore;
 import items.weapons.Sword;
 import items.weapons.Weapons;
 
+import java.sql.SQLData;
 import java.util.ArrayList;
 
 public class Game {
@@ -31,6 +35,8 @@ public class Game {
         this.currentBattle = null; // All'inizio non stai combattendo
 
         player.addToInventory(new HealthPotion("Pozione vita", "LEGGENDARIO", "Vitalità", 25, 5000));
+        player.addToInventory(new Helmet("Franco ", " ", 1, "Forza", 10, 5000));
+        player.addToInventory(new Helmet("Gianni ", " ", 1, "Forza", 10, 5000));
 
         XmlHandler.loadAllItems();
     }
@@ -91,10 +97,13 @@ public class Game {
                 currentView = playerView.INVENTORY_ACTION; // Cambio stato!
 
                 //TODO FORSE AGGIUNGERE PIù INFORMAZIONI ALL'ISPEZIONA
-                //TODO AGGIUNGERE QUI QUELLO CHE HAI ORA EQUIPAGGIATO SE LO HAI E MOSTRARLO
                 if (selectedItem instanceof Usables) {
                     return "Hai selezionato: "  + selectedItem.getDetails() + "\nVuoi USARE, BUTTARE o ANNULLARE?";
                 } else {
+                    String slot = selectedItem.getEquippedSlot().getFirst();
+                    if (player.getEquippedItemsRaw().get(slot) != null) {
+                        return "Hai selezionato: "  + selectedItem.getDetails() + "\n[!] Attualmente hai equipaggiato: " + player.getEquippedItemsRaw().get(slot).getDetails() +"\nVuoi EQUIPAGGIARE, BUTTARE o ANNULLARE?";
+                    }
                     return "Hai selezionato: "  + selectedItem.getDetails() + "\nVuoi EQUIPAGGIARE, BUTTARE o ANNULLARE?";
                 }
 

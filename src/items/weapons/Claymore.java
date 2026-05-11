@@ -9,6 +9,7 @@ public class Claymore extends Weapons {
         this.boostedStatVal = boostedStatVal;
         this.economicValue = economicValue;
         this.effect = effect;
+        equippedSlot.add("Primaria");
     }
 
 }
