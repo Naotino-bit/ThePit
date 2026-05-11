@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
 
-//TODO AGGIUNGERE COSA HAI EQUIPAGGIATO PRIMA DI SOSTITUIRLO
-// INFO DI COSA STAI GETTANDO QUANDO HAI LO ZAINO PIENO
 public class BattleManager {
     private Character player;
     private ArrayList<Enemies> enemies;
@@ -88,7 +86,7 @@ public class BattleManager {
     public String manageRound(String playerMove) {
         StringBuilder fightLog = new StringBuilder();
         if(playerCurrentStatus == playerStatus.INVENTORY) {
-            if (playerMove.equalsIgnoreCase("ESCI")) {
+            if (playerMove.equalsIgnoreCase("ESCI") || playerMove.toLowerCase().startsWith("esc")) {
                 playerCurrentStatus = playerStatus.BATTLE;
                 return "Zaino chiuso";
             }
@@ -169,7 +167,7 @@ public class BattleManager {
                     break; // Interrompe il ciclo in attesa di un input corretto
                 }
 
-                if (moveSplit[0].equalsIgnoreCase("ATTACCA")) {
+                if (moveSplit[0].equalsIgnoreCase("ATTACCA") || moveSplit[0].toLowerCase().startsWith("att")) {
                     Enemies target = enemies.get(enemyChoice);
                     player.attack(target, enemies);
                     fightLog.append("Hai colpito ").append(target.getName()).append("!\n");
@@ -188,7 +186,7 @@ public class BattleManager {
                         // Il ciclo NON si interrompe: ora farà attaccare i nemici successivi!
                     }
 
-                } else if (moveSplit[0].equalsIgnoreCase("ZAINO")) {
+                } else if (moveSplit[0].equalsIgnoreCase("ZAINO") || moveSplit[0].toLowerCase().startsWith("za")) {
                     playerCurrentStatus = playerStatus.INVENTORY;
                     fightLog.append("--- Zaino - Consumabili ---\n");
                     for(Items item: player.getInventoryUsables()){

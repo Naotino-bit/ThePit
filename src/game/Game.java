@@ -53,19 +53,17 @@ public class Game {
         return string;
     }
 
-    //TODO CREARE TASTO HELP o AIUTO PER STAMPARE TUTTI I COMANDI DISPONIBILI
-    // OPPURE SCRIVERLO SOLO NEL README SU GITHUB
     public Object processCommand(String comando){
 
         // se l'utente è in freeroam
         if(currentView == playerView.IDLE) {
-            if(comando.equalsIgnoreCase("ZAINO")){
+            if(comando.equalsIgnoreCase("ZAINO") || comando.toLowerCase().startsWith("za")){
                 currentView = playerView.INVENTORY_MAIN;
                 return getInventoryString() + "Selezionare un oggetto oppure 'ESCI'";
             }
 
             //DEBUG ONLY
-            if(comando.equalsIgnoreCase("spawn")){
+            if(comando.equalsIgnoreCase("spawn") || comando.toLowerCase().startsWith("sp")){
                 ArrayList<Enemies> enemies = new ArrayList<Enemies>();
 
                 enemies.add(spawnEnemy(new Zombie()));
@@ -77,7 +75,7 @@ public class Game {
             }
 
             //mostra quello che hai equipaggiato attualmente
-            if(comando.equalsIgnoreCase("PERSONAGGIO")){
+            if(comando.equalsIgnoreCase("PERSONAGGIO") || comando.toLowerCase().startsWith("per")){
                 currentView = playerView.PLAYER_INFO;
                 return "Mostra le statistiche con 'Statistiche'\nL'equipaggiamento attuale con 'Equipaggiamento'\nDisequipaggia qualcosa con 'Disequipaggia [SLOT]'";
             }
@@ -85,7 +83,7 @@ public class Game {
 
         // inventario, scelta oggetto
         else if (currentView == playerView.INVENTORY_MAIN) {
-            if (comando.equalsIgnoreCase("ESCI")) {
+            if (comando.equalsIgnoreCase("ESCI") || comando.toLowerCase().startsWith("esc")) {
                 currentView = playerView.IDLE;
                 return "Zaino chiuso";
             }
@@ -96,7 +94,6 @@ public class Game {
                 selectedItem = inventory.get(index); // Salvo l'oggetto scelto!
                 currentView = playerView.INVENTORY_ACTION; // Cambio stato!
 
-                //TODO FORSE AGGIUNGERE PIù INFORMAZIONI ALL'ISPEZIONA
                 if (selectedItem instanceof Usables) {
                     return "Hai selezionato: "  + selectedItem.getDetails() + "\nVuoi USARE, BUTTARE o ANNULLARE?";
                 } else {
@@ -114,7 +111,7 @@ public class Game {
 
         //azione sul'oggetto selezionato
         else if (currentView == playerView.INVENTORY_ACTION) {
-            if(comando.equalsIgnoreCase("EQUIPAGGIA")) {
+            if(comando.equalsIgnoreCase("EQUIPAGGIA") || comando.toLowerCase().startsWith("equ")) {
                 if (selectedItem instanceof Usables) {
                     return "Non puoi equipaggiare";
                 }
@@ -129,11 +126,11 @@ public class Game {
                 currentView = playerView.INVENTORY_MAIN;
                 return "Hai usato " + selectedItem.getName() + getInventoryString();
 
-            } else if (comando.equalsIgnoreCase("BUTTA")) {
+            } else if (comando.equalsIgnoreCase("BUTTA") || comando.toLowerCase().startsWith("bu")) {
                 player.removeFromInventory(selectedItem);
                 currentView = playerView.INVENTORY_MAIN;
                 return "Hai buttato " + selectedItem.getName() + getInventoryString();
-            } else if (comando.equalsIgnoreCase("ANNULLA")) {
+            } else if (comando.equalsIgnoreCase("ANNULLA") || comando.toLowerCase().startsWith("ann")) {
                 selectedItem = null;
                 currentView = playerView.INVENTORY_MAIN;
                 return "Azione annullata" + getInventoryString();
@@ -144,7 +141,7 @@ public class Game {
         //vista per gestione oggetti overflow durante battaglia
         else if (currentView == playerView.INVENTORY_OVERFLOW) {
             Items item = pendingLoot.getFirst();
-            if (comando.equalsIgnoreCase("LASCIA")) {
+            if (comando.equalsIgnoreCase("LASCIA") || comando.toLowerCase().startsWith("la")) {
                 pendingLoot.removeFirst();
                 if (pendingLoot.isEmpty()) {
                     currentView = playerView.IDLE;
@@ -181,10 +178,10 @@ public class Game {
 
         //vista personaggio (stats e equippedItems)
         else if (currentView == playerView.PLAYER_INFO) {
-            if (comando.equalsIgnoreCase("ESCI")) {
+            if (comando.equalsIgnoreCase("ESCI") || comando.toLowerCase().startsWith("esc")) {
                 currentView = playerView.IDLE;
                 return "Scheda personaggio chiusa";
-            } else if (comando.equalsIgnoreCase("Statistiche")){
+            } else if (comando.equalsIgnoreCase("Statistiche") || comando.toLowerCase().startsWith("sta")){
                 final String[] temp = {""}; //fatto ad array e non stringa perchè dava errore non so il motivo
                 temp[0] += "Livello: " + player.getLevel() + "\n";
                 player.getStats().forEach((stat, value) -> {
@@ -192,9 +189,9 @@ public class Game {
                 });
 
                 return temp[0];
-            } else if (comando.equalsIgnoreCase("Equipaggiamento")) {
+            } else if (comando.equalsIgnoreCase("Equipaggiamento") || comando.toLowerCase().startsWith("equ")) {
                 return player.getEquippedItems();
-            } else if (comando.toLowerCase().startsWith("disequipaggia")) {
+            } else if (comando.toLowerCase().startsWith("disequipaggia") || comando.toLowerCase().startsWith("dis")) {
                 try {
                     comando = comando.split(" ")[1];
                     //così che l'input viene a prescindere reso valido con la prima lettera maiuscola e il resto minuscolo
@@ -236,7 +233,7 @@ public class Game {
             return risultato;
         }
 
-        return "Comando non riconosciuto. Esegui 'ZAINO', 'SPAWN ZOMBIE', 'PERSONAGGIO' "; //TODO SISTEMARE COMANDI
+        return "Comando non riconosciuto. Esegui 'ZAINO', 'SPAWN', 'PERSONAGGIO' ";
     }
 
     private String getInventoryString() {
