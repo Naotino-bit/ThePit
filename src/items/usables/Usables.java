@@ -1,3 +1,6 @@
+
+//TODO RENDERE TUTTO UN INTERFACCIA!
+
 package items.usables;
 import characters.Character;
 import items.Items;

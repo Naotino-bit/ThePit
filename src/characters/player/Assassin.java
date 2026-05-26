@@ -7,15 +7,20 @@ import items.weapons.Dagger;
 public class Assassin extends Character {
     public Assassin() {
         name = "Assassino";
-        baseHpMax = 100;
-        baseStrength = 50;
-        baseAgility = 81; //primaria
-        baseIntelligence = 62;
-        basePrecision = 62; //secondaria
+        resetBaseStats();
 
         updateStats();
         this.totalHp = this.totalHpMax;
         this.currentMana = this.manaMax;
+    }
+
+    @Override
+    protected void resetBaseStats() {
+        baseHpMax = 30;
+        baseStrength = 15;
+        baseAgility = 25; //primaria
+        baseIntelligence = 15;
+        basePrecision = 20; //secondaria
     }
     @Override
     public boolean canEquipWeapon(Items item){
@@ -24,10 +29,10 @@ public class Assassin extends Character {
 
     @Override
     protected void applyLevelUpStats() {
-        this.baseAgility += 7;//boost primaria
-        this.basePrecision += 5;//boost secondaria
-        this.baseStrength += 2;
+        this.baseAgility += 3;//boost primaria
+        this.basePrecision += 2;//boost secondaria
+        this.baseStrength += 1;
         this.baseIntelligence += 1;
-        this.baseHpMax += 10;
+        this.baseHpMax += 4;
     }
 }

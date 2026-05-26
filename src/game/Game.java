@@ -3,6 +3,10 @@ package game;
 import characters.Character;
 import characters.enemies.Enemies;
 import characters.enemies.Zombie;
+import characters.enemies.Skeleton;
+import characters.enemies.Goblin;
+import characters.enemies.Witch;
+import characters.enemies.Orc;
 import items.Items;
 import items.armors.Armors;
 import items.armors.Helmet;
@@ -11,97 +15,126 @@ import items.usables.Usables;
 import items.weapons.Claymore;
 import items.weapons.Sword;
 import items.weapons.Weapons;
+import rooms.Room;
+import rooms.BattleRoom;
+import rooms.FountainRoom;
+import rooms.ShopRoom;
 
-import java.sql.SQLData;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Game {
     private Character player;
-    private BattleManager currentBattle;
+    private Room currentRoom;
+    private int lastBossDefeatedLevel = 0;
+
     public enum playerView {
         IDLE,
-        BATTLE,
+        ROOM, // non abbiamo più battle ma abbiamo room
         INVENTORY_MAIN,
         INVENTORY_ACTION,
         INVENTORY_OVERFLOW,
         PLAYER_INFO
     }
+
     public playerView currentView = playerView.IDLE;
     private Items selectedItem = null;
     private ArrayList<Items> pendingLoot = new ArrayList<>();
+    private int saveSlot = -1;
+
+    public void setSaveSlot(int slot) {
+        this.saveSlot = slot;
+    }
 
     public Game(Character playerClass) {
         this.player = playerClass;
-        this.currentBattle = null; // All'inizio non stai combattendo
-
-        player.addToInventory(new HealthPotion("Pozione vita", "LEGGENDARIO", "Vitalità", 25, 5000));
-        player.addToInventory(new Helmet("Franco ", " ", 1, "Forza", 10, 5000));
-        player.addToInventory(new Helmet("Gianni ", " ", 1, "Forza", 10, 5000));
+        this.currentRoom = null;
 
         XmlHandler.loadAllItems();
     }
 
     public String getEnemies(ArrayList<Enemies> enemies) {
-        String string = "E' apparso un nemico: \n";
-        if(enemies.size()>1) {
-            string = "Sono apparsi dei nemici: \n";
+        String enemyInfo = "E' apparso un nemico: \n"; /* l'avevi chiamato string, l'ho chiamato enemyInfo */
+        if (enemies.size() > 1) {
+            enemyInfo = "Sono apparsi dei nemici: \n";
         }
-        string += player.getName() + ": " + player.getHp() +"/" + player.getHpMax() + " hp\n";
-        for(int i=0; i<enemies.size(); i++) {
-            string += "[" + (i+1) + "] - " + enemies.get(i).getName() + " " + enemies.get(i).getHp() + "/" + enemies.get(i).getHpMax()+ " hp\n";
+        enemyInfo += player.getName() + ": " + player.getHp() + "/" + player.getHpMax() + " hp\n";
+        for (int i = 0; i < enemies.size(); i++) {
+            enemyInfo += "[" + (i + 1) + "] - " + enemies.get(i).getName() + " " + enemies.get(i).getHp() + "/"
+                    + enemies.get(i).getHpMax() + " hp\n";
         }
-        return string;
+        return enemyInfo;
     }
 
-    public Object processCommand(String comando){
+    public Object processCommand(String command) {
 
         // se l'utente è in freeroam
-        if(currentView == playerView.IDLE) {
-            if(comando.equalsIgnoreCase("ZAINO") || comando.toLowerCase().startsWith("za")){
+        if (currentView == playerView.IDLE) {
+            if (command.equalsIgnoreCase("ZAINO") || command.toLowerCase().startsWith("za")) {
                 currentView = playerView.INVENTORY_MAIN;
                 return getInventoryString() + "Selezionare un oggetto oppure 'ESCI'";
             }
 
-            //DEBUG ONLY
-            if(comando.equalsIgnoreCase("spawn") || comando.toLowerCase().startsWith("sp")){
-                ArrayList<Enemies> enemies = new ArrayList<Enemies>();
-
-                enemies.add(spawnEnemy(new Zombie()));
-                enemies.add(spawnEnemy(new Zombie()));
-
-                this.currentBattle = new BattleManager(player, enemies);
-                currentView = playerView.BATTLE;
-                return getEnemies(enemies);
+            if (command.equalsIgnoreCase("AVANZA") || command.toLowerCase().startsWith("ava")) {
+                generateNextRoom();
+                currentView = playerView.ROOM;
+                return currentRoom.enterRoom(player);
             }
 
-            //mostra quello che hai equipaggiato attualmente
-            if(comando.equalsIgnoreCase("PERSONAGGIO") || comando.toLowerCase().startsWith("per")){
+            // DEBUG ONLY
+            if (command.equalsIgnoreCase("spawn") || command.toLowerCase().startsWith("sp")) {
+                ArrayList<Enemies> enemies = new ArrayList<Enemies>();
+                enemies.add(spawnEnemy(new Zombie()));
+                enemies.add(spawnEnemy(new Zombie()));
+
+                this.currentRoom = new BattleRoom(player, enemies);
+                currentView = playerView.ROOM;
+                return this.currentRoom.enterRoom(player);
+            }
+
+            // mostra quello che hai equipaggiato attualmente
+            if (command.equalsIgnoreCase("PERSONAGGIO") || command.toLowerCase().startsWith("per")) {
                 currentView = playerView.PLAYER_INFO;
                 return "Mostra le statistiche con 'Statistiche'\nL'equipaggiamento attuale con 'Equipaggiamento'\nDisequipaggia qualcosa con 'Disequipaggia [SLOT]'";
             }
+
+            if (command.equalsIgnoreCase("CLASSIFICA") || command.toLowerCase().startsWith("cla")) {
+                return database.DatabaseManager.getTopRuns();
+            }
+
+            return "Sei nel corridoio. Comandi disponibili: 'AVANZA', 'ZAINO', 'PERSONAGGIO', 'CLASSIFICA'";
         }
 
         // inventario, scelta oggetto
         else if (currentView == playerView.INVENTORY_MAIN) {
-            if (comando.equalsIgnoreCase("ESCI") || comando.toLowerCase().startsWith("esc")) {
-                currentView = playerView.IDLE;
-                return "Zaino chiuso";
+            if (command.equalsIgnoreCase("ESCI") || command.toLowerCase().startsWith("esc")) {
+                // If we have an active room that isn't cleared, we go back to ROOM state
+                if (currentRoom != null && !currentRoom.isCleared()) {
+                    currentView = playerView.ROOM;
+                    return "Zaino chiuso. Sei ancora nella stanza.";
+                } else {
+                    currentView = playerView.IDLE;
+                    return "Zaino chiuso.";
+                }
             }
             try {
-                int index = Integer.parseInt(comando) - 1; // -1 perché l'utente digita 1 per l'indice 0
+                int index = Integer.parseInt(command) - 1; // -1 perché l'utente digita 1 per l'indice 0
                 ArrayList<Items> inventory = (ArrayList<Items>) player.getInventory();
 
                 selectedItem = inventory.get(index); // Salvo l'oggetto scelto!
                 currentView = playerView.INVENTORY_ACTION; // Cambio stato!
 
                 if (selectedItem instanceof Usables) {
-                    return "Hai selezionato: "  + selectedItem.getDetails() + "\nVuoi USARE, BUTTARE o ANNULLARE?";
+                    return "Hai selezionato: " + selectedItem.getDetails() + "\nVuoi USARE, BUTTARE o ANNULLARE?";
                 } else {
                     String slot = selectedItem.getEquippedSlot().getFirst();
                     if (player.getEquippedItemsRaw().get(slot) != null) {
-                        return "Hai selezionato: "  + selectedItem.getDetails() + "\n[!] Attualmente hai equipaggiato: " + player.getEquippedItemsRaw().get(slot).getDetails() +"\nVuoi EQUIPAGGIARE, BUTTARE o ANNULLARE?";
+                        return "Hai selezionato: " + selectedItem.getDetails() + "\n[!] Attualmente hai equipaggiato: "
+                                + player.getEquippedItemsRaw().get(slot).getDetails()
+                                + "\nVuoi EQUIPAGGIARE, BUTTARE o ANNULLARE?";
                     }
-                    return "Hai selezionato: "  + selectedItem.getDetails() + "\nVuoi EQUIPAGGIARE, BUTTARE o ANNULLARE?";
+                    return "Hai selezionato: " + selectedItem.getDetails()
+                            + "\nVuoi EQUIPAGGIARE, BUTTARE o ANNULLARE?";
                 }
 
             } catch (Exception e) {
@@ -109,50 +142,57 @@ public class Game {
             }
         }
 
-        //azione sul'oggetto selezionato
+        // azione sul'oggetto selezionato
         else if (currentView == playerView.INVENTORY_ACTION) {
-            if(comando.equalsIgnoreCase("EQUIPAGGIA") || comando.toLowerCase().startsWith("equ")) {
+            if (command.equalsIgnoreCase("EQUIPAGGIA") || command.toLowerCase().startsWith("equ")) {
                 if (selectedItem instanceof Usables) {
                     return "Non puoi equipaggiare";
                 }
-                player.equip(selectedItem);
+                String equipResult = player.equip(selectedItem);
                 currentView = playerView.INVENTORY_MAIN;
-                return "Hai equipaggiato " + selectedItem.getName() + getInventoryString();
-            } else if (comando.equalsIgnoreCase("USA")) {
+                return equipResult + getInventoryString();
+            } else if (command.equalsIgnoreCase("USA")) {
                 if (!(selectedItem instanceof Usables)) {
                     return "Non è un consumabile";
                 }
-                ((Usables) selectedItem).use(player,player);
+                if (selectedItem instanceof items.usables.Throwables) {
+                    return "Puoi usare questo oggetto solo durante una battaglia!";
+                }
+                String useResult = ((Usables) selectedItem).use(player, player);
+                player.removeFromInventory(selectedItem);
                 currentView = playerView.INVENTORY_MAIN;
-                return "Hai usato " + selectedItem.getName() + getInventoryString();
+                return useResult + "\n" + getInventoryString();
 
-            } else if (comando.equalsIgnoreCase("BUTTA") || comando.toLowerCase().startsWith("bu")) {
+            } else if (command.equalsIgnoreCase("BUTTA") || command.toLowerCase().startsWith("bu")) {
                 player.removeFromInventory(selectedItem);
                 currentView = playerView.INVENTORY_MAIN;
                 return "Hai buttato " + selectedItem.getName() + getInventoryString();
-            } else if (comando.equalsIgnoreCase("ANNULLA") || comando.toLowerCase().startsWith("ann")) {
+            } else if (command.equalsIgnoreCase("ANNULLA") || command.toLowerCase().startsWith("ann")) {
                 selectedItem = null;
                 currentView = playerView.INVENTORY_MAIN;
                 return "Azione annullata" + getInventoryString();
             }
             return "Comando non valido. 'EQUIPAGGIA', 'BUTTA', 'ANNULLA' ";
         }
-        
-        //vista per gestione oggetti overflow durante battaglia
+
+        // vista per gestione oggetti overflow
         else if (currentView == playerView.INVENTORY_OVERFLOW) {
             Items item = pendingLoot.getFirst();
-            if (comando.equalsIgnoreCase("LASCIA") || comando.toLowerCase().startsWith("la")) {
+            if (command.equalsIgnoreCase("LASCIA") || command.toLowerCase().startsWith("la")) {
                 pendingLoot.removeFirst();
                 if (pendingLoot.isEmpty()) {
                     currentView = playerView.IDLE;
+                    if (this.saveSlot > 0) database.DatabaseManager.saveGameState(this.saveSlot, this.player);
                     return "Hai buttato l'oggetto. Tornato in esplorazione";
                 } else {
-                    return "Hai abbandonato l'oggetto. C'è ancora altro a terra:\nVuoi prendere [" + pendingLoot.getFirst().getName() + " " + pendingLoot.getFirst().getDetails() + "]?\nScrivi un NUMERO per sostituirlo, o LASCIA.";
+                    return "Hai abbandonato l'oggetto. C'è ancora altro a terra:\nVuoi prendere ["
+                            + pendingLoot.getFirst().getName() + " " + pendingLoot.getFirst().getDetails()
+                            + "]?\nScrivi un NUMERO per sostituirlo, o LASCIA.";
                 }
             }
 
             try {
-                int indexToDrop = Integer.parseInt(comando) - 1;
+                int indexToDrop = Integer.parseInt(command) - 1;
                 ArrayList<Items> inventory = player.getInventory();
 
                 Items droppedItem = inventory.get(indexToDrop);
@@ -161,42 +201,56 @@ public class Game {
                 inventory.add(item);
                 pendingLoot.removeFirst();
 
-                String msg = "Hai gettato " + droppedItem.getName() + " e raccolto " + item.getName() + "\n";
+                String dropMessage = "Hai gettato " + droppedItem.getName() + " e raccolto " + item.getName() + "\n"; // renamed
+                                                                                                                      // msg
+                                                                                                                      // to
+                                                                                                                      // dropMessage
 
                 // controllo di nuovo se c'è altra roba in coda
                 if (pendingLoot.isEmpty()) {
                     currentView = playerView.IDLE;
-                    return msg + "Non c'è altro a terra. Tornato in esplorazione.";
+                    if (this.saveSlot > 0) database.DatabaseManager.saveGameState(this.saveSlot, this.player);
+                    return dropMessage + "Non c'è altro a terra. Tornato in esplorazione.";
                 } else {
-                    return msg + "C'è ancora altro a terra:\nVuoi prendere " + pendingLoot.getFirst().getName() + " " + pendingLoot.getFirst().getDetails() + "?\nScrivi un NUMERO per sostituirlo, o LASCIA.";
+                    return dropMessage + "C'è ancora altro a terra:\nVuoi prendere " + pendingLoot.getFirst().getName()
+                            + " " + pendingLoot.getFirst().getDetails()
+                            + "?\nScrivi un NUMERO per sostituirlo, o LASCIA.";
                 }
 
             } catch (Exception e) {
-                return "Comando non valido.\nA terra c'è: " + item.getName() + " " + item.getDetails() + "\nScrivi un NUMERO per sostituirlo o LASCIA.";
+                return "Comando non valido.\nA terra c'è: " + item.getName() + " " + item.getDetails()
+                        + "\nScrivi un NUMERO per sostituirlo o LASCIA.";
             }
         }
 
-        //vista personaggio (stats e equippedItems)
+        // vista personaggio (stats e equippedItems)
         else if (currentView == playerView.PLAYER_INFO) {
-            if (comando.equalsIgnoreCase("ESCI") || comando.toLowerCase().startsWith("esc")) {
-                currentView = playerView.IDLE;
-                return "Scheda personaggio chiusa";
-            } else if (comando.equalsIgnoreCase("Statistiche") || comando.toLowerCase().startsWith("sta")){
-                final String[] temp = {""}; //fatto ad array e non stringa perchè dava errore non so il motivo
-                temp[0] += "Livello: " + player.getLevel() + "\n";
+            if (command.equalsIgnoreCase("ESCI") || command.toLowerCase().startsWith("esc")) {
+                // If we have an active room that isn't cleared, we go back to ROOM state
+                if (currentRoom != null && !currentRoom.isCleared()) {
+                    currentView = playerView.ROOM;
+                    return "Scheda personaggio chiusa. Sei ancora nella stanza.";
+                } else {
+                    currentView = playerView.IDLE;
+                    return "Scheda personaggio chiusa.";
+                }
+            } else if (command.equalsIgnoreCase("Statistiche") || command.toLowerCase().startsWith("sta")) {
+                final String[] statsInfo = { "" }; // renamed temp to statsInfo
+                statsInfo[0] += "Livello: " + player.getLevel() + "\n";
                 player.getStats().forEach((stat, value) -> {
-                    temp[0] += stat + ": " + value + "\n";
+                    statsInfo[0] += stat + ": " + value + "\n";
                 });
 
-                return temp[0];
-            } else if (comando.equalsIgnoreCase("Equipaggiamento") || comando.toLowerCase().startsWith("equ")) {
+                return statsInfo[0];
+            } else if (command.equalsIgnoreCase("Equipaggiamento") || command.toLowerCase().startsWith("equ")) {
                 return player.getEquippedItems();
-            } else if (comando.toLowerCase().startsWith("disequipaggia") || comando.toLowerCase().startsWith("dis")) {
+            } else if (command.toLowerCase().startsWith("disequipaggia") || command.toLowerCase().startsWith("dis")) {
                 try {
-                    comando = comando.split(" ")[1];
-                    //così che l'input viene a prescindere reso valido con la prima lettera maiuscola e il resto minuscolo
-                    player.deEquip(comando.substring(0,1).toUpperCase() + comando.substring(1).toLowerCase());
-                    return "Hai disequipaggiato " + comando.toLowerCase();
+                    command = command.split(" ")[1];
+                    // così che l'input viene a prescindere reso valido con la prima lettera
+                    // maiuscola e il resto minuscolo
+                    String deEquipResult = player.deEquip(command.substring(0, 1).toUpperCase() + command.substring(1).toLowerCase());
+                    return deEquipResult;
                 } catch (Exception e) {
                     return "Errore durante il comando. Uso Disequipaggia [SLOT] Es: Disequipaggia torso";
                 }
@@ -205,47 +259,94 @@ public class Game {
                 return "Comando non valido. 'Equipaggiamento', 'Statistiche', 'Disequipaggia', 'Esci' ";
             }
 
-
         }
-        
-        
 
-        // in battaglia?
-        if (currentView == playerView.BATTLE) {
+        // nella stanza attiva (battaglia, negozio, fontana)
+        if (currentView == playerView.ROOM) {
+            if (!(currentRoom instanceof BattleRoom)) {
+                if (command.equalsIgnoreCase("ZAINO") || command.toLowerCase().startsWith("za")) {
+                    currentView = playerView.INVENTORY_MAIN;
+                    return getInventoryString() + "Selezionare un oggetto oppure 'ESCI'";
+                }
+                if (command.equalsIgnoreCase("PERSONAGGIO") || command.toLowerCase().startsWith("per")) {
+                    currentView = playerView.PLAYER_INFO;
+                    return "Mostra le statistiche con 'Statistiche'\nL'equipaggiamento attuale con 'Equipaggiamento'\nDisequipaggia qualcosa con 'Disequipaggia [SLOT]'";
+                }
+            }
 
-            // SE STO COMBATTENDO: Passo il comando all'arbitro!
-            String risultato = currentBattle.manageRound(comando);
+            // Pass the command to the active room logic
+            String result = currentRoom.processCommand(command, player); // renamed risultato to result
 
-            // Se la battaglia è finita, "licenzio" l'arbitro
-            if (currentBattle.isBattleOver()) {
+            if (result.contains("GAME OVER")) {
+                if (this.saveSlot > 0) {
+                    database.DatabaseManager.deleteSaveState(this.saveSlot);
+                }
+            }
 
-                pendingLoot = currentBattle.getPendingLoot();
+            // Se la stanza è stata superata/conclusa
+            if (currentRoom.isCleared()) {
+                pendingLoot = currentRoom.getPendingLoot();
                 if (!pendingLoot.isEmpty()) {
                     currentView = playerView.INVENTORY_OVERFLOW;
-                    risultato += "\n[!] Zaino pieno! [!] \nCi sono degli oggetti che puoi prendere.\n" + getInventoryString() + "\nScrivi un NUMERO per sostituirlo o LASCIA.";
-                    risultato += "\nA terra c'è: " + pendingLoot.getFirst().getName() + " " +pendingLoot.getFirst().getDetails();
+                    result += "\n[!] Zaino pieno! [!] \nCi sono degli oggetti che puoi prendere.\n"
+                            + getInventoryString() + "\nScrivi un NUMERO per sostituirlo o LASCIA.";
+                    result += "\nA terra c'è: " + pendingLoot.getFirst().getName() + " "
+                            + pendingLoot.getFirst().getDetails();
                 } else {
                     currentView = playerView.IDLE;
+                    if (this.saveSlot > 0) database.DatabaseManager.saveGameState(this.saveSlot, this.player);
                 }
-                currentBattle = null;
-
+                currentRoom = null;
             }
-            return risultato;
+            return result;
         }
 
-        return "Comando non riconosciuto. Esegui 'ZAINO', 'SPAWN', 'PERSONAGGIO' ";
+        return "Comando non riconosciuto.";
+    }
+
+    private void generateNextRoom() {
+        Random rand = new Random();
+
+        // Controllo Boss (Ogni 10 livelli)
+        if (player.getLevel() >= 10 && player.getLevel() % 10 == 0 && player.getLevel() > lastBossDefeatedLevel) {
+            lastBossDefeatedLevel = player.getLevel();
+            ArrayList<Enemies> enemies = new ArrayList<>();
+            Enemies boss = getRandomEnemy(rand);
+            boss = spawnEnemy(boss);
+            boss.applyBossBuff();
+            enemies.add(boss);
+            currentRoom = new BattleRoom(player, enemies);
+            return; // Se è la stanza del boss, non facciamo roll per shop o fontana
+        }
+
+        int roll = rand.nextInt(100);
+
+        // 70% Battle, 20% Shop, 10% Fountain
+        if (roll < 70) {
+            ArrayList<Enemies> enemies = new ArrayList<>();
+            // Spawn 1 to 3 enemies based on random chance
+            int numEnemies = rand.nextInt(3) + 1;
+            for (int i = 0; i < numEnemies; i++) {
+                enemies.add(spawnEnemy(getRandomEnemy(rand)));
+            }
+            currentRoom = new BattleRoom(player, enemies);
+        } else if (roll < 90) {
+            currentRoom = new ShopRoom();
+        } else {
+            currentRoom = new FountainRoom();
+        }
     }
 
     private String getInventoryString() {
-        String temp = "\n----- Zaino -----\n";
+        String inventoryStr = "\n----- Zaino -----\n"; // renamed temp to inventoryStr
         ArrayList<Items> inventory = player.getInventory();
-        if(inventory.isEmpty()){
-            return temp + "Zaino vuoto\n";
+        if (inventory.isEmpty()) {
+            return inventoryStr + "Zaino vuoto\n";
         }
         for (int i = 0; i < inventory.size(); i++) {
-            temp += (i + 1) + ": " + inventory.get(i).getName() + "\n";
+            inventoryStr += "[" + (i + 1) + "] " + inventory.get(i).getName() + "\n";
         }
-        return temp;
+        return inventoryStr;
     }
 
     public String getCurrentState() {
@@ -255,5 +356,17 @@ public class Game {
     private Enemies spawnEnemy(Enemies enemy) {
         enemy.setLevelAndScale(player.getLevel());
         return enemy;
+    }
+
+    private Enemies getRandomEnemy(Random rand) {
+        int r = rand.nextInt(5);
+        switch (r) {
+            case 0: return new Zombie();
+            case 1: return new Skeleton();
+            case 2: return new Goblin();
+            case 3: return new Orc();
+            case 4: return new Witch();
+            default: return new Zombie();
+        }
     }
 }

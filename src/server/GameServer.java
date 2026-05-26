@@ -10,6 +10,7 @@ public class GameServer {
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Server in ascolto sulla porta " + port + "...");
+            database.DatabaseManager.initializeDatabase();
 
 
             while (true) {

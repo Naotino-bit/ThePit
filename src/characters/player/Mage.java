@@ -8,15 +8,20 @@ import items.weapons.Staff;
 public class Mage extends Character {
     public Mage() {
         name = "Mago";
-        baseHpMax = 75;
-        baseStrength = 30;
-        baseAgility = 30;
-        baseIntelligence = 115; //primaria
-        basePrecision = 80; //secondaria
+        resetBaseStats();
 
         updateStats();
         this.totalHp = this.totalHpMax;
         this.currentMana = this.manaMax;
+    }
+
+    @Override
+    protected void resetBaseStats() {
+        baseHpMax = 25;
+        baseStrength = 10;
+        baseAgility = 10;
+        baseIntelligence = 35; //primaria
+        basePrecision = 20; //secondaria
     }
     @Override
     public boolean canEquipWeapon(Items item){
@@ -25,14 +30,10 @@ public class Mage extends Character {
 
     @Override
     protected void applyLevelUpStats() {
-        this.baseIntelligence += 8; //boost primaria
-        this.basePrecision += 3; //boost secondaria
-        this.baseAgility += 2;
+        this.baseIntelligence += 3; //boost primaria
+        this.basePrecision += 2; //boost secondaria
+        this.baseAgility += 1;
         this.baseStrength += 1;
-        this.baseHpMax += 10;
-    }
-    @Override
-    protected int getBaseDamage() {
-        return this.weaponDamage + this.totalIntelligence;
+        this.baseHpMax += 4;
     }
 }

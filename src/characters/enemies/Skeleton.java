@@ -5,11 +5,11 @@ public class Skeleton extends Enemies {
         this.name = "Scheletro";
 
         // Statistiche
-        this.baseHpMax = 80;
-        this.baseStrength = 45;
-        this.baseAgility = 50;
-        this.baseIntelligence = 10;
-        this.basePrecision = 70; 
+        this.baseHpMax = 25;
+        this.baseStrength = 15;
+        this.baseAgility = 15;
+        this.baseIntelligence = 5;
+        this.basePrecision = 20;
 
         this.expReward = 45;
         this.minMoneyDrop = 15;

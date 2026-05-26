@@ -5,11 +5,11 @@ public class Witch extends Enemies {
     public Witch() {
         this.name = "Strega";
 
-        this.baseHpMax = 45;
-        this.baseStrength = 10;
-        this.baseAgility = 40;
-        this.baseIntelligence = 85;
-        this.basePrecision = 60;
+        this.baseHpMax = 15;
+        this.baseStrength = 5;
+        this.baseAgility = 10;
+        this.baseIntelligence = 25;
+        this.basePrecision = 15;
 
         this.expReward = 60;
         this.minMoneyDrop = 20;
@@ -19,8 +19,5 @@ public class Witch extends Enemies {
 
     }
 
-    @Override
-    protected int getBaseDamage() {
-        return this.weaponDamage + this.totalIntelligence;
-    }
+
 }

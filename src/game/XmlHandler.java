@@ -285,6 +285,10 @@ public class XmlHandler {
             }
         }
 
+        if (fullItemPool.isEmpty()) {
+            return null;
+        }
+
         return fullItemPool.get(rand.nextInt(fullItemPool.size()));
     }
 }

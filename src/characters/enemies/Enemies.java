@@ -67,6 +67,8 @@ public class Enemies extends Character {
             this.baseHpMax += (int) (this.baseHpMax * 0.20 * levelDiff);     // +20% HP per livello
             this.baseStrength += (int) (this.baseStrength * 0.15 * levelDiff); // +15% Forza
             this.baseAgility += (int) (this.baseAgility * 0.05 * levelDiff);   // +5% Agilità
+            this.baseIntelligence += (int) (this.baseIntelligence * 0.15 * levelDiff); // +15% Intelligenza
+            this.basePrecision += (int) (this.basePrecision * 0.05 * levelDiff); // +5% Precisione
 
             this.expReward += (int) (this.expReward * 0.25 * levelDiff);       // +25% EXP in più
             this.minMoneyDrop += (int) (this.minMoneyDrop * 0.15 * levelDiff); // +15% Soldi
@@ -76,5 +78,25 @@ public class Enemies extends Character {
         this.updateStats();
         this.totalHp = this.totalHpMax;
         this.currentMana = this.manaMax;
+    }
+    public void applyBossBuff() {
+        this.name = "BOSS " + this.name;
+        this.baseHpMax *= 3;
+        this.totalHpMax *= 3;
+        this.totalHp = this.totalHpMax;
+        
+        this.baseStrength = (int)(this.baseStrength * 1.5);
+        this.baseAgility = (int)(this.baseAgility * 1.5);
+        this.baseIntelligence = (int)(this.baseIntelligence * 1.5);
+        this.basePrecision = (int)(this.basePrecision * 1.5);
+        
+        this.expReward *= 3;
+        this.minMoneyDrop *= 3;
+        this.maxMoneyDrop *= 3;
+        
+        // Loot assicurato (generiamo 3 drop invece di 1 se possibile)
+        generateLoot(3);
+        
+        this.updateStats();
     }
 }

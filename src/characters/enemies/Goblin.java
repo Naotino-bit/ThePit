@@ -5,11 +5,11 @@ public class Goblin extends Enemies {
         this.name = "Goblin";
 
         // Statistiche
-        this.baseHpMax = 60;
-        this.baseStrength = 30;
-        this.baseAgility = 70;
-        this.baseIntelligence = 10;
-        this.basePrecision = 40;
+        this.baseHpMax = 20;
+        this.baseStrength = 10;
+        this.baseAgility = 20;
+        this.baseIntelligence = 5;
+        this.basePrecision = 10;
 
         this.expReward = 35;
         this.minMoneyDrop = 10;

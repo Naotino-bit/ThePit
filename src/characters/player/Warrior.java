@@ -6,17 +6,22 @@ import items.weapons.Shield;
 import items.weapons.Sword;
 
 public class Warrior extends Character {
-    public Warrior(){
+    public Warrior() {
         name = "Guerriero";
-        baseHpMax = 120;
-        baseStrength = 90; //primaria
-        baseAgility = 85; //secondaria
-        baseIntelligence = 30;
-        basePrecision = 50;
+        resetBaseStats();
 
         updateStats();
         this.totalHp = this.totalHpMax;
         this.currentMana = this.manaMax;
+    }
+
+    @Override
+    protected void resetBaseStats() {
+        baseHpMax = 40;
+        baseStrength = 25; //primaria
+        baseAgility = 25; //secondaria
+        baseIntelligence = 10;
+        basePrecision = 15;
     }
 
     @Override
@@ -26,10 +31,10 @@ public class Warrior extends Character {
 
     @Override
     protected void applyLevelUpStats() {
-        this.baseStrength += 7; //primaria
-        this.baseAgility += 3; //secondaria
-        this.basePrecision += 2;
+        this.baseStrength += 3; //primaria
+        this.baseAgility += 2; //secondaria
+        this.basePrecision += 1;
         this.baseIntelligence += 1;
-        this.baseHpMax += 15;
+        this.baseHpMax += 6;
     }
 }

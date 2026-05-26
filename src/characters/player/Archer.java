@@ -7,15 +7,20 @@ import items.weapons.Bow;
 public class Archer extends Character {
     public Archer() {
         name = "Arciere";
-        baseHpMax = 75;
-        baseStrength = 30;
-        baseAgility = 90; //secondaria
-        baseIntelligence = 30;
-        basePrecision = 105; //primaria
+        resetBaseStats();
 
         updateStats();
         this.totalHp = this.totalHpMax;
         this.currentMana = this.manaMax;
+    }
+
+    @Override
+    protected void resetBaseStats() {
+        baseHpMax = 25;
+        baseStrength = 10;
+        baseAgility = 25; //secondaria
+        baseIntelligence = 10;
+        basePrecision = 30; //primaria
     }
 
     @Override
@@ -25,10 +30,10 @@ public class Archer extends Character {
 
     @Override
     protected void applyLevelUpStats() {
-        this.basePrecision += 7;
-        this.baseAgility += 5;
-        this.baseStrength += 2;
+        this.basePrecision += 3;
+        this.baseAgility += 2;
+        this.baseStrength += 1;
         this.baseIntelligence += 1;
-        this.baseHpMax += 15;
+        this.baseHpMax += 5;
     }
 }

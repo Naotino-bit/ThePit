@@ -8,15 +8,20 @@ import items.weapons.Claymore;
 public class Tank extends Character {
     public Tank() {
         name = "Tank";
-        baseHpMax = 150;
-        baseStrength = 105; //primaria
-        baseAgility = 40;
-        baseIntelligence = 70; //secondaria
-        basePrecision = 40;
+        resetBaseStats();
 
         updateStats();
         this.totalHp = this.totalHpMax;
         this.currentMana = this.manaMax;
+    }
+
+    @Override
+    protected void resetBaseStats() {
+        baseHpMax = 45;
+        baseStrength = 30; //primaria
+        baseAgility = 10;
+        baseIntelligence = 20; //secondaria
+        basePrecision = 15;
     }
 
     @Override
@@ -26,10 +31,10 @@ public class Tank extends Character {
 
     @Override
     protected void applyLevelUpStats() {
-        this.baseStrength += 8; //primaria
+        this.baseStrength += 3; //primaria
         this.baseAgility += 1; //secondaria
         this.basePrecision += 1;
-        this.baseIntelligence += 3;
-        this.baseHpMax += 30;
+        this.baseIntelligence += 2;
+        this.baseHpMax += 8;
     }
 }

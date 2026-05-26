@@ -5,11 +5,11 @@ public class Orc extends Enemies {
         this.name = "Orco";
 
         // Statistiche
-        this.baseHpMax = 150;
-        this.baseStrength = 80;
-        this.baseAgility = 15;
+        this.baseHpMax = 50;
+        this.baseStrength = 25;
+        this.baseAgility = 5;
         this.baseIntelligence = 5;
-        this.basePrecision = 40;
+        this.basePrecision = 15;
 
         this.expReward = 75;
         this.minMoneyDrop = 30;

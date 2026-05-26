@@ -11,11 +11,11 @@ import java.util.concurrent.ScheduledFuture;
 public class Zombie extends Enemies {
     public Zombie() {
         this.name = "Zombie";
-        this.baseHpMax = 100;
-        this.baseAgility = 10;//MESSA PER DEBUG A 10
-        this.baseStrength = 50;
+        this.baseHpMax = 35;
+        this.baseAgility = 5;
+        this.baseStrength = 15;
         this.baseIntelligence = 0;
-        this.basePrecision = 15;
+        this.basePrecision = 5;
         
 
 
