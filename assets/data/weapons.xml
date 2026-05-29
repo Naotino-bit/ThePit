@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weapons>
+
+    <!-- ==================== SWORDS ==================== -->
+    <Weapon tipo="Sword" nome="Spada di Legno" rarita="Comune" prezzo="100" dannoBase="10" stat="Forza" valStat="3"/>
+
+    <Weapon tipo="Sword" nome="Spada di Ferro" rarita="Raro" prezzo="450" dannoBase="18" stat="Forza" valStat="7"/>
+
+    <!-- Effetto: Fire aspect -->
+    <Weapon tipo="Sword" nome="Aspect Of The Dragons" rarita="Epico" prezzo="1800" dannoBase="32" stat="Forza" valStat="12" effetto="Fuoco"/>
+
+    <!--- Fa danno puro (Ignora le difese) -->
+    <Weapon tipo="Sword" nome="Excalibur" rarita="Leggendario" prezzo="6000" dannoBase="50" stat="Forza" valStat="20" effetto="Puro"/>
+
+
+    <!-- ==================== CLAYMORES ==================== -->
+    <Weapon tipo="Claymore" nome="Martello Di Pietra" rarita="Comune" prezzo="100" dannoBase="15" stat="Forza" valStat="5"/>
+
+    <Weapon tipo="Claymore" nome="Ascia Di Titanio" rarita="Raro" prezzo="450" dannoBase="25" stat="Forza" valStat="10"/>
+
+    <!-- Effetto: Ghiaccio (diminuisce l'agilità del nemico) -->
+    <Weapon tipo="Claymore" nome="Moonlight Greatsword" rarita="Epico" prezzo="1800" dannoBase="40" stat="Intelligenza" valStat="15" effetto="Ghiaccio"/>
+
+    <!-- Effetto: Danno ad area (+25% ai nemici circostanti) -->
+    <Weapon tipo="Claymore" nome="Sundered Prince" rarita="Leggendario" prezzo="6000" dannoBase="65" stat="Forza" valStat="25" effetto="DannoArea"/>
+
+
+    <!-- ==================== BOWS ==================== -->
+    <Weapon tipo="Bow" nome="Arco Artigianale" rarita="Comune" prezzo="80" dannoBase="8" stat="Precisione" valStat="4"/>
+
+    <!-- Effetto: Boost agilità, spari più volte -->
+    <Weapon tipo="Bow" nome="Arco Corto" rarita="Raro" prezzo="350" dannoBase="14" stat="Agilità" valStat="15"/>
+
+    <!-- Effetto: Balestra (tanto danno, debuff sull'agilità) -->
+    <Weapon tipo="Bow" nome="Eradicator" rarita="Epico" prezzo="1400" dannoBase="35" stat="Precisione" valStat="12" effetto="Balestra"/>
+
+    <!-- Effetto: Più volte attacchi lo stesso target, più aumenta la precisione fino al critico garantito -->
+    <Weapon tipo="Bow" nome="Predator" rarita="Leggendario" prezzo="4500" dannoBase="45" stat="Precisione" valStat="25" effetto="Ripetizione"/>
+
+
+    <!-- ==================== DAGGERS ==================== -->
+    <Weapon tipo="Dagger" nome="Pugnale Arrugginito" rarita="Comune" prezzo="80" dannoBase="6" stat="Agilità" valStat="5"/>
+
+    <!-- Effetto: Veleno applicato su hit -->
+    <Weapon tipo="Dagger" nome="Pugnale Avvelenato" rarita="Raro" prezzo="350" dannoBase="12" stat="Agilità" valStat="10" effetto="Veleno"/>
+
+    <Weapon tipo="Dagger" nome="The Sting" rarita="Epico" prezzo="1400" dannoBase="22" stat="Agilità" valStat="18"/>
+
+    <Weapon tipo="Dagger" nome="Dragon's Tooth" rarita="Leggendario" prezzo="4500" dannoBase="35" stat="Agilità" valStat="25"/>
+
+
+    <!-- ==================== STAFFS ==================== -->
+    <Weapon tipo="Staff" nome="Catalizzatore Dell'Apprendista" rarita="Comune" prezzo="80" dannoBase="5" stat="Intelligenza" valStat="8"/>
+
+    <!-- Effetto: Bonus recupero HP -->
+    <Weapon tipo="Staff" nome="Staffa Della Vita" rarita="Raro" prezzo="350" dannoBase="10" stat="Vitalità" valStat="15" effetto="RecuperoVita"/>
+
+    <Weapon tipo="Staff" nome="Eye of Perception" rarita="Epico" prezzo="1400" dannoBase="20" stat="Intelligenza" valStat="22"/>
+
+    <Weapon tipo="Staff" nome="Skyward Atlas" rarita="Leggendario" prezzo="4500" dannoBase="35" stat="Intelligenza" valStat="35"/>
+
+
+    <!-- ==================== SHIELDS ==================== -->
+    <Weapon tipo="Shield" nome="Scudo Di Legno" rarita="Comune" prezzo="80" dannoBase="5" stat="Vitalità" valStat="5"/>
+
+    <Weapon tipo="Shield" nome="Scudo Di Metallo" rarita="Raro" prezzo="350" dannoBase="10" stat="Vitalità" valStat="12"/>
+
+    <!-- Effetto: Chance di non ricevere alcun danno -->
+    <Weapon tipo="Shield" nome="Great Turtle Shell" rarita="Epico" prezzo="1400" dannoBase="15" stat="Vitalità" valStat="25" effetto="Immortale"/>
+
+    <Weapon tipo="Shield" nome="Colonne Di Ercole" rarita="Leggendario" prezzo="4500" dannoBase="40" stat="Vitalità" valStat="40" effetto="Specchio"/>
+
+</weapons>

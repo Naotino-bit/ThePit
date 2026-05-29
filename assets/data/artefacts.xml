@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<artefacts>
+
+    <!-- ========================================== -->
+    <!-- ARTEFATTI DELLA VITA                       -->
+    <!-- ========================================== -->
+    <!-- SET: CRIMSON SEED (Comune e Raro) RECUPERO HP -->
+    <Artefatto tipo="Ring" nome="Anello Crimson Seed" rarita="Comune" prezzo="100" set="Crimson Seed">
+        <MainStat stat="Vitalità" valore="20"/>
+    </Artefatto>
+    <Artefatto tipo="Cloack" nome="Mantello Crimson Seed" rarita="Comune" prezzo="100" set="Crimson Seed">
+        <MainStat stat="Vitalità" valore="25"/>
+    </Artefatto>
+
+    <Artefatto tipo="Ring" nome="Anello Crimson Seed" rarita="Raro" prezzo="400" set="Crimson Seed">
+        <MainStat stat="Vitalità" valore="30"/> <Stat stat="Forza" valore="5"/>
+    </Artefatto>
+    <Artefatto tipo="Cloack" nome="Mantello Crimson Seed" rarita="Raro" prezzo="400" set="Crimson Seed">
+        <MainStat stat="Vitalità" valore="35"/> <Stat stat="Difesa" valore="5"/>
+    </Artefatto>
+
+    <!-- SET: CRIMSON AMBER (Epico e Leggendario)  +HP MAX -->
+    <Artefatto tipo="Earrings" nome="Orecchini Crimson Amber" rarita="Epico" prezzo="1500" set="Crimson Amber">
+        <MainStat stat="Vitalità" valore="50"/> <Stat stat="Forza" valore="10"/> <Stat stat="Difesa" valore="10"/>
+    </Artefatto>
+    <Artefatto tipo="Necklace" nome="Amuleto Crimson Amber" rarita="Epico" prezzo="1500" set="Crimson Amber">
+        <MainStat stat="Vitalità" valore="55"/> <Stat stat="Forza" valore="12"/> <Stat stat="Difesa" valore="8"/>
+    </Artefatto>
+
+    <Artefatto tipo="Earrings" nome="Orecchini Crimson Amber" rarita="Leggendario" prezzo="5000" set="Crimson Amber">
+        <MainStat stat="Vitalità" valore="80"/> <Stat stat="Forza" valore="25"/> <Stat stat="Difesa" valore="25"/>
+    </Artefatto>
+    <Artefatto tipo="Necklace" nome="Amuleto Crimson Amber" rarita="Leggendario" prezzo="5000" set="Crimson Amber">
+        <MainStat stat="Vitalità" valore="90"/> <Stat stat="Forza" valore="30"/> <Stat stat="Difesa" valore="20"/>
+    </Artefatto>
+
+
+    <!-- ========================================== -->
+    <!-- ARTEFATTI DEL MANA                         -->
+    <!-- ========================================== -->
+    <!-- SET: CERULEAN SEED (Comune e Raro) RECUPERO MANA -->
+    <Artefatto tipo="Ring" nome="Anello Cerulean Seed" rarita="Comune" prezzo="100" set="Cerulean Seed">
+        <MainStat stat="Mana" valore="15"/>
+    </Artefatto>
+    <Artefatto tipo="Cloack" nome="Veste Cerulean Seed" rarita="Comune" prezzo="100" set="Cerulean Seed">
+        <MainStat stat="Mana" valore="20"/>
+    </Artefatto>
+
+    <Artefatto tipo="Ring" nome="Anello Cerulean Seed" rarita="Raro" prezzo="400" set="Cerulean Seed">
+        <MainStat stat="Mana" valore="25"/> <Stat stat="Intelligenza" valore="5"/>
+    </Artefatto>
+    <Artefatto tipo="Cloack" nome="Veste Cerulean Seed" rarita="Raro" prezzo="400" set="Cerulean Seed">
+        <MainStat stat="Mana" valore="30"/> <Stat stat="Agilità" valore="5"/>
+    </Artefatto>
+
+    <!-- SET: CERULEAN AMBER (Epico e Leggendario) +MANA MAX-->
+    <Artefatto tipo="Earrings" nome="Orecchini Cerulean Amber" rarita="Epico" prezzo="1500" set="Cerulean Amber">
+        <MainStat stat="Mana" valore="45"/> <Stat stat="Intelligenza" valore="12"/> <Stat stat="Agilità" valore="8"/>
+    </Artefatto>
+    <Artefatto tipo="Necklace" nome="Amuleto Cerulean Amber" rarita="Epico" prezzo="1500" set="Cerulean Amber">
+        <MainStat stat="Mana" valore="50"/> <Stat stat="Intelligenza" valore="15"/> <Stat stat="Agilità" valore="10"/>
+    </Artefatto>
+
+    <Artefatto tipo="Earrings" nome="Orecchini Cerulean Amber" rarita="Leggendario" prezzo="5000" set="Cerulean Amber">
+        <MainStat stat="Mana" valore="75"/> <Stat stat="Intelligenza" valore="30"/> <Stat stat="Agilità" valore="20"/>
+    </Artefatto>
+    <Artefatto tipo="Necklace" nome="Amuleto Cerulean Amber" rarita="Leggendario" prezzo="5000" set="Cerulean Amber">
+        <MainStat stat="Mana" valore="85"/> <Stat stat="Intelligenza" valore="35"/> <Stat stat="Agilità" valore="25"/>
+    </Artefatto>
+
+
+    <!-- ========================================== -->
+    <!-- ARTEFATTI DELL'AGILITÀ                     -->
+    <!-- ========================================== -->
+    <!-- SET: TURQUOISE TURTLE (Comune e Raro) BONUS INT AGILITA'-->
+    <Artefatto tipo="Ring" nome="Anello Turquoise Turtle" rarita="Comune" prezzo="100" set="Turquoise Turtle">
+        <MainStat stat="Agilità" valore="8"/>
+    </Artefatto>
+    <Artefatto tipo="Cloack" nome="Cappa Turquoise Turtle" rarita="Comune" prezzo="100" set="Turquoise Turtle">
+        <MainStat stat="Agilità" valore="10"/>
+    </Artefatto>
+
+    <Artefatto tipo="Ring" nome="Anello Turquoise Turtle" rarita="Raro" prezzo="400" set="Turquoise Turtle">
+        <MainStat stat="Agilità" valore="14"/> <Stat stat="Precisione" valore="4"/>
+    </Artefatto>
+    <Artefatto tipo="Cloack" nome="Cappa Turquoise Turtle" rarita="Raro" prezzo="400" set="Turquoise Turtle">
+        <MainStat stat="Agilità" valore="18"/> <Stat stat="Forza" valore="4"/>
+    </Artefatto>
+
+    <!-- SET: EMERALD AMBER (Epico e Leggendario) BONUS % AGILITA'-->
+    <Artefatto tipo="Earrings" nome="Orecchini Emerald Amber" rarita="Epico" prezzo="1500" set="Emerald Amber">
+        <MainStat stat="Agilità" valore="25"/> <Stat stat="Precisione" valore="10"/> <Stat stat="Forza" valore="8"/>
+    </Artefatto>
+    <Artefatto tipo="Necklace" nome="Collana Emerald Amber" rarita="Epico" prezzo="1500" set="Emerald Amber">
+        <MainStat stat="Agilità" valore="28"/> <Stat stat="Precisione" valore="12"/> <Stat stat="Forza" valore="10"/>
+    </Artefatto>
+
+    <Artefatto tipo="Earrings" nome="Orecchini Emerald Amber" rarita="Leggendario" prezzo="5000" set="Emerald Amber">
+        <MainStat stat="Agilità" valore="40"/> <Stat stat="Precisione" valore="25"/> <Stat stat="Forza" valore="20"/>
+    </Artefatto>
+    <Artefatto tipo="Necklace" nome="Collana Emerald Amber" rarita="Leggendario" prezzo="5000" set="Emerald Amber">
+        <MainStat stat="Agilità" valore="45"/> <Stat stat="Precisione" valore="30"/> <Stat stat="Forza" valore="25"/>
+    </Artefatto>
+
+
+    <!-- ========================================== -->
+    <!-- ARTEFATTI DELLA PRECISIONE                 -->
+    <!-- ========================================== -->
+    <!-- SET: SHARPSHOT (Comune e Raro) BONUS INT PRECISIONE-->
+    <Artefatto tipo="Ring" nome="Anello Sharpshot" rarita="Comune" prezzo="100" set="Sharpshot">
+        <MainStat stat="Precisione" valore="8"/>
+    </Artefatto>
+    <Artefatto tipo="Cloack" nome="Mantello Sharpshot" rarita="Comune" prezzo="100" set="Sharpshot">
+        <MainStat stat="Precisione" valore="10"/>
+    </Artefatto>
+
+    <Artefatto tipo="Ring" nome="Anello Sharpshot" rarita="Raro" prezzo="400" set="Sharpshot">
+        <MainStat stat="Precisione" valore="15"/> <Stat stat="Agilità" valore="5"/>
+    </Artefatto>
+    <Artefatto tipo="Cloack" nome="Mantello Sharpshot" rarita="Raro" prezzo="400" set="Sharpshot">
+        <MainStat stat="Precisione" valore="18"/> <Stat stat="Intelligenza" valore="5"/>
+    </Artefatto>
+
+    <!-- SET: ARROW STING (Epico e Leggendario) BONUS % PRECISIONE -->
+    <Artefatto tipo="Earrings" nome="Orecchini Arrow Sting" rarita="Epico" prezzo="1500" set="Arrow Sting">
+        <MainStat stat="Precisione" valore="25"/> <Stat stat="Agilità" valore="10"/> <Stat stat="Intelligenza" valore="8"/>
+    </Artefatto>
+    <Artefatto tipo="Necklace" nome="Amuleto Arrow Sting" rarita="Epico" prezzo="1500" set="Arrow Sting">
+        <MainStat stat="Precisione" valore="30"/> <Stat stat="Agilità" valore="12"/> <Stat stat="Intelligenza" valore="10"/>
+    </Artefatto>
+
+    <Artefatto tipo="Earrings" nome="Orecchini Arrow Sting" rarita="Leggendario" prezzo="5000" set="Arrow Sting">
+        <MainStat stat="Precisione" valore="45"/> <Stat stat="Agilità" valore="25"/> <Stat stat="Intelligenza" valore="20"/>
+    </Artefatto>
+    <Artefatto tipo="Necklace" nome="Amuleto Arrow Sting" rarita="Leggendario" prezzo="5000" set="Arrow Sting">
+        <MainStat stat="Precisione" valore="50"/> <Stat stat="Agilità" valore="30"/> <Stat stat="Intelligenza" valore="25"/>
+    </Artefatto>
+
+
+    <!-- ========================================== -->
+    <!-- ARTEFATTI DELLA FORZA                      -->
+    <!-- ========================================== -->
+    <!-- SET: BARBARIAN (Comune e Raro) BONUS INT FORZA-->
+    <Artefatto tipo="Ring" nome="Anello del Barbaro" rarita="Comune" prezzo="100" set="Barbarian">
+        <MainStat stat="Forza" valore="10"/>
+    </Artefatto>
+    <Artefatto tipo="Cloack" nome="Pelliccia del Barbaro" rarita="Comune" prezzo="100" set="Barbarian">
+        <MainStat stat="Forza" valore="12"/>
+    </Artefatto>
+
+    <Artefatto tipo="Ring" nome="Anello del Barbaro" rarita="Raro" prezzo="400" set="Barbarian">
+        <MainStat stat="Forza" valore="18"/> <Stat stat="Vitalità" valore="8"/>
+    </Artefatto>
+    <Artefatto tipo="Cloack" nome="Pelliccia del Barbaro" rarita="Raro" prezzo="400" set="Barbarian">
+        <MainStat stat="Forza" valore="22"/> <Stat stat="Difesa" valore="8"/>
+    </Artefatto>
+
+    <!-- SET: ZORO (Epico e Leggendario) BONUS % FORZA-->
+    <Artefatto tipo="Earrings" nome="Orecchini di Zoro" rarita="Epico" prezzo="1500" set="Zoro">
+        <MainStat stat="Forza" valore="35"/> <Stat stat="Vitalità" valore="15"/> <Stat stat="Precisione" valore="10"/>
+    </Artefatto>
+    <Artefatto tipo="Necklace" nome="Catenina di Zoro" rarita="Epico" prezzo="1500" set="Zoro">
+        <MainStat stat="Forza" valore="40"/> <Stat stat="Vitalità" valore="18"/> <Stat stat="Precisione" valore="12"/>
+    </Artefatto>
+
+    <Artefatto tipo="Earrings" nome="Orecchini di Zoro" rarita="Leggendario" prezzo="5000" set="Zoro">
+        <MainStat stat="Forza" valore="60"/> <Stat stat="Vitalità" valore="30"/> <Stat stat="Precisione" valore="25"/>
+    </Artefatto>
+    <Artefatto tipo="Necklace" nome="Catenina di Zoro" rarita="Leggendario" prezzo="5000" set="Zoro">
+        <MainStat stat="Forza" valore="70"/> <Stat stat="Vitalità" valore="35"/> <Stat stat="Precisione" valore="30"/>
+    </Artefatto>
+
+
+    <!-- ========================================== -->
+    <!-- ARTEFATTI DELL'INTELLIGENZA                -->
+    <!-- ========================================== -->
+    <!-- SET: STARGAZER HEIRLOOM (Comune e Raro) BONUS INT INTELLIGENZA-->
+    <Artefatto tipo="Ring" nome="Anello Stargazer" rarita="Comune" prezzo="100" set="Stargazer">
+        <MainStat stat="Intelligenza" valore="10"/>
+    </Artefatto>
+    <Artefatto tipo="Cloack" nome="Veste Stargazer" rarita="Comune" prezzo="100" set="Stargazer">
+        <MainStat stat="Intelligenza" valore="12"/>
+    </Artefatto>
+
+    <Artefatto tipo="Ring" nome="Anello Stargazer" rarita="Raro" prezzo="400" set="Stargazer">
+        <MainStat stat="Intelligenza" valore="18"/> <Stat stat="Mana" valore="10"/>
+    </Artefatto>
+    <Artefatto tipo="Cloack" nome="Veste Stargazer" rarita="Raro" prezzo="400" set="Stargazer">
+        <MainStat stat="Intelligenza" valore="22"/> <Stat stat="Precisione" valore="5"/>
+    </Artefatto>
+
+    <!-- SET: HIGH PRIEST (Epico e Leggendario) BONUS % INTELLIGENZA-->
+    <Artefatto tipo="Earrings" nome="Orecchini High Priest" rarita="Epico" prezzo="1500" set="High Priest">
+        <MainStat stat="Intelligenza" valore="35"/> <Stat stat="Mana" valore="20"/> <Stat stat="Precisione" valore="10"/>
+    </Artefatto>
+    <Artefatto tipo="Necklace" nome="Rosario High Priest" rarita="Epico" prezzo="1500" set="High Priest">
+        <MainStat stat="Intelligenza" valore="40"/> <Stat stat="Mana" valore="25"/> <Stat stat="Precisione" valore="12"/>
+    </Artefatto>
+
+    <Artefatto tipo="Earrings" nome="Orecchini High Priest" rarita="Leggendario" prezzo="5000" set="High Priest">
+        <MainStat stat="Intelligenza" valore="60"/> <Stat stat="Mana" valore="40"/> <Stat stat="Precisione" valore="25"/>
+    </Artefatto>
+    <Artefatto tipo="Necklace" nome="Rosario High Priest" rarita="Leggendario" prezzo="5000" set="High Priest">
+        <MainStat stat="Intelligenza" valore="70"/> <Stat stat="Mana" valore="50"/> <Stat stat="Precisione" valore="30"/>
+    </Artefatto>
+
+
+    <!-- ========================================== -->
+    <!-- ARTEFATTI DELLA RESISTENZA (DIFESA)        -->
+    <!-- ========================================== -->
+    <!-- SET: TURTLE SHELL (Comune e Raro) BONUS INT DIFESA-->
+    <Artefatto tipo="Ring" nome="Anello Turtle Shell" rarita="Comune" prezzo="100" set="Turtle Shell">
+        <MainStat stat="Difesa" valore="8"/>
+    </Artefatto>
+    <Artefatto tipo="Cloack" nome="Guscio Turtle Shell" rarita="Comune" prezzo="100" set="Turtle Shell">
+        <MainStat stat="Difesa" valore="10"/>
+    </Artefatto>
+
+    <Artefatto tipo="Ring" nome="Anello Turtle Shell" rarita="Raro" prezzo="400" set="Turtle Shell">
+        <MainStat stat="Difesa" valore="15"/> <Stat stat="Vitalità" valore="10"/>
+    </Artefatto>
+    <Artefatto tipo="Cloack" nome="Guscio Turtle Shell" rarita="Raro" prezzo="400" set="Turtle Shell">
+        <MainStat stat="Difesa" valore="18"/> <Stat stat="Forza" valore="5"/>
+    </Artefatto>
+
+    <!-- SET: DRAGON SCALE (Epico e Leggendario) BONUS % DIFESA-->
+    <Artefatto tipo="Earrings" nome="Orecchini Dragon Scale" rarita="Epico" prezzo="1500" set="Dragon Scale">
+        <MainStat stat="Difesa" valore="25"/> <Stat stat="Vitalità" valore="20"/> <Stat stat="Forza" valore="10"/>
+    </Artefatto>
+    <Artefatto tipo="Necklace" nome="Amuleto Dragon Scale" rarita="Epico" prezzo="1500" set="Dragon Scale">
+        <MainStat stat="Difesa" valore="30"/> <Stat stat="Vitalità" valore="25"/> <Stat stat="Forza" valore="12"/>
+    </Artefatto>
+
+    <Artefatto tipo="Earrings" nome="Orecchini Dragon Scale" rarita="Leggendario" prezzo="5000" set="Dragon Scale">
+        <MainStat stat="Difesa" valore="45"/> <Stat stat="Vitalità" valore="40"/> <Stat stat="Forza" valore="25"/>
+    </Artefatto>
+    <Artefatto tipo="Necklace" nome="Amuleto Dragon Scale" rarita="Leggendario" prezzo="5000" set="Dragon Scale">
+        <MainStat stat="Difesa" valore="50"/> <Stat stat="Vitalità" valore="50"/> <Stat stat="Forza" valore="30"/>
+    </Artefatto>
+
+
+    <!-- ========================================== -->
+    <!-- PEZZI SINGOLI SPECIALI (Tutti Leggendari)  -->
+    <!-- ========================================== -->
+
+    <Artefatto tipo="Necklace" nome="Assassin's Crimson Dagger" rarita="Leggendario" prezzo="5000" set="Nessuno">
+        <MainStat stat="Precisione" valore="50"/> <Stat stat="Agilità" valore="30"/> <Stat stat="Forza" valore="25"/>
+    </Artefatto><!-- se fai crit recuperi una percentuale della vita levata-->
+
+    <Artefatto tipo="Ring" nome="Gold Scarab" rarita="Leggendario" prezzo="5000" set="Nessuno">
+        <MainStat stat="Intelligenza" valore="45"/> <Stat stat="Vitalità" valore="40"/> <Stat stat="Mana" valore="35"/>
+    </Artefatto><!-- più oro quando sconfiggi un nemico-->
+
+    <Artefatto tipo="Ring" nome="Silver Scarab" rarita="Leggendario" prezzo="5000" set="Nessuno">
+        <MainStat stat="Precisione" valore="45"/> <Stat stat="Agilità" valore="35"/> <Stat stat="Difesa" valore="30"/>
+    </Artefatto><!-- più loot quando sconfiggi i mostri-->
+
+    <Artefatto tipo="Cloack" nome="Dragon's Egg" rarita="Leggendario" prezzo="5000" set="Nessuno">
+        <MainStat stat="Forza" valore="50"/> <Stat stat="Vitalità" valore="40"/> <Stat stat="Difesa" valore="30"/>
+    </Artefatto><!-- più exp quando sconfiggi i mostri-->
+
+</artefacts>
