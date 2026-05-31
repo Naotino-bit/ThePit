@@ -26,17 +26,20 @@ public class WelcomeScreen extends ScreenAdapter {
     private NetworkManager networkManager;
     private Table rootTable;
     private Label statusLabel;
-    
+
     // UI Assets
     private Texture bgTex;
     private Texture logoTex;
     private Texture slotPanelTex;
+    private Texture emptySlotPanelTex;
     private Texture parchmentTex;
-    private Texture silhouetteTex;
-    
+    private Texture resetButtonTex;
+    private Texture logoTextTex;
+    private Texture uiBoxTex;
+
     // Class textures
     private Texture warriorTex, archerTex, assassinTex, mageTex, tankTex;
-    
+
     private Skin skin;
 
     public WelcomeScreen(Main game) {
@@ -58,7 +61,7 @@ public class WelcomeScreen extends ScreenAdapter {
 
         statusLabel = new Label("Connessione al server in corso...", skin, "status");
         statusLabel.setAlignment(Align.center);
-        
+
         buildConnectingMenu();
 
         networkManager = new NetworkManager("127.0.0.1", 8083, new NetworkManager.NetworkListener() {
@@ -76,17 +79,27 @@ public class WelcomeScreen extends ScreenAdapter {
     }
 
     private void loadAssets() {
-        bgTex = new Texture(Gdx.files.internal("welcome_bg.png"));
-        logoTex = new Texture(Gdx.files.internal("the_pit_icon.png")); // Using window icon as logo
-        slotPanelTex = new Texture(Gdx.files.internal("slot_panel.png"));
-        parchmentTex = new Texture(Gdx.files.internal("parchment.png"));
-        silhouetteTex = new Texture(Gdx.files.internal("silhouette.png"));
+        bgTex = new Texture(Gdx.files.internal("bg_welcomeScreen.png"));
+        logoTex = new Texture(Gdx.files.internal("the_pit_logo.png"));
+        logoTextTex = new Texture(Gdx.files.internal("the_pit_text.png"));
+        slotPanelTex = new Texture(Gdx.files.internal("selection_bg.png"));
+        emptySlotPanelTex = new Texture(Gdx.files.internal("bg_empty_slot.png"));
+        parchmentTex = new Texture(Gdx.files.internal("leaderboard_bg.png"));
+        resetButtonTex = new Texture(Gdx.files.internal("reset_button_bg.png"));
+        uiBoxTex = new Texture(Gdx.files.internal("ui_box.png"));
 
         warriorTex = new Texture(Gdx.files.internal("classes/warrior.png"));
         archerTex = new Texture(Gdx.files.internal("classes/archer.png"));
         assassinTex = new Texture(Gdx.files.internal("classes/assassin.png"));
         mageTex = new Texture(Gdx.files.internal("classes/mage.png"));
         tankTex = new Texture(Gdx.files.internal("classes/tank.png"));
+    }
+
+    private TextureRegionDrawable createBackground(Texture tex) {
+        TextureRegionDrawable drawable = new TextureRegionDrawable(tex);
+        drawable.setMinWidth(0);
+        drawable.setMinHeight(0);
+        return drawable;
     }
 
     private Texture getClassTexture(String className) {
@@ -121,19 +134,19 @@ public class WelcomeScreen extends ScreenAdapter {
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 
         // Standard font
-        parameter.size = 32;
+        parameter.size = 24;
         parameter.magFilter = Texture.TextureFilter.Linear;
         parameter.minFilter = Texture.TextureFilter.Linear;
         BitmapFont font = generator.generateFont(parameter);
         skin.add("default", font);
 
         // Status font
-        parameter.size = 24;
+        parameter.size = 18;
         BitmapFont statusFont = generator.generateFont(parameter);
         skin.add("status", statusFont);
 
         // Leaderboard font
-        parameter.size = 26;
+        parameter.size = 20;
         parameter.color = Color.BLACK;
         BitmapFont blackFont = generator.generateFont(parameter);
         skin.add("black", blackFont);
@@ -165,8 +178,16 @@ public class WelcomeScreen extends ScreenAdapter {
 
     private void buildConnectingMenu() {
         rootTable.clear();
-        Image logo = new Image(logoTex);
-        rootTable.add(logo).size(300, 300).padBottom(50).row();
+        Table logoTable = new Table();
+        Image logoImg = new Image(logoTex);
+        logoImg.setScaling(com.badlogic.gdx.utils.Scaling.fit);
+        Image textImg = new Image(logoTextTex);
+        textImg.setScaling(com.badlogic.gdx.utils.Scaling.fit);
+
+        // Usiamo padTop e padBottom negativi per ingrandire le immagini SENZA spingere via il resto dello schermo
+        logoTable.add(logoImg).size(300, 300).padTop(-50).padBottom(-50).row();
+        logoTable.add(textImg).size(1600, 500).padTop(-175).padBottom(-175);
+        rootTable.add(logoTable).padBottom(10).row();
         rootTable.add(statusLabel).pad(20).row();
     }
 
@@ -190,13 +211,27 @@ public class WelcomeScreen extends ScreenAdapter {
 
     private void buildMenu(String slotsInfo, String topRunsInfo) {
         rootTable.clear();
-        
-        // Logo
-        Image logo = new Image(logoTex);
-        rootTable.add(logo).size(250, 250).padBottom(40).row();
 
-        // Slots container
+        // FONDAMENTALE: Assicurati che la tabella principale riempia lo schermo
+        rootTable.setFillParent(true);
+
+        // Logo
+        Table logoTable = new Table();
+        Image logoImg = new Image(logoTex);
+        logoImg.setScaling(com.badlogic.gdx.utils.Scaling.fit);
+        Image textImg = new Image(logoTextTex);
+        textImg.setScaling(com.badlogic.gdx.utils.Scaling.fit);
+
+        // Usiamo padTop e padBottom negativi per ingrandire le immagini SENZA spingere via il resto dello schermo
+        logoTable.add(logoImg).size(300, 300).padTop(-50).padBottom(-50).row();
+        logoTable.add(textImg).size(1600, 500).padTop(-175).padBottom(-175);
+        rootTable.add(logoTable).padBottom(10).row();
+
+        // Slots container (Lo sfondo grande con le rune)
         Table slotsContainer = new Table();
+        slotsContainer.setBackground(createBackground(slotPanelTex));
+        // Padding per lasciare spazio ai bordi runici
+        slotsContainer.pad(60, 40, 60, 40);
 
         String[] slots = slotsInfo.split("\\|");
         for (String slotStr : slots) {
@@ -207,20 +242,28 @@ public class WelcomeScreen extends ScreenAdapter {
                 String clazz = sInfo[1];
                 String lvl = sInfo[2];
                 String date = sInfo[3];
-                
-                // Base slot table with background
-                Table slotTable = new Table();
-                slotTable.setBackground(new TextureRegionDrawable(slotPanelTex));
-                slotTable.pad(15);
-                
+
+                // Tabella del singolo slot — NESSUN padding qui, la dimensione la mettiamo sulla cella
+                Table slotTable = new Table() {
+                    @Override
+                    public com.badlogic.gdx.scenes.scene2d.Actor hit(float x, float y, boolean touchable) {
+                        // Ignoriamo i click nell'area trasparente "gigante" causata dal padding negativo
+                        // Il padding è -375 (top/bottom) e -200 (left/right).
+                        if (x < 200 || x > getWidth() - 200 || y < 350 || y > getHeight() - 350) {
+                            return null;
+                        }
+                        return super.hit(x, y, touchable);
+                    }
+                };
+
                 if (clazz.equals("Vuoto")) {
-                    // Empty slot
-                    Image silImage = new Image(silhouetteTex);
+                    // Sfondo dello slot vuoto
+                    slotTable.setBackground(createBackground(emptySlotPanelTex));
                     Label textLabel = new Label("Nuova Partita (Slot " + id + ")", skin);
-                    
-                    slotTable.add(silImage).size(80, 80).padRight(20);
-                    slotTable.add(textLabel).expandX().center();
-                    
+
+                    slotTable.add(textLabel).expand().center();
+
+                    slotTable.setTouchable(com.badlogic.gdx.scenes.scene2d.Touchable.enabled);
                     slotTable.addListener(new ClickListener() {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
@@ -228,69 +271,76 @@ public class WelcomeScreen extends ScreenAdapter {
                             statusLabel.setText("Avvio Nuova Partita nello Slot " + id + "...");
                         }
                     });
-                    
-                    slotsContainer.add(slotTable).width(700).height(120).padBottom(20).row();
-                    
+
+                    slotsContainer.add(slotTable).size(1500, 850).pad(-375,-200, -375, -200).row();
+
                 } else {
-                    // Occupied slot
+                    // Sfondo dello slot occupato
+                    slotTable.setBackground(createBackground(emptySlotPanelTex));
+
                     Image classImg = new Image(getClassTexture(clazz));
-                    
+                    classImg.setScaling(com.badlogic.gdx.utils.Scaling.fit);
+
                     Table textTable = new Table();
                     Label nameLabel = new Label("Carica Slot " + id + " - " + clazz + " Lvl " + lvl, skin);
                     Label dateLabel = new Label("(" + date + ")", skin, "status");
-                    nameLabel.setAlignment(Align.center);
-                    dateLabel.setAlignment(Align.center);
-                    textTable.add(nameLabel).row();
-                    textTable.add(dateLabel).padTop(5);
-                    
-                    TextButton resetBtn = new TextButton("Reset", skin);
+
+                    nameLabel.setAlignment(Align.left);
+                    dateLabel.setAlignment(Align.left);
+
+                    textTable.add(nameLabel).expandX().fillX().row();
+                    textTable.add(dateLabel).padTop(5).expandX().fillX();
+
+                    TextButton.TextButtonStyle resetStyle = new TextButton.TextButtonStyle();
+                    resetStyle.up = createBackground(resetButtonTex);
+                    resetStyle.font = skin.getFont("default");
+                    TextButton resetBtn = new TextButton("Reset", resetStyle);
                     resetBtn.addListener(new ClickListener() {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
+                            event.stop(); // Previene conflitti con il listener dello slot
                             networkManager.sendCommand("RESET_SLOT " + id);
                             statusLabel.setText("Resettando lo slot " + id + "...");
                         }
                     });
-                    
-                    // The row inside the slot
-                    slotTable.add(classImg).size(80, 80).padRight(20);
-                    slotTable.add(textTable).expandX().center();
-                    slotTable.add(resetBtn).width(120).height(70).padLeft(20);
-                    
-                    // Add click listener to the table to load game (but not on the reset button)
+
+                    // Layout interno dello slot
+                    slotTable.add(classImg).size(80, 80).padLeft(75);
+                    slotTable.add(textTable);
+                    slotTable.add(resetBtn).size(280, 140);
+
                     slotTable.setTouchable(com.badlogic.gdx.scenes.scene2d.Touchable.enabled);
                     slotTable.addListener(new ClickListener() {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
-                            // Only trigger load if the click wasn't on the reset button
                             if (event.getTarget() != resetBtn && !resetBtn.isAscendantOf(event.getTarget())) {
                                 networkManager.sendCommand("LOAD_GAME " + id);
                                 statusLabel.setText("Caricamento in corso...");
                             }
                         }
                     });
-                    
-                    slotsContainer.add(slotTable).width(700).height(120).padBottom(20).row();
+
+                    slotsContainer.add(slotTable).size(1500, 850).pad(-375,-200, -375, -200).row();
                 }
             }
         }
-        
-        rootTable.add(slotsContainer).padBottom(30).row();
 
-        // Leaderboard with parchment background
+        rootTable.add(slotsContainer).width(900).padBottom(20).row();
+
+        // Classifica
         Table leaderboardTable = new Table();
-        leaderboardTable.setBackground(new TextureRegionDrawable(parchmentTex));
-        leaderboardTable.pad(40, 60, 40, 60); // Inner padding for the scroll
-        
-        Label leaderboardLabel = new Label("| ===== CLASSIFICA (MIGLIORI RUN) ===== |\n" + topRunsInfo, skin, "black");
+        leaderboardTable.setBackground(createBackground(parchmentTex));
+        leaderboardTable.pad(40, 60, 40, 60);
+
+        Label leaderboardLabel = new Label(topRunsInfo, skin, "black");
         leaderboardLabel.setAlignment(Align.center);
-        leaderboardTable.add(leaderboardLabel);
+        leaderboardTable.add(leaderboardLabel).expand().center();
 
-        rootTable.add(leaderboardTable).minWidth(600).padBottom(40).row();
+        rootTable.add(leaderboardTable).width(1200).height(900).padTop(-400).padBottom(-300).row();
 
-        // Bottom status label
+        // Testo in basso
         statusLabel.setText("Scegli un'opzione per iniziare");
-        rootTable.add(statusLabel).padBottom(20).row();
+        rootTable.add(statusLabel).padBottom(10).row();
     }
 
     @Override
@@ -314,7 +364,7 @@ public class WelcomeScreen extends ScreenAdapter {
         logoTex.dispose();
         slotPanelTex.dispose();
         parchmentTex.dispose();
-        silhouetteTex.dispose();
+        uiBoxTex.dispose();
         warriorTex.dispose();
         archerTex.dispose();
         assassinTex.dispose();

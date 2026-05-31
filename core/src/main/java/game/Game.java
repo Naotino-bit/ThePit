@@ -406,9 +406,9 @@ public class Game {
             }
 
             // Pass the command to the active room logic
-            String result = "{MSG:" + currentRoom.processCommand(command, player) + "}" + getEquippedData() + getStatsData(); // renamed risultato to result
+            String result = "{MSG:" + currentRoom.processCommand(command, player) + "}" + getEquippedData() + getStatsData() + getInventoryData(); // renamed risultato to result
             if (currentRoom instanceof ShopRoom) {
-                result += getShopData() + getInventoryData();
+                result += getShopData();
             }
 
             if (result.contains("GAME OVER")) {

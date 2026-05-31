@@ -28,7 +28,7 @@ public class DatabaseManager {
 
             try (Connection conn = DriverManager.getConnection(DB_URL);
                  Statement stmt = conn.createStatement()) {
-                
+
                 String sqlRuns = "CREATE TABLE IF NOT EXISTS runs (" +
                              "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                              "character_class TEXT NOT NULL, " +
@@ -36,7 +36,7 @@ public class DatabaseManager {
                              "money INTEGER NOT NULL, " +
                              "run_date DATETIME DEFAULT CURRENT_TIMESTAMP)";
                 stmt.execute(sqlRuns);
-                
+
                 String sqlSave = "CREATE TABLE IF NOT EXISTS save_states (" +
                              "slot_id INTEGER PRIMARY KEY, " +
                              "player_name TEXT, " +
@@ -62,12 +62,12 @@ public class DatabaseManager {
         String sql = "INSERT INTO runs (character_class, level_reached, money, run_date) VALUES (?, ?, ?, DATETIME('now', 'localtime'))";
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+
             pstmt.setString(1, characterClass);
             pstmt.setInt(2, levelReached);
             pstmt.setInt(3, money);
             pstmt.executeUpdate();
-            
+
         } catch (SQLException e) {
             System.out.println("Errore durante il salvataggio della run: " + e.getMessage());
         }
@@ -76,19 +76,19 @@ public class DatabaseManager {
     public static String getTopRuns() {
         String sql = "SELECT character_class, level_reached, money, run_date FROM runs ORDER BY level_reached DESC, money DESC LIMIT 5";
         StringBuilder sb = new StringBuilder();
-        sb.append("===== CLASSIFICA (MIGLIORI RUN) =====\n");
-        
+        sb.append("===== CLASSIFICA (MIGLIORI RUN) =====|\n");
+
         try (Connection conn = DriverManager.getConnection(DB_URL);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
-            
+
             int count = 1;
             while (rs.next()) {
                 String charClass = rs.getString("character_class");
                 int level = rs.getInt("level_reached");
                 int money = rs.getInt("money");
                 String date = rs.getString("run_date");
-                
+
                 sb.append(count).append(". [").append(date).append("] ")
                   .append(charClass).append(" - Livello: ").append(level)
                   .append(" - Monete: ").append(money).append("\n");
@@ -108,7 +108,7 @@ public class DatabaseManager {
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, DATETIME('now', 'localtime'))";
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+
             pstmt.setInt(1, slotId);
             pstmt.setString(2, player.getName());
             pstmt.setString(3, player.getClass().getSimpleName());
@@ -117,13 +117,13 @@ public class DatabaseManager {
             pstmt.setInt(6, player.getCurrentMana());
             pstmt.setInt(7, player.getMoney());
             pstmt.setInt(8, player.getExp());
-            
+
             StringBuilder inv = new StringBuilder();
             for (Items item : player.getInventory()) {
                 inv.append(item.getName()).append(",");
             }
             pstmt.setString(9, inv.toString());
-            
+
             StringBuilder eq = new StringBuilder();
             for (Map.Entry<String, Items> entry : player.getEquippedItemsRaw().entrySet()) {
                 if (entry.getValue() != null) {
@@ -131,9 +131,9 @@ public class DatabaseManager {
                 }
             }
             pstmt.setString(10, eq.toString());
-            
+
             pstmt.executeUpdate();
-            
+
         } catch (SQLException e) {
             System.out.println("Errore salvataggio game state: " + e.getMessage());
         }
@@ -146,7 +146,7 @@ public class DatabaseManager {
         try (Connection conn = DriverManager.getConnection(DB_URL);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
-            
+
             while (rs.next()) {
                 int id = rs.getInt("slot_id");
                 if (id >= 1 && id <= 3) {
@@ -185,16 +185,16 @@ public class DatabaseManager {
                     case "Tank": player = new Tank(); break;
                     default: return null;
                 }
-                
+
                 player.setMoney(rs.getInt("money"));
-                
+
                 int levelToReach = rs.getInt("level");
                 for (int i = 1; i < levelToReach; i++) {
                     player.forceLevelUp();
                 }
                 player.setExp(rs.getInt("exp"));
                 player.forceHpAndMana(rs.getInt("hp"), rs.getInt("mana"));
-                
+
                 String inv = rs.getString("inventory");
                 if (inv != null && !inv.isEmpty()) {
                     for (String itemName : inv.split(",")) {
@@ -204,7 +204,7 @@ public class DatabaseManager {
                         }
                     }
                 }
-                
+
                 String eq = rs.getString("equipped");
                 if (eq != null && !eq.isEmpty()) {
                     for (String eqData : eq.split(",")) {
@@ -213,7 +213,7 @@ public class DatabaseManager {
                             Items item = getItemByName(parts[1]);
                             if (item != null) {
                                 // Add to inventory if not already there, wait no, equip just takes it from inventory usually, or maybe we can just equip it.
-                                // It's better to add to inventory and then equip, but wait, `equip` removes it from inventory if it's there. 
+                                // It's better to add to inventory and then equip, but wait, `equip` removes it from inventory if it's there.
                                 // Actually, let's just add it to inventory and equip.
                                 player.addToInventory(item);
                                 player.equip(item);

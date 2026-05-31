@@ -312,12 +312,77 @@ public class BattleManager {
                     fightLog.append("Hai passato il turno.\n");
                     
                 } else if (moveSplit[0].equalsIgnoreCase("ZAINO") || moveSplit[0].toLowerCase().startsWith("za")) {
-                    playerCurrentStatus = playerStatus.INVENTORY;
-                    fightLog.append("--- Zaino - Consumabili ---\n");
-                    for(Items item: player.getInventoryUsables()){
-                        fightLog.append(player.getInventory().indexOf(item)+1).append(". ").append(item.getName()).append(" ").append(item.getDetails()).append("\n");
+                    if (moveSplit.length > 1) {
+                        try {
+                            int index = Integer.parseInt(moveSplit[1]) - 1;
+                            ArrayList<Usables> inventory = player.getInventoryUsables();
+                            if (index >= 0 && index < inventory.size()) {
+                                Usables itemToUse = inventory.get(index);
+                                Character target = player;
+                                
+                                if (itemToUse instanceof items.usables.Throwables) {
+                                    if (!((items.usables.Throwables) itemToUse).isAoE) {
+                                        int targetIndex = 0;
+                                        if (moveSplit.length > 2) {
+                                            targetIndex = Integer.parseInt(moveSplit[2]) - 1;
+                                        }
+                                        if (targetIndex >= 0 && targetIndex < enemies.size()) {
+                                            target = enemies.get(targetIndex);
+                                        } else {
+                                            fightLog.append("Bersaglio non valido.\n");
+                                            break;
+                                        }
+                                    }
+                                }
+                                
+                                actionPoints--;
+                                player.removeFromInventory(itemToUse);
+                                
+                                if (itemToUse instanceof items.usables.Throwables && ((items.usables.Throwables) itemToUse).isAoE) {
+                                    StringBuilder aoeResult = new StringBuilder();
+                                    ArrayList<Enemies> enemiesCopy = new ArrayList<>(enemies);
+                                    for (Enemies e : enemiesCopy) {
+                                        aoeResult.append(itemToUse.use(player, e)).append("\n");
+                                        StringBuilder fakeLog = new StringBuilder();
+                                        if (checkDeath(e, fakeLog)) {
+                                            aoeResult.append(fakeLog.toString());
+                                        }
+                                    }
+                                    fightLog.append(aoeResult.toString());
+                                } else {
+                                    String result = itemToUse.use(player, target);
+                                    if (target instanceof Enemies) {
+                                        StringBuilder fakeLog = new StringBuilder();
+                                        if (checkDeath(target, fakeLog)) {
+                                            result += "\n" + fakeLog.toString();
+                                        }
+                                    }
+                                    fightLog.append(result).append("\n");
+                                }
+
+                                if (actionPoints > 0) {
+                                    fightLog.append("Puoi agire di nuovo (PA Rimanenti: ").append(actionPoints).append(")\n");
+                                    break;
+                                } else {
+                                    counterRound++;
+                                    playerActionProcessed = true;
+                                }
+                            } else {
+                                fightLog.append("Oggetto non valido.\n");
+                                break;
+                            }
+                        } catch (NumberFormatException e) {
+                            fightLog.append("Comando zaino non valido.\n");
+                            break;
+                        }
+                    } else {
+                        playerCurrentStatus = playerStatus.INVENTORY;
+                        fightLog.append("--- Zaino - Consumabili ---\n");
+                        for(Items item: player.getInventoryUsables()){
+                            fightLog.append(player.getInventory().indexOf(item)+1).append(". ").append(item.getName()).append(" ").append(item.getDetails()).append("\n");
+                        }
+                        return fightLog.toString();
                     }
-                    return fightLog.toString();
                 } else {
                     fightLog.append("Comando non riconosciuto.\n");
                     break;

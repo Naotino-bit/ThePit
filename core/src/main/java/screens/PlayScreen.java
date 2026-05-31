@@ -44,11 +44,11 @@ public class PlayScreen extends ScreenAdapter {
     private String selectedClassName = "";
     private TextButton confirmClassButton;
     private String[] classStats = {
-            "--- Guerriero ---\nHpMax: 120\nForza: 90\nAgilità: 85\nIntelligenza: 30\nPrecisione: 50",
-            "--- Arciere ---\nHpMax: 75\nForza: 30\nAgilità: 90\nIntelligenza: 30\nPrecisione: 105",
-            "--- Assassino ---\nHpMax: 100\nForza: 50\nAgilità: 81\nIntelligenza: 62\nPrecisione: 62",
-            "--- Mago ---\nHpMax: 75\nForza: 30\nAgilità: 30\nIntelligenza: 115\nPrecisione: 80",
-            "--- Tank ---\nHpMax: 150\nForza: 105\nAgilità: 40\nIntelligenza: 70\nPrecisione: 40"
+            "--- Guerriero ---\nHpMax: 40\nForza: 25\nAgilità: 25\nIntelligenza: 10\nPrecisione: 15",
+            "--- Arciere ---\nHpMax: 25\nForza: 10\nAgilità: 25\nIntelligenza: 10\nPrecisione: 30",
+            "--- Assassino ---\nHpMax: 30\nForza: 15\nAgilità: 25\nIntelligenza: 15\nPrecisione: 20",
+            "--- Mago ---\nHpMax: 25\nForza: 10\nAgilità: 10\nIntelligenza: 35\nPrecisione: 20",
+            "--- Tank ---\nHpMax: 45\nForza: 30\nAgilità: 10\nIntelligenza: 20\nPrecisione: 15"
     };
 
     private String lastMessage = "Benvenuto in THE PIT!";
@@ -901,14 +901,36 @@ public class PlayScreen extends ScreenAdapter {
                 // Left: Grid
                 Table grid = new Table();
                 grid.defaults().pad(10);
+                
+                // Creiamo una lista filtrata di ItemInfo e memorizziamo l'indice originale (+1) associato
+                java.util.ArrayList<ItemInfo> displayItems = new java.util.ArrayList<>();
+                java.util.ArrayList<Integer> originalIndexes = new java.util.ArrayList<>();
+                
+                if (currentState.equals("INVENTORY_BATTLE")) {
+                    int usableCounter = 1;
+                    for (int i = 0; i < inventoryItems.size(); i++) {
+                        ItemInfo item = inventoryItems.get(i);
+                        if (item.type.equalsIgnoreCase("USABLE") || item.type.equalsIgnoreCase("HealthPotion") || item.type.equalsIgnoreCase("ManaPotion")) {
+                            displayItems.add(item);
+                            originalIndexes.add(usableCounter);
+                            usableCounter++;
+                        }
+                    }
+                } else {
+                    for (int i = 0; i < inventoryItems.size(); i++) {
+                        displayItems.add(inventoryItems.get(i));
+                        originalIndexes.add(i + 1); // 1-based index
+                    }
+                }
+
                 for (int i = 0; i < 20; i++) { // Mostriamo 20 slot (4 righe da 5)
                     Table slot = new Table();
                     slot.setBackground(skin.newDrawable("white", new Color(1, 1, 1, 0.1f)));
 
-                    if (i < inventoryItems.size()) {
-                        final int index = i + 1;
-                        final int finalI = i;
-                        ItemInfo item = inventoryItems.get(i);
+                    if (i < displayItems.size()) {
+                        final int indexToSend = originalIndexes.get(i);
+                        final int finalI = i; // Indice visivo nella griglia
+                        ItemInfo item = displayItems.get(i);
                         Texture icon = getItemIcon(item);
 
                         Image itemImg = new Image(icon);
@@ -935,7 +957,7 @@ public class PlayScreen extends ScreenAdapter {
                                         || currentState.equals("INVENTORY_OVERFLOW")) {
                                     updateButtons();
                                 } else {
-                                    sendCommand(String.valueOf(index));
+                                    sendCommand(String.valueOf(indexToSend));
                                 }
                             }
                         });
@@ -1309,10 +1331,35 @@ public class PlayScreen extends ScreenAdapter {
                 addButton("ESCI", () -> sendCommand("Esci"));
                 break;
             case "INVENTORY_BATTLE":
-                if (selectedIndexInInventory != -1 && selectedIndexInInventory < inventoryItems.size()) {
+                // Costruiamo le liste filtrate per poter ottenere l'ItemInfo corretto e l'indice associato
+                java.util.ArrayList<ItemInfo> battleItems = new java.util.ArrayList<>();
+                java.util.ArrayList<Integer> battleOriginalIndexes = new java.util.ArrayList<>();
+                int usableCount = 1;
+                for (int i = 0; i < inventoryItems.size(); i++) {
+                    ItemInfo item = inventoryItems.get(i);
+                    if (item.type.equalsIgnoreCase("USABLE") || item.type.equalsIgnoreCase("HealthPotion") || item.type.equalsIgnoreCase("ManaPotion")) {
+                        battleItems.add(item);
+                        battleOriginalIndexes.add(usableCount);
+                        usableCount++;
+                    }
+                }
+                
+                if (selectedIndexInInventory != -1 && selectedIndexInInventory < battleItems.size()) {
                     addIconButton("USA", iconWand, () -> {
-                        int indexToSend = selectedIndexInInventory + 1;
-                        sendCommand(String.valueOf(indexToSend));
+                        int indexToSend = battleOriginalIndexes.get(selectedIndexInInventory);
+                        ItemInfo item = battleItems.get(selectedIndexInInventory);
+                        String itemNameLower = item.name.toLowerCase();
+                        boolean isThrowable = itemNameLower.contains("lancio") || itemNameLower.contains("bomba") || itemNameLower.contains("fiala") || itemNameLower.contains("coltello");
+                        boolean isAoE = itemNameLower.contains("bomba") || itemNameLower.contains("bomb") || itemNameLower.contains("frammentazione");
+                        
+                        if (isThrowable && !isAoE) {
+                            isSelectingTarget = true;
+                            selectedAttackType = "ZAINO_" + indexToSend;
+                            lastFeedbackMessage = "Seleziona un bersaglio per " + item.name;
+                            sendCommand("ESCI"); // Chiudiamo lo zaino per mostrare i nemici
+                        } else {
+                            sendCommand(String.valueOf(indexToSend));
+                        }
                     });
                 }
                 addButton("ESCI", () -> sendCommand("Esci"));
