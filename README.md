@@ -1,6 +1,6 @@
 <div align="center">
 
-![ThePit]([https://via.placeholder.com/800x400?text=ThePit+-+16-bit+RPG](https://github.com/Naotino-bit/ThePit/blob/Added_GUI/assets/the_pit_text.png))
+![ThePit](https://github.com/Naotino-bit/ThePit/blob/Added_GUI/assets/the_pit_text.png)
 
 **Un videogioco RPG multiplayer in stile 16-bit con architettura Client-Server.**
 
