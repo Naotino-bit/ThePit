@@ -2,7 +2,7 @@
 
 ![ThePit](https://github.com/Naotino-bit/ThePit/blob/Added_GUI/assets/the_pit_text.png)
 
-**Un videogioco RPG multiplayer in stile 16-bit con architettura Client-Server.**
+**Un videogioco RPG in stile 16-bit con architettura Client-Server.**
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/Naotino-bit/ThePit?style=for-the-badge&color=blue)
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Naotino-bit/ThePit/Added_GUI?style=for-the-badge&color=orange)
